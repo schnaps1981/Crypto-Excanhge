@@ -3,3 +3,8 @@
 /.idea/misc.xml
 /.idea/modules.xml
 /.idea/vcs.xml
+/.gradle/
+/.idea/
+/gradle/wrapper/
+/gradlew
+/gradlew.bat

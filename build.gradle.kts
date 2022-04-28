@@ -1,0 +1,10 @@
+plugins {
+    kotlin("jvm") apply false
+}
+
+group = "com.crypto"
+version = "0.0.1"
+
+repositories {
+    mavenCentral()
+}
