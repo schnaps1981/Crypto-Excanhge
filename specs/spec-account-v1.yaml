@@ -1,0 +1,170 @@
+openapi: 3.0.4
+info:
+  title: Аккаунт
+  description: Управление аккаунтом пользователя биржи
+  version: 1.0.0
+servers:
+  - url: 'https://localhost/v1'
+tags:
+  - name: account
+    description: Управление аккаунтом пользователя
+paths:
+  /account/create:
+    post:
+      tags:
+        - account
+      summary: Создать пользователя
+      operationId: userCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccCreateRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccCreateResponse'
+
+  /account/delete:
+    post:
+      tags:
+        - account
+      summary: Удалить пользователя
+      operationId: userDelete
+      requestBody:
+        description: Request Body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccDeleteResponse'
+
+components:
+  schemas:
+
+    UserId:
+      type: object
+      description: Id пользователя
+      properties:
+        userId:
+          type: string
+
+    CurrencyPair:
+      type: object
+      description: 'Объект, описывающий валютную пару: тикер (сокращенное название BTC, USD, ETH и тд) + количество'
+      properties:
+        ticker:
+          type: string
+          description: Тикер валюты
+        value:
+          type: number
+          format: double
+          description: Объем валюты (количество)
+
+    User:
+      type: object
+      description: Id пользователя
+      allOf:
+        - $ref: '#/components/schemas/UserId'
+        - type: object
+          properties:
+            currencies:
+              type: array
+              items:
+                $ref: '#/components/schemas/CurrencyPair'
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        groupd:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/AccCreateRequest'
+          delete: '#/components/schemas/AccDeleteRequest'
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дискриминатор для вычисления типа ответа
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/AccCreateResponse'
+          delete: '#/components/schemas/AccDeleteResponse'
+
+    AccCreateRequest:
+      description: Создание пользователя. Следует передать массив начальных желаемых балансов
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          description: Массив желаемых начальных балансов при регистрации аккаунта
+          properties:
+            currencies:
+              type: array
+              items:
+                $ref: '#/components/schemas/CurrencyPair'
+
+    AccCreateResponse:
+      description: Созданный пользователь. Содержит id созданного пользователя и балансы валют, которые удалось создать
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/User'
+
+    AccDeleteRequest:
+      description: Удаление пользователя. Следует передавать id пользователя, которого нужно удалить
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/UserId'
+
+    AccDeleteResponse:
+      description: Ответ на удаление пользователя. Состояние операции в поле result
+      allOf:
+        - $ref: '#/components/schemas/IResponse'

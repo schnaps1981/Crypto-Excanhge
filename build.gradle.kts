@@ -5,6 +5,9 @@ plugins {
 group = "com.crypto"
 version = "0.0.1"
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
