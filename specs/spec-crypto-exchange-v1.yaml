@@ -1,13 +1,15 @@
 openapi: 3.0.4
 info:
-  title: Аккаунт
-  description: Управление аккаунтом пользователя биржи
+  title: Криптовалютная биржа
+  description: API криптовалютной биржи
   version: 1.0.0
 servers:
   - url: 'https://localhost/v1'
 tags:
   - name: account
     description: Управление аккаунтом пользователя
+  - name: userinfo
+    description: Информация о состоянии аккаунта и счетов пользователя
 paths:
   /account/create:
     post:
@@ -50,6 +52,26 @@ paths:
               schema:
                 $ref: '#/components/schemas/AccDeleteResponse'
 
+  /userinfo/balances:
+    post:
+      tags:
+        - userinfo
+      summary: Состояние счета пользователя
+      operationId: userBalances
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBalancesRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBalancesResponse'
+
 components:
   schemas:
 
@@ -74,7 +96,7 @@ components:
 
     User:
       type: object
-      description: Id пользователя
+      description: Пользователь (id + балансы)
       allOf:
         - $ref: '#/components/schemas/UserId'
         - type: object
@@ -117,6 +139,7 @@ components:
         mapping:
           create: '#/components/schemas/AccCreateRequest'
           delete: '#/components/schemas/AccDeleteRequest'
+          read: '#/components/schemas/UserBalancesRequest'
 
     IResponse:
       type: object
@@ -139,9 +162,10 @@ components:
         mapping:
           create: '#/components/schemas/AccCreateResponse'
           delete: '#/components/schemas/AccDeleteResponse'
+          read: '#/components/schemas/UserBalancesResponse'
 
     AccCreateRequest:
-      description: Создание пользователя. Следует передать массив начальных желаемых балансов
+      description: Запрос создание пользователя. Следует передать массив начальных желаемых балансов
       allOf:
         - $ref: '#/components/schemas/IRequest'
         - type: object
@@ -153,18 +177,36 @@ components:
                 $ref: '#/components/schemas/CurrencyPair'
 
     AccCreateResponse:
-      description: Созданный пользователь. Содержит id созданного пользователя и балансы валют, которые удалось создать
+      description: Ответ создание пользователя. Содержит id созданного пользователя и балансы валют, которые удалось создать
       allOf:
         - $ref: '#/components/schemas/IResponse'
         - $ref: '#/components/schemas/User'
 
     AccDeleteRequest:
-      description: Удаление пользователя. Следует передавать id пользователя, которого нужно удалить
+      description: Запрос удаление пользователя. Следует передавать id пользователя, которого нужно удалить
       allOf:
         - $ref: '#/components/schemas/IRequest'
         - $ref: '#/components/schemas/UserId'
 
     AccDeleteResponse:
-      description: Ответ на удаление пользователя. Состояние операции в поле result
+      description: Ответ удаление пользователя.. Состояние операции в поле result
       allOf:
         - $ref: '#/components/schemas/IResponse'
+
+    UserBalancesRequest:
+      description: Запрос состояния балансов пользователя
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/UserId'
+
+    UserBalancesResponse:
+      description: Ответ состояния балансов пользователя
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          description: Массив желаемых начальных балансов при регистрации аккаунта
+          properties:
+            currencies:
+              type: array
+              items:
+                $ref: '#/components/schemas/CurrencyPair'

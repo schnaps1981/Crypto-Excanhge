@@ -29,7 +29,7 @@ openApiGenerate {
     apiPackage.set("$openapiGroup.api")
     modelPackage.set("$openapiGroup.models")
     invokerPackage.set("$openapiGroup.invoker")
-    inputSpec.set("$rootDir/specs/spec-account-v1.yaml")
+    inputSpec.set("$rootDir/specs/spec-crypto-exchange-v1.yaml")
     library.set("jvm-okhttp3")
 
     /**
