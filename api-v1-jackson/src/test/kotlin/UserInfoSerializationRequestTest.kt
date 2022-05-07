@@ -12,7 +12,7 @@ class UserInfoSerializationRequestTest {
         val jsonString = apiV1RequestSerialize(request)
 
         println(jsonString)
-        assertContains(jsonString, "\"requestType\":\"read\"")
+        assertContains(jsonString, "\"requestType\":\"UserBalancesRead\"")
         assertContains(jsonString, "\"userId\":\"User123\"")
 
     }
@@ -20,13 +20,13 @@ class UserInfoSerializationRequestTest {
     @Test
     fun deserializeUserBalancesRequestTest() {
         val jsonString =
-            "{\"requestType\":\"read\",\"requestId\":null,\"userId\":\"User123\"}"
+            "{\"requestType\":\"UserBalancesRead\",\"requestId\":null,\"userId\":\"User123\"}"
 
         val decoded = apiV1RequestDeserialize<UserBalancesRequest>(jsonString)
 
         println(decoded)
 
-        assertEquals("read", decoded.requestType)
+        assertEquals("UserBalancesRead", decoded.requestType)
         assertEquals("User123", decoded.userId)
     }
 }

@@ -21,14 +21,14 @@ class UserInfoSerializationResponseTest {
         assertContains(jsonString, "\"value\":1.0")
         assertContains(jsonString, "\"ticker\":\"USD\"")
         assertContains(jsonString, "\"value\":1000.0")
-        assertContains(jsonString, "\"responseType\":\"read\"")
+        assertContains(jsonString, "\"responseType\":\"UserBalancesRead\"")
 
     }
 
     @Test
     fun deserializeUserBalancesResponseTest() {
         val jsonString =
-            "{\"responseType\":\"read\",\"requestId\":null,\"result\":null,\"errors\":null,\"currencies\":[{\"ticker\":\"BTC\",\"value\":1.0},{\"ticker\":\"USD\",\"value\":1000.0}]}"
+            "{\"responseType\":\"UserBalancesRead\",\"requestId\":null,\"result\":null,\"errors\":null,\"currencies\":[{\"ticker\":\"BTC\",\"value\":1.0},{\"ticker\":\"USD\",\"value\":1000.0}]}"
 
         val decoded = apiV1ResponseDeserialize<UserBalancesResponse>(jsonString)
 
@@ -42,6 +42,6 @@ class UserInfoSerializationResponseTest {
         assertEquals(currencyPairsAsMap["BTC"], 1.0)
         assertEquals(currencyPairsAsMap["USD"], 1000.0)
 
-        assertEquals("read", decoded.responseType)
+        assertEquals("UserBalancesRead", decoded.responseType)
     }
 }

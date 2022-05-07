@@ -22,14 +22,14 @@ class AccountSerializationRequestTest {
         println(jsonString)
         assertContains(jsonString, "\"ticker\":\"BTC\"")
         assertContains(jsonString, "\"value\":1.0")
-        assertContains(jsonString, "\"requestType\":\"create\"")
+        assertContains(jsonString, "\"requestType\":\"AccountCreate\"")
 
     }
 
     @Test
     fun deserializeAccCreateRequestTest() {
         val jsonString =
-            "{\"requestType\":\"create\",\"requestId\":null,\"currencies\":[{\"ticker\":\"BTC\",\"value\":1.0},{\"ticker\":\"USD\",\"value\":1000.0}]}"
+            "{\"requestType\":\"AccountCreate\",\"requestId\":null,\"currencies\":[{\"ticker\":\"BTC\",\"value\":1.0},{\"ticker\":\"USD\",\"value\":1000.0}]}"
 
         val decoded = apiV1RequestDeserialize<AccCreateRequest>(jsonString)
 
@@ -56,7 +56,7 @@ class AccountSerializationRequestTest {
 
     @Test
     fun deserializeAccDeleteRequestTest() {
-        val jsonString = "{\"requestType\":\"delete\",\"requestId\":null,\"userId\":\"user123\"}"
+        val jsonString = "{\"requestType\":\"AccountDelete\",\"requestId\":null,\"userId\":\"user123\"}"
 
         val decoded = apiV1RequestDeserialize<AccDeleteRequest>(jsonString)
         println(decoded)
@@ -66,7 +66,7 @@ class AccountSerializationRequestTest {
 
     @Test
     fun deserializeIRequestTest() {
-        val jsonString = "{\"requestType\":\"delete\",\"requestId\":null,\"userId\":\"user123\"}"
+        val jsonString = "{\"requestType\":\"AccountDelete\",\"requestId\":null,\"userId\":\"user123\"}"
 
         val decoded = apiV1RequestDeserialize<IRequest>(jsonString) as AccDeleteRequest
         println(decoded)

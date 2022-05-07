@@ -10,6 +10,8 @@ tags:
     description: Управление аккаунтом пользователя
   - name: userinfo
     description: Информация о состоянии аккаунта и счетов пользователя
+  - name: ticker
+    description: Информация о курсах валютных пар
 paths:
   /account/create:
     post:
@@ -72,6 +74,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserBalancesResponse'
 
+  /ticker/supported:
+    post:
+      tags:
+        - ticker
+      summary: Доступные к торговле валютные пары
+      operationId: getCurrencies
+      requestBody:
+        description: RequsetBody
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/SupportedCurrenciesRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/SupportedCurrenciesResponse'
+  /ticker:
+    post:
+      tags:
+        - ticker
+      summary: Курсы валютных пар
+      operationId: getTicker
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/TickerRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/TickerResponse'
+
 components:
   schemas:
 
@@ -93,6 +134,27 @@ components:
           type: number
           format: double
           description: Объем валюты (количество)
+
+    TickerPair:
+      type: object
+      properties:
+        first:
+          type: string
+          description: Тикер первой валюты
+        second:
+          type: string
+          description: Тикер второй валюты
+
+    Ticker:
+      type: object
+      description: Тикер валютной пары
+      properties:
+        pair:
+          $ref: '#/components/schemas/TickerPair'
+        rate:
+          type: number
+          format: double
+          description: Курс first/second
 
     User:
       type: object
@@ -137,9 +199,11 @@ components:
       discriminator:
         propertyName: requestType
         mapping:
-          create: '#/components/schemas/AccCreateRequest'
-          delete: '#/components/schemas/AccDeleteRequest'
-          read: '#/components/schemas/UserBalancesRequest'
+          AccountCreate: '#/components/schemas/AccCreateRequest'
+          AccountDelete: '#/components/schemas/AccDeleteRequest'
+          UserBalancesRead: '#/components/schemas/UserBalancesRequest'
+          CurrenciesRead: '#/components/schemas/SupportedCurrenciesRequest'
+          TickerRead: '#/components/schemas/TickerRequest'
 
     IResponse:
       type: object
@@ -160,9 +224,11 @@ components:
       discriminator:
         propertyName: responseType
         mapping:
-          create: '#/components/schemas/AccCreateResponse'
-          delete: '#/components/schemas/AccDeleteResponse'
-          read: '#/components/schemas/UserBalancesResponse'
+          AccountCreate: '#/components/schemas/AccCreateResponse'
+          AccountDelete: '#/components/schemas/AccDeleteResponse'
+          UserBalancesRead: '#/components/schemas/UserBalancesResponse'
+          CurrenciesRead: '#/components/schemas/SupportedCurrenciesResponse'
+          TickerRead: '#/components/schemas/TickerResponse'
 
     AccCreateRequest:
       description: Запрос создание пользователя. Следует передать массив начальных желаемых балансов
@@ -189,7 +255,7 @@ components:
         - $ref: '#/components/schemas/UserId'
 
     AccDeleteResponse:
-      description: Ответ удаление пользователя.. Состояние операции в поле result
+      description: Ответ удаление пользователя. Состояние операции в поле result
       allOf:
         - $ref: '#/components/schemas/IResponse'
 
@@ -204,9 +270,38 @@ components:
       allOf:
         - $ref: '#/components/schemas/IResponse'
         - type: object
-          description: Массив желаемых начальных балансов при регистрации аккаунта
+          description: Массив балансов аккаунта
           properties:
             currencies:
               type: array
               items:
                 $ref: '#/components/schemas/CurrencyPair'
+
+    SupportedCurrenciesRequest:
+      description: Запрос. доступные валюты
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+
+    SupportedCurrenciesResponse:
+      description: Ответ. доступные валюты
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          description: список доступных к торговле валют
+          properties:
+            currencies:
+              type: array
+              items:
+                type: string
+
+    TickerRequest:
+      description: Запрос курса валютных пар
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/TickerPair'
+
+    TickerResponse:
+      description: Ответ курса валютных пар
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/Ticker'

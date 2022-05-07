@@ -19,7 +19,7 @@ class AccountSerializationResponseTest {
     @Test
     fun deserializeAccCreateResponseTest() {
         val jsonString =
-            "{\"responseType\":\"create\",\"requestId\":null,\"result\":null,\"errors\":null,\"userId\":\"user123\"}"
+            "{\"responseType\":\"AccountCreate\",\"requestId\":null,\"result\":null,\"errors\":null,\"userId\":\"user123\"}"
 
         val decoded = apiV1ResponseDeserialize<AccCreateResponse>(jsonString)
 
@@ -40,7 +40,7 @@ class AccountSerializationResponseTest {
 
     @Test
     fun deserializeAccDeleteResponseTest() {
-        val jsonString = "{\"responseType\":\"delete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
+        val jsonString = "{\"responseType\":\"AccountDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
 
         val decoded = apiV1ResponseDeserialize<AccDeleteResponse>(jsonString)
         println(decoded)
@@ -50,7 +50,7 @@ class AccountSerializationResponseTest {
 
     @Test
     fun deserializeIResponseTest() {
-        val jsonString = "{\"responseType\":\"delete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
+        val jsonString = "{\"responseType\":\"AccountDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
 
         val decoded = apiV1ResponseDeserialize<IResponse>(jsonString) as AccDeleteResponse
         println(decoded)
