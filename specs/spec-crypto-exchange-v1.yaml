@@ -489,6 +489,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/IRequest'
         - $ref: '#/components/schemas/OrderBase'
+        - $ref: '#/components/schemas/UserId'
 
     OrderCreateResponse:
       description: Ответ. создание ордера
@@ -501,6 +502,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/IRequest'
         - $ref: '#/components/schemas/OrderId'
+        - $ref: '#/components/schemas/UserId'
 
     OrderDeleteResponse:
       description: Ответ. удаление ордера
@@ -511,6 +513,7 @@ components:
       description: Запрос. чтение ордеров
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/UserId'
         - type: object
           properties:
             filter:

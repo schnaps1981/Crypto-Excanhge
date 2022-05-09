@@ -9,4 +9,5 @@
 /gradlew
 /gradlew.bat
 /api-v1-jackson/build/
-/transport-main-openapi-v1/build/
+/crypto-transport-main-openapi-v1/build/
+/crypto-common/build/
