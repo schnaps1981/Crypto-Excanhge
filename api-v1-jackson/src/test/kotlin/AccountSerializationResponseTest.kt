@@ -1,4 +1,7 @@
-import com.crypto.api.v1.models.*
+import com.crypto.api.v1.models.AccCreateResponse
+import com.crypto.api.v1.models.AccDeleteResponse
+import com.crypto.api.v1.models.IResponse
+import com.crypto.api.v1.models.ResponseResult
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -6,7 +9,7 @@ import kotlin.test.assertEquals
 class AccountSerializationResponseTest {
 
     @Test
-    fun serializeAccCreateResponseTest() {
+    fun `serialize account create response`() {
         val accCreateResponse = AccCreateResponse(userId = "user123")
 
         val jsonString = apiV1ResponseSerialize(accCreateResponse)
@@ -17,7 +20,7 @@ class AccountSerializationResponseTest {
     }
 
     @Test
-    fun deserializeAccCreateResponseTest() {
+    fun `deserialize account create response`() {
         val jsonString =
             "{\"responseType\":\"AccountCreate\",\"requestId\":null,\"result\":null,\"errors\":null,\"userId\":\"user123\"}"
 
@@ -29,7 +32,7 @@ class AccountSerializationResponseTest {
     }
 
     @Test
-    fun serializeAccDeleteResponseTest() {
+    fun `serialize account delete response`() {
         val accDeleteResponse = AccDeleteResponse(result = ResponseResult.SUCCESS)
 
         val jsonString = apiV1ResponseSerialize((accDeleteResponse))
@@ -39,8 +42,9 @@ class AccountSerializationResponseTest {
     }
 
     @Test
-    fun deserializeAccDeleteResponseTest() {
-        val jsonString = "{\"responseType\":\"AccountDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
+    fun `deserialize account delete response`() {
+        val jsonString =
+            "{\"responseType\":\"AccountDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
 
         val decoded = apiV1ResponseDeserialize<AccDeleteResponse>(jsonString)
         println(decoded)
@@ -49,8 +53,9 @@ class AccountSerializationResponseTest {
     }
 
     @Test
-    fun deserializeIResponseTest() {
-        val jsonString = "{\"responseType\":\"AccountDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
+    fun `deserialize IResponse`() {
+        val jsonString =
+            "{\"responseType\":\"AccountDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
 
         val decoded = apiV1ResponseDeserialize<IResponse>(jsonString) as AccDeleteResponse
         println(decoded)

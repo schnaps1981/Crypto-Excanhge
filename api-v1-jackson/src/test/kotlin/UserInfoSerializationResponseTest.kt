@@ -1,4 +1,5 @@
-import com.crypto.api.v1.models.*
+import com.crypto.api.v1.models.CurrencyPair
+import com.crypto.api.v1.models.UserBalancesResponse
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -6,7 +7,7 @@ import kotlin.test.assertEquals
 class UserInfoSerializationResponseTest {
 
     @Test
-    fun serializeUserBalancesResponseTest() {
+    fun `serialize user balance response`() {
         val request = UserBalancesResponse(
             currencies = listOf(
                 CurrencyPair("BTC", 1.0),
@@ -26,7 +27,7 @@ class UserInfoSerializationResponseTest {
     }
 
     @Test
-    fun deserializeUserBalancesResponseTest() {
+    fun `deserialize user balance response`() {
         val jsonString =
             "{\"responseType\":\"UserBalancesRead\",\"requestId\":null,\"result\":null,\"errors\":null,\"currencies\":[{\"ticker\":\"BTC\",\"value\":1.0},{\"ticker\":\"USD\",\"value\":1000.0}]}"
 

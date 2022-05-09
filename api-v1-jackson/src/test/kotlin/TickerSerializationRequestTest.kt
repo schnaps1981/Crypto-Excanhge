@@ -1,4 +1,5 @@
-import com.crypto.api.v1.models.*
+import com.crypto.api.v1.models.SupportedCurrenciesRequest
+import com.crypto.api.v1.models.TickerRequest
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -45,7 +46,7 @@ class TickerSerializationRequestTest {
     }
 
     @Test
-    fun `deserialize ticker request` () {
+    fun `deserialize ticker request`() {
         val jsonString = "{\"requestType\":\"TickerRead\",\"requestId\":null,\"first\":\"BTC\",\"second\":\"USD\"}"
 
         val decoded = apiV1RequestDeserialize<TickerRequest>(jsonString)

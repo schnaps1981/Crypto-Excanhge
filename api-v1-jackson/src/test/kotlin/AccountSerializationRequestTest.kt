@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class AccountSerializationRequestTest {
 
     @Test
-    fun serializeAccCreateRequestTest() {
+    fun `serialize account create request`() {
         val accCreateRequest = AccCreateRequest(
             currencies = listOf(
                 CurrencyPair("BTC", 1.0),
@@ -27,7 +27,7 @@ class AccountSerializationRequestTest {
     }
 
     @Test
-    fun deserializeAccCreateRequestTest() {
+    fun `deserialize account create request`() {
         val jsonString =
             "{\"requestType\":\"AccountCreate\",\"requestId\":null,\"currencies\":[{\"ticker\":\"BTC\",\"value\":1.0},{\"ticker\":\"USD\",\"value\":1000.0}]}"
 
@@ -45,7 +45,7 @@ class AccountSerializationRequestTest {
     }
 
     @Test
-    fun serializeAccDeleteRequestTest() {
+    fun `serialize account delete request`() {
         val accDeleteRequest = AccDeleteRequest(userId = "user123")
 
         val jsonString = apiV1RequestSerialize(accDeleteRequest)
@@ -55,7 +55,7 @@ class AccountSerializationRequestTest {
     }
 
     @Test
-    fun deserializeAccDeleteRequestTest() {
+    fun `deserialize account delete request`() {
         val jsonString = "{\"requestType\":\"AccountDelete\",\"requestId\":null,\"userId\":\"user123\"}"
 
         val decoded = apiV1RequestDeserialize<AccDeleteRequest>(jsonString)
@@ -65,7 +65,7 @@ class AccountSerializationRequestTest {
     }
 
     @Test
-    fun deserializeIRequestTest() {
+    fun `deserialize IRequest`() {
         val jsonString = "{\"requestType\":\"AccountDelete\",\"requestId\":null,\"userId\":\"user123\"}"
 
         val decoded = apiV1RequestDeserialize<IRequest>(jsonString) as AccDeleteRequest

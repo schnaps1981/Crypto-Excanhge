@@ -1,4 +1,4 @@
-import com.crypto.api.v1.models.*
+import com.crypto.api.v1.models.UserBalancesRequest
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 class UserInfoSerializationRequestTest {
 
     @Test
-    fun serializeUserBalancesRequestTest() {
+    fun `serialize user balance request`() {
         val request = UserBalancesRequest(userId = "User123")
 
         val jsonString = apiV1RequestSerialize(request)
@@ -18,7 +18,7 @@ class UserInfoSerializationRequestTest {
     }
 
     @Test
-    fun deserializeUserBalancesRequestTest() {
+    fun `deserialize user balance request`() {
         val jsonString =
             "{\"requestType\":\"UserBalancesRead\",\"requestId\":null,\"userId\":\"User123\"}"
 

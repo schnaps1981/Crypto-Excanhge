@@ -12,6 +12,8 @@ tags:
     description: Информация о состоянии аккаунта и счетов пользователя
   - name: ticker
     description: Информация о курсах валютных пар
+  - name: order
+    description: Управление ордерами
 paths:
   /account/create:
     post:
@@ -85,14 +87,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#components/schemas/SupportedCurrenciesRequest'
+              $ref: '#/components/schemas/SupportedCurrenciesRequest'
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/SupportedCurrenciesResponse'
+                $ref: '#/components/schemas/SupportedCurrenciesResponse'
+
   /ticker:
     post:
       tags:
@@ -104,14 +107,74 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#components/schemas/TickerRequest'
+              $ref: '#/components/schemas/TickerRequest'
       responses:
         200:
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/TickerResponse'
+                $ref: '#/components/schemas/TickerResponse'
+
+  /order/create:
+    post:
+      tags:
+        - order
+      summary: Создание ордера
+      operationId: createOrder
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderCreateResponse'
+
+  /order/delete:
+    post:
+      tags:
+        - order
+      summary: Удаление ордера
+      operationId: deleteOrder
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDeleteRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDeleteResponse'
+
+  /order/read:
+    post:
+      tags:
+        - order
+      summary: получение списка ордеров
+      operationId: readOrder
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderReadRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderReadResponse'
 
 components:
   schemas:
@@ -186,6 +249,115 @@ components:
         message:
           type: string
 
+    FilterByDate:
+      allOf:
+        - $ref: '#/components/schemas/IFilter'
+        - type: object
+          description: фильтр по дате
+          properties:
+            date:
+              type: string
+
+    FilterByState:
+      allOf:
+        - $ref: '#/components/schemas/IFilter'
+        - type: object
+          description: фильтр по состоянию ордера
+          properties:
+            state:
+              $ref: '#/components/schemas/OrderState'
+
+    FilterByType:
+      allOf:
+        - $ref: '#/components/schemas/IFilter'
+        - type: object
+          description: фильтр по типу ордера
+          properties:
+            type:
+              $ref: '#/components/schemas/OrderType'
+
+    FilterByCurrency:
+      allOf:
+        - $ref: '#/components/schemas/IFilter'
+        - type: object
+          description: фильтр по валюте ордера
+          properties:
+            currency:
+              type: string
+
+    IFilter:
+      type: object
+      description: интерфейс фильтра
+      properties:
+        filterType:
+          type: string
+          description: поле-дискриминатор для вычисления типа фильтра
+      discriminator:
+        propertyName: filterType
+        mapping:
+          byDate: '#/components/schemas/FilterByDate'
+          byState: '#/components/schemas/FilterByState'
+          byType: '#/components/schemas/FilterByType'
+          byCurrency: '#/components/schemas/FilterByCurrency'
+
+    OrderId:
+      type: object
+      description: Id ордера
+      properties:
+        orderId:
+          type: string
+
+    OrderType:
+      type: string
+      description: Тип ордера
+      enum:
+        - buy
+        - sell
+
+    OrderState:
+      type: string
+      description: Состояние ордера
+      enum:
+        - active
+        - completed
+        - cancelled
+
+    OrderBase:
+      type: object
+      description: база ордера
+      properties:
+        pair:
+          $ref: '#/components/schemas/TickerPair'
+        quantity:
+          description: количесто актива выставляемое в ордере
+          type: number
+          format: double
+        price:
+          description: цена актива, по которой выставляет ордер
+          type: number
+          format: double
+        orderType:
+          $ref: '#/components/schemas/OrderType'
+
+    Order:
+      description: Объект, описывающий ордер
+      allOf:
+        - $ref: '#/components/schemas/OrderBase'
+        - type: object
+          properties:
+            orderId:
+              description: Идентификатор ордера
+              type: string
+            created:
+              description: Метка времени создания ордера
+              type: integer
+            orderState:
+              $ref: '#/components/schemas/OrderState'
+            amount:
+              description: количество получаемой валюты (amount = price * quantity)
+              type: number
+              format: double
+
     IRequest:
       type: object
       description: Базовый интерфейс для всех запросов
@@ -204,6 +376,9 @@ components:
           UserBalancesRead: '#/components/schemas/UserBalancesRequest'
           CurrenciesRead: '#/components/schemas/SupportedCurrenciesRequest'
           TickerRead: '#/components/schemas/TickerRequest'
+          OrderCreate: '#/components/schemas/OrderCreateRequest'
+          OrderDelete: '#/components/schemas/OrderDeleteRequest'
+          OrderRead: '#/components/schemas/OrderReadRequest'
 
     IResponse:
       type: object
@@ -229,6 +404,9 @@ components:
           UserBalancesRead: '#/components/schemas/UserBalancesResponse'
           CurrenciesRead: '#/components/schemas/SupportedCurrenciesResponse'
           TickerRead: '#/components/schemas/TickerResponse'
+          OrderCreate: '#/components/schemas/OrderCreateResponse'
+          OrderDelete: '#/components/schemas/OrderDeleteResponse'
+          OrderRead: '#/components/schemas/OrderReadResponse'
 
     AccCreateRequest:
       description: Запрос создание пользователя. Следует передать массив начальных желаемых балансов
@@ -305,3 +483,47 @@ components:
       allOf:
         - $ref: '#/components/schemas/IResponse'
         - $ref: '#/components/schemas/Ticker'
+
+    OrderCreateRequest:
+      description: Запрос. создание ордера
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/OrderBase'
+
+    OrderCreateResponse:
+      description: Ответ. создание ордера
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/OrderId'
+
+    OrderDeleteRequest:
+      description: Запрос. удаление ордера
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/OrderId'
+
+    OrderDeleteResponse:
+      description: Ответ. удаление ордера
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+
+    OrderReadRequest:
+      description: Запрос. чтение ордеров
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - type: object
+          properties:
+            filter:
+              $ref: '#/components/schemas/IFilter'
+
+    OrderReadResponse:
+      description: Ответ. чтение ордеров
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          description: список найденных ордеров
+          properties:
+            orders:
+              type: array
+              items:
+                $ref: '#/components/schemas/Order'
