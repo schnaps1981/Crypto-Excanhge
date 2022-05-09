@@ -10,5 +10,4 @@ pluginManagement {
         id("org.openapi.generator") version openapiVersion apply false
     }
 }
-include("api-v1-jackson")
-include("api-v1-moshi")
+include("transport-main-openapi-v1")

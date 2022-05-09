@@ -9,4 +9,4 @@
 /gradlew
 /gradlew.bat
 /api-v1-jackson/build/
-/api-v1-moshi/build/
+/transport-main-openapi-v1/build/
