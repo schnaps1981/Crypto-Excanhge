@@ -1,6 +1,6 @@
 import com.crypto.api.v1.models.AccCreateRequest
 import com.crypto.api.v1.models.AccDeleteRequest
-import com.crypto.api.v1.models.CurrencyPair
+import com.crypto.api.v1.models.Currency
 import com.crypto.api.v1.models.IRequest
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -12,8 +12,8 @@ class AccountSerializationRequestTest {
     fun `serialize account create request`() {
         val accCreateRequest = AccCreateRequest(
             currencies = listOf(
-                CurrencyPair("BTC", 1.0),
-                CurrencyPair("USD", 1000.0)
+                Currency("BTC", 1.0),
+                Currency("USD", 1000.0)
             )
         )
 

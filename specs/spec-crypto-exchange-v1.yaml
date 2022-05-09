@@ -186,9 +186,9 @@ components:
         userId:
           type: string
 
-    CurrencyPair:
+    Currency:
       type: object
-      description: 'Объект, описывающий валютную пару: тикер (сокращенное название BTC, USD, ETH и тд) + количество'
+      description: 'Объект, описывающий баланс валюты: тикер (сокращенное название BTC, USD, ETH и тд) + количество'
       properties:
         ticker:
           type: string
@@ -229,7 +229,7 @@ components:
             currencies:
               type: array
               items:
-                $ref: '#/components/schemas/CurrencyPair'
+                $ref: '#/components/schemas/Currency'
 
     ResponseResult:
       type: string
@@ -418,7 +418,7 @@ components:
             currencies:
               type: array
               items:
-                $ref: '#/components/schemas/CurrencyPair'
+                $ref: '#/components/schemas/Currency'
 
     AccCreateResponse:
       description: Ответ создание пользователя. Содержит id созданного пользователя и балансы валют, которые удалось создать
@@ -453,7 +453,7 @@ components:
             currencies:
               type: array
               items:
-                $ref: '#/components/schemas/CurrencyPair'
+                $ref: '#/components/schemas/Currency'
 
     SupportedCurrenciesRequest:
       description: Запрос. доступные валюты

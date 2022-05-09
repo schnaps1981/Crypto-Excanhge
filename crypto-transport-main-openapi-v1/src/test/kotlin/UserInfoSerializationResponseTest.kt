@@ -1,4 +1,4 @@
-import com.crypto.api.v1.models.CurrencyPair
+import com.crypto.api.v1.models.Currency
 import com.crypto.api.v1.models.UserBalancesResponse
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -10,8 +10,8 @@ class UserInfoSerializationResponseTest {
     fun `serialize user balance response`() {
         val request = UserBalancesResponse(
             currencies = listOf(
-                CurrencyPair("BTC", 1.0),
-                CurrencyPair("USD", 1000.0)
+                Currency("BTC", 1.0),
+                Currency("USD", 1000.0)
             )
         )
 
