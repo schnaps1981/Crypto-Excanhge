@@ -13,3 +13,4 @@ pluginManagement {
 }
 include("crypto-transport-main-openapi-v1")
 include("crypto-common")
+include("crypto-mappers-v1")

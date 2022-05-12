@@ -1,7 +1,4 @@
-import com.crypto.api.v1.models.AccCreateResponse
-import com.crypto.api.v1.models.AccDeleteResponse
-import com.crypto.api.v1.models.IResponse
-import com.crypto.api.v1.models.ResponseResult
+import com.crypto.api.v1.models.*
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -33,23 +30,25 @@ class AccountSerializationResponseTest {
 
     @Test
     fun `serialize account delete response`() {
-        val accDeleteResponse = AccDeleteResponse(result = ResponseResult.SUCCESS)
+        val accDeleteResponse = AccDeleteResponse(result = ResponseResult.SUCCESS, deleteResult = DeleteResult.SUCCESS)
 
         val jsonString = apiV1ResponseSerialize((accDeleteResponse))
 
         println(jsonString)
         assertContains(jsonString, "\"result\":\"success\"")
+        assertContains(jsonString, "\"deleteResult\":\"success\"")
     }
 
     @Test
     fun `deserialize account delete response`() {
         val jsonString =
-            "{\"responseType\":\"AccountDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
+            "{\"responseType\":\"AccountDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null, \"deleteResult\":\"success\"}"
 
         val decoded = apiV1ResponseDeserialize<AccDeleteResponse>(jsonString)
         println(decoded)
 
         assertEquals(ResponseResult.SUCCESS, decoded.result)
+        assertEquals(DeleteResult.SUCCESS, decoded.deleteResult)
     }
 
     @Test

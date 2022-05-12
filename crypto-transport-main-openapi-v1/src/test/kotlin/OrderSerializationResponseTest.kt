@@ -35,7 +35,7 @@ class OrderSerializationResponseTest {
 
     @Test
     fun `serialize order delete response test`() {
-        val request = OrderDeleteResponse(result = ResponseResult.SUCCESS)
+        val request = OrderDeleteResponse(result = ResponseResult.SUCCESS, deleteResult = DeleteResult.SUCCESS)
 
         val jsonString = apiV1ResponseSerialize(request)
 
@@ -43,11 +43,13 @@ class OrderSerializationResponseTest {
 
         assertContains(jsonString, "\"responseType\":\"OrderDelete\"")
         assertContains(jsonString, "\"result\":\"success\"")
+        assertContains(jsonString, "\"deleteResult\":\"success\"")
     }
 
     @Test
     fun `deserialize order delete request test`() {
-        val response = "{\"responseType\":\"OrderDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null}"
+        val response =
+            "{\"responseType\":\"OrderDelete\",\"requestId\":null,\"result\":\"success\",\"errors\":null, \"deleteResult\":\"success\"}"
 
         val decoded = apiV1ResponseDeserialize<OrderDeleteResponse>(response)
 
@@ -55,6 +57,7 @@ class OrderSerializationResponseTest {
 
         assertEquals("OrderDelete", decoded.responseType)
         assertEquals(ResponseResult.SUCCESS, decoded.result)
+        assertEquals(DeleteResult.SUCCESS, decoded.deleteResult)
     }
 
     @Test

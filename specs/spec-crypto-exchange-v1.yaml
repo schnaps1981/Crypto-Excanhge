@@ -242,7 +242,7 @@ components:
       properties:
         code:
           type: string
-        groupd:
+        group:
           type: string
         field:
           type: string
@@ -299,6 +299,13 @@ components:
           byState: '#/components/schemas/FilterByState'
           byType: '#/components/schemas/FilterByType'
           byCurrency: '#/components/schemas/FilterByCurrency'
+
+    DeleteResult:
+      type: string
+      description: Результат команды удаления
+      enum:
+        - success
+        - error
 
     OrderId:
       type: object
@@ -412,6 +419,7 @@ components:
       description: Запрос создание пользователя. Следует передать массив начальных желаемых балансов
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           description: Массив желаемых начальных балансов при регистрации аккаунта
           properties:
@@ -430,17 +438,23 @@ components:
       description: Запрос удаление пользователя. Следует передавать id пользователя, которого нужно удалить
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
         - $ref: '#/components/schemas/UserId'
 
     AccDeleteResponse:
       description: Ответ удаление пользователя. Состояние операции в поле result
       allOf:
         - $ref: '#/components/schemas/IResponse'
+        - type: object
+          properties:
+            deleteResult:
+              $ref: '#/components/schemas/DeleteResult'
 
     UserBalancesRequest:
       description: Запрос состояния балансов пользователя
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
         - $ref: '#/components/schemas/UserId'
 
     UserBalancesResponse:
@@ -459,6 +473,7 @@ components:
       description: Запрос. доступные валюты
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
 
     SupportedCurrenciesResponse:
       description: Ответ. доступные валюты
@@ -476,6 +491,7 @@ components:
       description: Запрос курса валютных пар
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
         - $ref: '#/components/schemas/TickerPair'
 
     TickerResponse:
@@ -488,6 +504,7 @@ components:
       description: Запрос. создание ордера
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
         - $ref: '#/components/schemas/OrderBase'
         - $ref: '#/components/schemas/UserId'
 
@@ -501,6 +518,7 @@ components:
       description: Запрос. удаление ордера
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
         - $ref: '#/components/schemas/OrderId'
         - $ref: '#/components/schemas/UserId'
 
@@ -508,11 +526,16 @@ components:
       description: Ответ. удаление ордера
       allOf:
         - $ref: '#/components/schemas/IResponse'
+        - type: object
+          properties:
+            deleteResult:
+              $ref: '#/components/schemas/DeleteResult'
 
     OrderReadRequest:
       description: Запрос. чтение ордеров
       allOf:
         - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
         - $ref: '#/components/schemas/UserId'
         - type: object
           properties:
@@ -530,3 +553,34 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Order'
+
+    RequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    RequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/Debug'
+
+    Debug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/RequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/RequestDebugStubs'
+
+    RequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - cannotDelete
+        - badFilter
