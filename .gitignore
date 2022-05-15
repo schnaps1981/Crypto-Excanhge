@@ -11,4 +11,4 @@
 /api-v1-jackson/build/
 /crypto-transport-main-openapi-v1/build/
 /crypto-common/build/
-/crypto-mappers-v1/build/
+**/build/
