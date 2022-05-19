@@ -25,7 +25,7 @@ class AccountMappersTest {
                 balances = mutableListOf(
                     CryptoCurrency(
                         ticker = "BTC",
-                        value = 0.001
+                        value = "0.001".toBigDecimal()
                     )
                 )
             )
@@ -38,7 +38,7 @@ class AccountMappersTest {
         assertEquals(ResponseResult.SUCCESS, response.result)
         assertEquals("789", response.userId)
         assertEquals("BTC", response.currencies?.firstOrNull()?.ticker)
-        assertEquals(0.001, response.currencies?.firstOrNull()?.value)
+        assertEquals("0.001", response.currencies?.firstOrNull()?.value)
 
         assertEquals("123", response.errors?.firstOrNull()?.code)
         assertEquals("non_fatal", response.errors?.firstOrNull()?.group)
@@ -66,7 +66,7 @@ class AccountMappersTest {
                 balances = mutableListOf(
                     CryptoCurrency(
                         ticker = "BTC",
-                        value = 0.001
+                        value = 0.001.toBigDecimal()
                     )
                 )
             )
@@ -94,8 +94,8 @@ class AccountMappersTest {
                 stub = RequestDebugStubs.SUCCESS
             ),
             currencies = listOf(
-                Currency("BTC", 0.01),
-                Currency("USD", 100.0)
+                Currency("BTC", "0.01"),
+                Currency("USD", "100.0")
             )
         )
 
@@ -108,7 +108,7 @@ class AccountMappersTest {
 
         assertEquals(CryptoRequestId("1234"), context.requestId)
         assertEquals(CryptoAccountCommands.CREATE, context.command)
-        assertEquals(CryptoCurrency("BTC", 0.01), context.accountRequest.balances.firstOrNull())
+        assertEquals(CryptoCurrency("BTC", 0.01.toBigDecimal()), context.accountRequest.balances.firstOrNull())
     }
 
     @Test

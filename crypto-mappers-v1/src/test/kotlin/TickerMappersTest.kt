@@ -53,7 +53,7 @@ class TickerMappersTest {
             command = CryptoTickerCommands.READ_TICKER,
             ratesResponse = CryptoPairRate(
                 pair = CryptoPair("BTC", "USD"),
-                rate = 10.0
+                rate = 10.0.toBigDecimal()
             )
         )
 
@@ -68,7 +68,7 @@ class TickerMappersTest {
         assertEquals("currencies", response.errors?.firstOrNull()?.field)
         assertEquals("couldn't create some balance", response.errors?.firstOrNull()?.message)
 
-        assertEquals(10.0, response.rate)
+        assertEquals("10.0", response.rate)
         assertEquals("BTC", response.pair?.first)
         assertEquals("USD", response.pair?.second)
     }

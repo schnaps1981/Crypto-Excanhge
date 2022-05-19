@@ -1,6 +1,8 @@
 package models
 
+import java.math.BigDecimal
+
 data class CryptoCurrency(
     var ticker: String = "",
-    var value: Double = 0.0
+    var value: BigDecimal = BigDecimal.valueOf(0.0)
 )

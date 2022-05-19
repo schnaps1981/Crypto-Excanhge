@@ -15,7 +15,7 @@ fun CryptoTickerContext.toTransportReadTicker() = TickerResponse(
     result = if (state == CryptoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
     pair = TickerPair(ratesResponse.pair.first, ratesResponse.pair.second),
-    rate = ratesResponse.rate
+    rate = ratesResponse.rate.toString()
 )
 
 fun CryptoTickerContext.toTransportReadCurrencies() = SupportedCurrenciesResponse(

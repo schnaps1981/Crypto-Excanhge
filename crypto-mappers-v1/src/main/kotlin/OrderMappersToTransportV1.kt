@@ -27,13 +27,13 @@ fun CryptoOrderContext.toTransportReadOrder() = OrderReadResponse(
     orders = ordersResponse.map { order ->
         Order(
             pair = order.pair.toTransport(),
-            quantity = order.quantity,
-            price = order.price,
+            quantity = order.quantity.toString(),
+            price = order.price.toString(),
             orderType = order.orderType.toTransport(),
             orderId = order.orderId.asString().takeIf { it.isNotBlank() },
             created = order.created,
             orderState = order.orderState.toTransport(),
-            amount = order.amount
+            amount = order.amount.toString()
         )
     }
 )

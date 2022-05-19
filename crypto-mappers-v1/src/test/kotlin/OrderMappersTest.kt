@@ -26,8 +26,8 @@ class OrderMappersTest {
             userInfoResponse = CryptoUserInfo(
                 userId = CryptoUserId("3423"),
                 balances = listOf(
-                    CryptoCurrency("BTC", 1.0),
-                    CryptoCurrency("USD", 100.0)
+                    CryptoCurrency("BTC", 1.0.toBigDecimal()),
+                    CryptoCurrency("USD", 100.0.toBigDecimal())
                 )
             )
         )
@@ -44,7 +44,7 @@ class OrderMappersTest {
         assertEquals("couldn't create some balance", response.errors?.firstOrNull()?.message)
 
         assertEquals("BTC", response.currencies?.firstOrNull()?.ticker)
-        assertEquals(1.0, response.currencies?.firstOrNull()?.value)
+        assertEquals("1.0", response.currencies?.firstOrNull()?.value)
 
     }
 

@@ -16,5 +16,5 @@ fun CryptoUserInfoContext.toTransportReadUserBalance() = UserBalancesResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = if (state == CryptoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
     errors = errors.toTransportErrors(),
-    currencies = userInfoResponse.balances.map { Currency(it.ticker, it.value) }
+    currencies = userInfoResponse.balances.map { Currency(it.ticker, it.value.toString()) }
 )

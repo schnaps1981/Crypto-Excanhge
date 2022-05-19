@@ -1,5 +1,6 @@
 import com.crypto.api.v1.models.*
 import models.*
+import java.math.BigDecimal
 
 fun IRequest?.requestId() = this?.requestId?.let { CryptoRequestId(it) } ?: CryptoRequestId.NONE
 fun String?.toCryptoUserId() = this?.let { CryptoUserId(it) } ?: CryptoUserId.NONE
@@ -59,3 +60,6 @@ inline fun <T, R> everyoneOrNull(vararg args: T?, block: (List<T>) -> R): R? {
 inline fun <T, R> List<T>?.toMutableListNotNullOrEmpty(block: (T) -> R?): MutableList<R> {
     return this?.mapNotNull { block(it) }?.toMutableList() ?: mutableListOf()
 }
+
+fun String?.toBigDecimalOrElse(block: () -> BigDecimal): BigDecimal =
+    this?.toBigDecimalOrNull() ?: block()

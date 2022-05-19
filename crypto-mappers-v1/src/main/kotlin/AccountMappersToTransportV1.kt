@@ -28,4 +28,4 @@ fun CryptoAccountContext.toTransportAccountDelete() = AccDeleteResponse(
 )
 
 private fun MutableList<CryptoCurrency>.toTransportCurrency(): List<Currency> =
-    this.map { Currency(it.ticker, it.value) }
+    this.map { Currency(it.ticker, it.value.toString()) }

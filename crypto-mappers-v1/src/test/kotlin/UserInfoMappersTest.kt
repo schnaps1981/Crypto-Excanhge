@@ -52,8 +52,8 @@ class UserInfoMappersTest {
             ),
             userId = "user123",
             pair = TickerPair("BTC", "USD"),
-            quantity = 1.0,
-            price = 2.0,
+            quantity = "1.0",
+            price = "2.0",
             orderType = OrderType.SELL
         )
 
@@ -68,8 +68,8 @@ class UserInfoMappersTest {
         assertEquals(CryptoOrderCommands.CREATE, context.command)
 
         assertEquals(CryptoUserId("user123"), context.userIdRequest)
-        assertEquals(1.0, context.orderRequest.quantity)
-        assertEquals(2.0, context.orderRequest.price)
+        assertEquals(1.0.toBigDecimal(), context.orderRequest.quantity)
+        assertEquals(2.0.toBigDecimal(), context.orderRequest.price)
         assertEquals(CryptoOrderType.SELL, context.orderRequest.orderType)
         assertEquals("BTC", context.orderRequest.pair.first)
         assertEquals("USD", context.orderRequest.pair.second)
@@ -151,9 +151,9 @@ class UserInfoMappersTest {
                     orderId = CryptoOrderId("order123"),
                     created = 123,
                     orderState = CryptoOrderState.COMPLETED,
-                    amount = 2.0,
-                    quantity = 3.0,
-                    price = 4.0,
+                    amount = 2.0.toBigDecimal(),
+                    quantity = 3.0.toBigDecimal(),
+                    price = 4.0.toBigDecimal(),
                     orderType = CryptoOrderType.SELL,
                     pair = CryptoPair(
                         first = "BTC",
@@ -178,9 +178,9 @@ class UserInfoMappersTest {
         assertEquals("order123", response.orders?.firstOrNull()?.orderId)
         assertEquals(123, response.orders?.firstOrNull()?.created)
         assertEquals(OrderState.COMPLETED, response.orders?.firstOrNull()?.orderState)
-        assertEquals(2.0, response.orders?.firstOrNull()?.amount)
-        assertEquals(3.0, response.orders?.firstOrNull()?.quantity)
-        assertEquals(4.0, response.orders?.firstOrNull()?.price)
+        assertEquals("2.0", response.orders?.firstOrNull()?.amount)
+        assertEquals("3.0", response.orders?.firstOrNull()?.quantity)
+        assertEquals("4.0", response.orders?.firstOrNull()?.price)
         assertEquals(OrderType.SELL, response.orders?.firstOrNull()?.orderType)
         assertEquals("BTC", response.orders?.firstOrNull()?.pair?.first)
         assertEquals("USD", response.orders?.firstOrNull()?.pair?.second)

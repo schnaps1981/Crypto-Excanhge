@@ -36,7 +36,7 @@ fun CryptoAccountContext.fromTransport(request: AccDeleteRequest) {
 private fun List<Currency>?.fromTransport(): MutableList<CryptoCurrency> {
     return this.toMutableListNotNullOrEmpty {
         everyoneOrNull(it.ticker, it.value) { (ticker, value) ->
-            CryptoCurrency(ticker as String, value as Double)
+            CryptoCurrency(ticker as String, value.toBigDecimalOrElse { 0.0.toBigDecimal() })
         }
     }
 }
