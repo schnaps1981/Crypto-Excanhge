@@ -10,8 +10,8 @@ class UserInfoSerializationResponseTest {
     fun `serialize user balance response`() {
         val request = UserBalancesResponse(
             currencies = listOf(
-                Currency("BTC", 1.0),
-                Currency("USD", 1000.0)
+                Currency("BTC", "1.0"),
+                Currency("USD", "1000.0")
             )
         )
 
@@ -19,9 +19,9 @@ class UserInfoSerializationResponseTest {
 
         println(jsonString)
         assertContains(jsonString, "\"ticker\":\"BTC\"")
-        assertContains(jsonString, "\"value\":1.0")
+        assertContains(jsonString, "\"value\":\"1.0\"")
         assertContains(jsonString, "\"ticker\":\"USD\"")
-        assertContains(jsonString, "\"value\":1000.0")
+        assertContains(jsonString, "\"value\":\"1000.0\"")
         assertContains(jsonString, "\"responseType\":\"UserBalancesRead\"")
 
     }
@@ -40,8 +40,8 @@ class UserInfoSerializationResponseTest {
         assertContains(currencyPairsAsMap, "BTC")
         assertContains(currencyPairsAsMap, "USD")
 
-        assertEquals(currencyPairsAsMap["BTC"], 1.0)
-        assertEquals(currencyPairsAsMap["USD"], 1000.0)
+        assertEquals(currencyPairsAsMap["BTC"], "1.0")
+        assertEquals(currencyPairsAsMap["USD"], "1000.0")
 
         assertEquals("UserBalancesRead", decoded.responseType)
     }

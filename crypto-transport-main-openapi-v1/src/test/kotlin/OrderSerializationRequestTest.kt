@@ -10,8 +10,8 @@ class OrderSerializationRequestTest {
         val request = OrderCreateRequest(
             pair = TickerPair(first = "BTC", second = "USD"),
             orderType = OrderType.BUY,
-            price = 100.0,
-            quantity = 1.0,
+            price = "100.0",
+            quantity = "1.0",
             userId = "user_123"
         )
 
@@ -21,8 +21,8 @@ class OrderSerializationRequestTest {
 
         assertContains(jsonString, "\"requestType\":\"OrderCreate\"")
         assertContains(jsonString, "\"pair\":{\"first\":\"BTC\",\"second\":\"USD\"}")
-        assertContains(jsonString, "\"quantity\":1.0")
-        assertContains(jsonString, "\"price\":100.0")
+        assertContains(jsonString, "\"quantity\":\"1.0\"")
+        assertContains(jsonString, "\"price\":\"100.0\"")
         assertContains(jsonString, "\"orderType\":\"buy\"")
         assertContains(jsonString, "\"userId\":\"user_123\"")
     }
@@ -39,8 +39,8 @@ class OrderSerializationRequestTest {
         assertEquals("OrderCreate", decoded.requestType)
         assertEquals("BTC", decoded.pair?.first)
         assertEquals("USD", decoded.pair?.second)
-        assertEquals(1.0, decoded.quantity)
-        assertEquals(100.0, decoded.price)
+        assertEquals("1.0", decoded.quantity)
+        assertEquals("100.0", decoded.price)
         assertEquals(OrderType.BUY, decoded.orderType)
         assertEquals("user_123", decoded.userId)
     }

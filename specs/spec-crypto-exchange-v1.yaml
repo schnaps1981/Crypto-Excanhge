@@ -194,8 +194,7 @@ components:
           type: string
           description: Тикер валюты
         value:
-          type: number
-          format: double
+          type: string
           description: Объем валюты (количество)
 
     TickerPair:
@@ -215,8 +214,7 @@ components:
         pair:
           $ref: '#/components/schemas/TickerPair'
         rate:
-          type: number
-          format: double
+          type: string
           description: Курс first/second
 
     User:
@@ -337,12 +335,10 @@ components:
           $ref: '#/components/schemas/TickerPair'
         quantity:
           description: количесто актива выставляемое в ордере
-          type: number
-          format: double
+          type: string
         price:
           description: цена актива, по которой выставляет ордер
-          type: number
-          format: double
+          type: string
         orderType:
           $ref: '#/components/schemas/OrderType'
 
@@ -362,8 +358,7 @@ components:
               $ref: '#/components/schemas/OrderState'
             amount:
               description: количество получаемой валюты (amount = price * quantity)
-              type: number
-              format: double
+              type: string
 
     IRequest:
       type: object

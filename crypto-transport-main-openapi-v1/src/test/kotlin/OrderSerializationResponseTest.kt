@@ -67,12 +67,12 @@ class OrderSerializationResponseTest {
                 Order(
                     pair = TickerPair(first = "BTC", second = "USD"),
                     orderId = "orderId_123",
-                    price = 1.0,
+                    price = "1.0",
                     orderType = OrderType.SELL,
-                    quantity = 10.0,
+                    quantity = "10.0",
                     orderState = OrderState.COMPLETED,
                     created = 111,
-                    amount = 100.0
+                    amount = "100.0"
                 )
             )
         )
@@ -83,13 +83,13 @@ class OrderSerializationResponseTest {
         assertContains(jsonString, "\"responseType\":\"OrderRead\"")
         assertContains(jsonString, "\"first\":\"BTC\"")
         assertContains(jsonString, "\"second\":\"USD\"")
-        assertContains(jsonString, "\"quantity\":10.0")
-        assertContains(jsonString, "\"price\":1.0")
+        assertContains(jsonString, "\"quantity\":\"10.0\"")
+        assertContains(jsonString, "\"price\":\"1.0\"")
         assertContains(jsonString, "\"orderType\":\"sell\"")
         assertContains(jsonString, "\"orderId\":\"orderId_123\"")
         assertContains(jsonString, "\"created\":111")
         assertContains(jsonString, "\"orderState\":\"completed\"")
-        assertContains(jsonString, "\"amount\":100.0")
+        assertContains(jsonString, "\"amount\":\"100.0\"")
 
     }
 
@@ -105,12 +105,12 @@ class OrderSerializationResponseTest {
         assertEquals("OrderRead", decoded.responseType)
         assertEquals("BTC", decoded.orders?.get(0)?.pair?.first)
         assertEquals("USD", decoded.orders?.get(0)?.pair?.second)
-        assertEquals(10.0, decoded.orders?.get(0)?.quantity)
-        assertEquals(1.0, decoded.orders?.get(0)?.price)
+        assertEquals("10.0", decoded.orders?.get(0)?.quantity)
+        assertEquals("1.0", decoded.orders?.get(0)?.price)
         assertEquals(OrderType.SELL, decoded.orders?.get(0)?.orderType)
         assertEquals("orderId_123", decoded.orders?.get(0)?.orderId)
         assertEquals(111, decoded.orders?.get(0)?.created)
         assertEquals(OrderState.COMPLETED, decoded.orders?.get(0)?.orderState)
-        assertEquals(100.0, decoded.orders?.get(0)?.amount)
+        assertEquals("100.0", decoded.orders?.get(0)?.amount)
     }
 }

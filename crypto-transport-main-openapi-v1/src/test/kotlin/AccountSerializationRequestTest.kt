@@ -12,8 +12,8 @@ class AccountSerializationRequestTest {
     fun `serialize account create request`() {
         val accCreateRequest = AccCreateRequest(
             currencies = listOf(
-                Currency("BTC", 1.0),
-                Currency("USD", 1000.0)
+                Currency("BTC", "1.0"),
+                Currency("USD", "1000.0")
             )
         )
 
@@ -21,7 +21,7 @@ class AccountSerializationRequestTest {
 
         println(jsonString)
         assertContains(jsonString, "\"ticker\":\"BTC\"")
-        assertContains(jsonString, "\"value\":1.0")
+        assertContains(jsonString, "\"value\":\"1.0\"")
         assertContains(jsonString, "\"requestType\":\"AccountCreate\"")
 
     }
@@ -40,8 +40,8 @@ class AccountSerializationRequestTest {
         assertContains(currencyPairsAsMap, "BTC")
         assertContains(currencyPairsAsMap, "USD")
 
-        assertEquals(currencyPairsAsMap["BTC"], 1.0)
-        assertEquals(currencyPairsAsMap["USD"], 1000.0)
+        assertEquals(currencyPairsAsMap["BTC"], "1.0")
+        assertEquals(currencyPairsAsMap["USD"], "1000.0")
     }
 
     @Test

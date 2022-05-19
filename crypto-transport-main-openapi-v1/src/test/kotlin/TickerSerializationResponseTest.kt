@@ -35,7 +35,7 @@ class TickerSerializationResponseTest {
     fun `serialize ticker response`() {
         val response = TickerResponse(
             pair = TickerPair("BTC", "USD"),
-            rate = 1000.0
+            rate = "1000.0"
         )
 
         val jsonString = apiV1ResponseSerialize(response)
@@ -55,6 +55,6 @@ class TickerSerializationResponseTest {
         assertEquals("TickerRead", decoded.responseType)
         assertEquals("BTC", decoded.pair?.first)
         assertEquals("USD", decoded.pair?.second)
-        assertEquals(1000.0, decoded.rate)
+        assertEquals("1000.0", decoded.rate)
     }
 }
