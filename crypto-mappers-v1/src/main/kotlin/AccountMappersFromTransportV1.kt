@@ -1,11 +1,9 @@
-import com.crypto.api.v1.models.AccCreateRequest
-import com.crypto.api.v1.models.AccDeleteRequest
-import com.crypto.api.v1.models.Currency
-import com.crypto.api.v1.models.IRequest
+import com.crypto.api.v1.models.*
 import context.CryptoAccountContext
 import errors.UnknownRequestClass
 import models.CryptoCurrency
 import models.commands.CryptoAccountCommands
+import stubs.CryptoAccountStubs
 
 fun CryptoAccountContext.fromTransport(request: IRequest) = when (request) {
     is AccCreateRequest -> fromTransport(request)
@@ -18,7 +16,7 @@ fun CryptoAccountContext.fromTransport(request: AccCreateRequest) {
 
     requestId = request.requestId()
     workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    stubCase = request.debug.transportToStubAccount()
 
     accountRequest.balances = request.currencies.fromTransport()
 }
@@ -28,7 +26,7 @@ fun CryptoAccountContext.fromTransport(request: AccDeleteRequest) {
 
     requestId = request.requestId()
     workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    stubCase = request.debug.transportToStubAccount()
 
     accountRequest.id = request.userId.toCryptoUserId()
 }
@@ -39,4 +37,10 @@ private fun List<Currency>?.fromTransport(): MutableList<CryptoCurrency> {
             CryptoCurrency(ticker as String, value.toBigDecimalOrElse { 0.0.toBigDecimal() })
         }
     }
+}
+
+//TODO роазобраться зачем стабы вообще
+private fun Debug?.transportToStubAccount(): CryptoAccountStubs = when (this?.stub) {
+    RequestDebugStubs.SUCCESS -> CryptoAccountStubs.SUCCESS
+    else -> CryptoAccountStubs.NONE
 }

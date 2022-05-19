@@ -7,6 +7,8 @@ import models.commands.CryptoTickerCommands
 import models.filter.CryptoFilterByDate
 import models.filter.CryptoFilterByType
 import org.junit.Test
+import stubs.CryptoOrderStubs
+import stubs.CryptoTickerStubs
 import kotlin.test.assertEquals
 
 class UserInfoMappersTest {
@@ -62,7 +64,7 @@ class UserInfoMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoOrderStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoOrderCommands.CREATE, context.command)
@@ -123,7 +125,7 @@ class UserInfoMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoOrderStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoOrderCommands.DELETE, context.command)
@@ -203,7 +205,7 @@ class UserInfoMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoOrderStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoOrderCommands.READ, context.command)
@@ -232,7 +234,7 @@ class UserInfoMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoOrderStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoOrderCommands.READ, context.command)
@@ -261,7 +263,7 @@ class UserInfoMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoTickerStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoRequestId("1234"), context.requestId)

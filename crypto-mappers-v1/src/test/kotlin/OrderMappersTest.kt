@@ -5,6 +5,8 @@ import models.*
 import models.commands.CryptoTickerCommands
 import models.commands.CryptoUserInfoCommands
 import org.junit.Test
+import stubs.CryptoTickerStubs
+import stubs.CryptoUserInfoStubs
 import kotlin.test.assertEquals
 
 class OrderMappersTest {
@@ -64,7 +66,7 @@ class OrderMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoUserInfoStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoUserInfoCommands.READ_BALANCE, context.command)
@@ -89,7 +91,7 @@ class OrderMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoTickerStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoRequestId("1234"), context.requestId)

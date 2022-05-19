@@ -1,6 +1,6 @@
-package models
+package stubs
 
-enum class CryptoStubs {
+enum class CryptoOrderStubs {
     NONE,
     SUCCESS,
     NOT_FOUND,

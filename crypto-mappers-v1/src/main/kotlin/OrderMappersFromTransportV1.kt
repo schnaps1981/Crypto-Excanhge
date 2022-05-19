@@ -5,6 +5,7 @@ import errors.UnknownRequestClass
 import models.CryptoPair
 import models.commands.CryptoOrderCommands
 import models.filter.*
+import stubs.CryptoOrderStubs
 
 fun CryptoOrderContext.fromTransport(request: IRequest) = when (request) {
     is OrderCreateRequest -> fromTransport(request)
@@ -16,7 +17,7 @@ fun CryptoOrderContext.fromTransport(request: IRequest) = when (request) {
 fun CryptoOrderContext.fromTransport(request: OrderCreateRequest) {
     requestId = request.requestId()
     workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    stubCase = request.debug.transportToStubOrder()
 
     command = CryptoOrderCommands.CREATE
 
@@ -34,7 +35,7 @@ fun CryptoOrderContext.fromTransport(request: OrderCreateRequest) {
 fun CryptoOrderContext.fromTransport(request: OrderReadRequest) {
     requestId = request.requestId()
     workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    stubCase = request.debug.transportToStubOrder()
 
     command = CryptoOrderCommands.READ
 
@@ -46,7 +47,7 @@ fun CryptoOrderContext.fromTransport(request: OrderReadRequest) {
 fun CryptoOrderContext.fromTransport(request: OrderDeleteRequest) {
     requestId = request.requestId()
     workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    stubCase = request.debug.transportToStubOrder()
 
     command = CryptoOrderCommands.DELETE
 
@@ -72,3 +73,12 @@ private fun fromTransport(filter: FilterByState) =
 
 private fun fromTransport(filter: FilterByType) =
     CryptoFilterByType(orderType = filter.type.transportToCryptoOrderType())
+
+private fun Debug?.transportToStubOrder(): CryptoOrderStubs = when (this?.stub) {
+    RequestDebugStubs.SUCCESS -> CryptoOrderStubs.SUCCESS
+    RequestDebugStubs.NOT_FOUND -> CryptoOrderStubs.NOT_FOUND
+    RequestDebugStubs.BAD_ID -> CryptoOrderStubs.BAD_ID
+    RequestDebugStubs.CANNOT_DELETE -> CryptoOrderStubs.CANNOT_DELETE
+    RequestDebugStubs.BAD_FILTER -> CryptoOrderStubs.BAD_FILTER
+    null -> CryptoOrderStubs.NONE
+}

@@ -3,6 +3,7 @@ import context.CryptoTickerContext
 import models.*
 import models.commands.CryptoTickerCommands
 import org.junit.Test
+import stubs.CryptoTickerStubs
 import kotlin.test.assertEquals
 
 class TickerMappersTest {
@@ -87,7 +88,7 @@ class TickerMappersTest {
         context.fromTransport(request)
 
         println(context)
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoTickerStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoTickerCommands.READ_CURRENCIES, context.command)
@@ -110,7 +111,7 @@ class TickerMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoTickerStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoRequestId("1234"), context.requestId)

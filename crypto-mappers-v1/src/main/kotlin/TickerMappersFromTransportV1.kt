@@ -1,10 +1,9 @@
-import com.crypto.api.v1.models.IRequest
-import com.crypto.api.v1.models.SupportedCurrenciesRequest
-import com.crypto.api.v1.models.TickerRequest
+import com.crypto.api.v1.models.*
 import context.CryptoTickerContext
 import errors.UnknownRequestClass
 import models.CryptoPair
 import models.commands.CryptoTickerCommands
+import stubs.CryptoTickerStubs
 
 
 fun CryptoTickerContext.fromTransport(request: IRequest) = when (request) {
@@ -18,7 +17,7 @@ fun CryptoTickerContext.fromTransport(request: TickerRequest) {
 
     requestId = request.requestId()
     workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    stubCase = request.debug.transportToStubTicker()
 
     ratesRequest = everyoneOrNull(request.first, request.second) { (first, second) ->
         CryptoPair(first, second)
@@ -30,5 +29,11 @@ fun CryptoTickerContext.fromTransport(request: SupportedCurrenciesRequest) {
 
     requestId = request.requestId()
     workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+    stubCase = request.debug.transportToStubTicker()
+}
+
+//TODO роазобраться зачем стабы вообще
+private fun Debug?.transportToStubTicker(): CryptoTickerStubs = when (this?.stub) {
+    RequestDebugStubs.SUCCESS -> CryptoTickerStubs.SUCCESS
+    else -> CryptoTickerStubs.NONE
 }

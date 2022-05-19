@@ -13,15 +13,6 @@ fun Debug?.transportToWorkMode(): CryptoWorkMode = when (this?.mode) {
     null -> CryptoWorkMode.PROD
 }
 
-fun Debug?.transportToStubCase(): CryptoStubs = when (this?.stub) {
-    RequestDebugStubs.SUCCESS -> CryptoStubs.SUCCESS
-    RequestDebugStubs.NOT_FOUND -> CryptoStubs.NOT_FOUND
-    RequestDebugStubs.BAD_ID -> CryptoStubs.BAD_ID
-    RequestDebugStubs.CANNOT_DELETE -> CryptoStubs.CANNOT_DELETE
-    RequestDebugStubs.BAD_FILTER -> CryptoStubs.BAD_FILTER
-    null -> CryptoStubs.NONE
-}
-
 fun OrderType?.transportToCryptoOrderType(): CryptoOrderType = when (this) {
     OrderType.SELL -> CryptoOrderType.SELL
     OrderType.BUY -> CryptoOrderType.BUY

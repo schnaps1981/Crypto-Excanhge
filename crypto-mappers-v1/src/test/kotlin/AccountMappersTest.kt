@@ -3,6 +3,7 @@ import context.CryptoAccountContext
 import models.*
 import models.commands.CryptoAccountCommands
 import org.junit.Test
+import stubs.CryptoAccountStubs
 import kotlin.test.assertEquals
 
 class AccountMappersTest {
@@ -103,7 +104,7 @@ class AccountMappersTest {
         context.fromTransport(request)
 
         println(context)
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoAccountStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoRequestId("1234"), context.requestId)
@@ -127,7 +128,7 @@ class AccountMappersTest {
 
         println(context)
 
-        assertEquals(CryptoStubs.SUCCESS, context.stubCase)
+        assertEquals(CryptoAccountStubs.SUCCESS, context.stubCase)
         assertEquals(CryptoWorkMode.STUB, context.workMode)
 
         assertEquals(CryptoRequestId("1234"), context.requestId)
