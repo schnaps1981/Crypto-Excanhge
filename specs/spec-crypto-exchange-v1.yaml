@@ -1,0 +1,581 @@
+openapi: 3.0.4
+info:
+  title: Криптовалютная биржа
+  description: API криптовалютной биржи
+  version: 1.0.0
+servers:
+  - url: 'https://localhost/v1'
+tags:
+  - name: account
+    description: Управление аккаунтом пользователя
+  - name: userinfo
+    description: Информация о состоянии аккаунта и счетов пользователя
+  - name: ticker
+    description: Информация о курсах валютных пар
+  - name: order
+    description: Управление ордерами
+paths:
+  /account/create:
+    post:
+      tags:
+        - account
+      summary: Создать пользователя
+      operationId: userCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccCreateRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccCreateResponse'
+
+  /account/delete:
+    post:
+      tags:
+        - account
+      summary: Удалить пользователя
+      operationId: userDelete
+      requestBody:
+        description: Request Body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccDeleteResponse'
+
+  /userinfo/balances:
+    post:
+      tags:
+        - userinfo
+      summary: Состояние счета пользователя
+      operationId: userBalances
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBalancesRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBalancesResponse'
+
+  /ticker/supported:
+    post:
+      tags:
+        - ticker
+      summary: Доступные к торговле валютные пары
+      operationId: getCurrencies
+      requestBody:
+        description: RequsetBody
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportedCurrenciesRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportedCurrenciesResponse'
+
+  /ticker:
+    post:
+      tags:
+        - ticker
+      summary: Курсы валютных пар
+      operationId: getTicker
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TickerRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TickerResponse'
+
+  /order/create:
+    post:
+      tags:
+        - order
+      summary: Создание ордера
+      operationId: createOrder
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreateRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderCreateResponse'
+
+  /order/delete:
+    post:
+      tags:
+        - order
+      summary: Удаление ордера
+      operationId: deleteOrder
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDeleteRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderDeleteResponse'
+
+  /order/read:
+    post:
+      tags:
+        - order
+      summary: получение списка ордеров
+      operationId: readOrder
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderReadRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderReadResponse'
+
+components:
+  schemas:
+
+    UserId:
+      type: object
+      description: Id пользователя
+      properties:
+        userId:
+          type: string
+
+    Currency:
+      type: object
+      description: 'Объект, описывающий баланс валюты: тикер (сокращенное название BTC, USD, ETH и тд) + количество'
+      properties:
+        ticker:
+          type: string
+          description: Тикер валюты
+        value:
+          type: string
+          description: Объем валюты (количество)
+
+    TickerPair:
+      type: object
+      properties:
+        first:
+          type: string
+          description: Тикер первой валюты
+        second:
+          type: string
+          description: Тикер второй валюты
+
+    Ticker:
+      type: object
+      description: Тикер валютной пары
+      properties:
+        pair:
+          $ref: '#/components/schemas/TickerPair'
+        rate:
+          type: string
+          description: Курс first/second
+
+    User:
+      type: object
+      description: Пользователь (id + балансы)
+      allOf:
+        - $ref: '#/components/schemas/UserId'
+        - type: object
+          properties:
+            currencies:
+              type: array
+              items:
+                $ref: '#/components/schemas/Currency'
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    FilterByDate:
+      allOf:
+        - $ref: '#/components/schemas/IFilter'
+        - type: object
+          description: фильтр по дате
+          properties:
+            date:
+              type: string
+
+    FilterByState:
+      allOf:
+        - $ref: '#/components/schemas/IFilter'
+        - type: object
+          description: фильтр по состоянию ордера
+          properties:
+            state:
+              $ref: '#/components/schemas/OrderState'
+
+    FilterByType:
+      allOf:
+        - $ref: '#/components/schemas/IFilter'
+        - type: object
+          description: фильтр по типу ордера
+          properties:
+            type:
+              $ref: '#/components/schemas/OrderType'
+
+    FilterByCurrency:
+      allOf:
+        - $ref: '#/components/schemas/IFilter'
+        - type: object
+          description: фильтр по валюте ордера
+          properties:
+            currency:
+              type: string
+
+    IFilter:
+      type: object
+      description: интерфейс фильтра
+      properties:
+        filterType:
+          type: string
+          description: поле-дискриминатор для вычисления типа фильтра
+      discriminator:
+        propertyName: filterType
+        mapping:
+          byDate: '#/components/schemas/FilterByDate'
+          byState: '#/components/schemas/FilterByState'
+          byType: '#/components/schemas/FilterByType'
+          byCurrency: '#/components/schemas/FilterByCurrency'
+
+    DeleteResult:
+      type: string
+      description: Результат команды удаления
+      enum:
+        - success
+        - error
+
+    OrderId:
+      type: object
+      description: Id ордера
+      properties:
+        orderId:
+          type: string
+
+    OrderType:
+      type: string
+      description: Тип ордера
+      enum:
+        - buy
+        - sell
+
+    OrderState:
+      type: string
+      description: Состояние ордера
+      enum:
+        - active
+        - completed
+        - cancelled
+
+    OrderBase:
+      type: object
+      description: база ордера
+      properties:
+        pair:
+          $ref: '#/components/schemas/TickerPair'
+        quantity:
+          description: количесто актива выставляемое в ордере
+          type: string
+        price:
+          description: цена актива, по которой выставляет ордер
+          type: string
+        orderType:
+          $ref: '#/components/schemas/OrderType'
+
+    Order:
+      description: Объект, описывающий ордер
+      allOf:
+        - $ref: '#/components/schemas/OrderBase'
+        - type: object
+          properties:
+            orderId:
+              description: Идентификатор ордера
+              type: string
+            created:
+              description: Метка времени создания ордера
+              type: integer
+            orderState:
+              $ref: '#/components/schemas/OrderState'
+            amount:
+              description: количество получаемой валюты (amount = price * quantity)
+              type: string
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+      discriminator:
+        propertyName: requestType
+        mapping:
+          AccountCreate: '#/components/schemas/AccCreateRequest'
+          AccountDelete: '#/components/schemas/AccDeleteRequest'
+          UserBalancesRead: '#/components/schemas/UserBalancesRequest'
+          CurrenciesRead: '#/components/schemas/SupportedCurrenciesRequest'
+          TickerRead: '#/components/schemas/TickerRequest'
+          OrderCreate: '#/components/schemas/OrderCreateRequest'
+          OrderDelete: '#/components/schemas/OrderDeleteRequest'
+          OrderRead: '#/components/schemas/OrderReadRequest'
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дискриминатор для вычисления типа ответа
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      discriminator:
+        propertyName: responseType
+        mapping:
+          AccountCreate: '#/components/schemas/AccCreateResponse'
+          AccountDelete: '#/components/schemas/AccDeleteResponse'
+          UserBalancesRead: '#/components/schemas/UserBalancesResponse'
+          CurrenciesRead: '#/components/schemas/SupportedCurrenciesResponse'
+          TickerRead: '#/components/schemas/TickerResponse'
+          OrderCreate: '#/components/schemas/OrderCreateResponse'
+          OrderDelete: '#/components/schemas/OrderDeleteResponse'
+          OrderRead: '#/components/schemas/OrderReadResponse'
+
+    AccCreateRequest:
+      description: Запрос создание пользователя. Следует передать массив начальных желаемых балансов
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - type: object
+          description: Массив желаемых начальных балансов при регистрации аккаунта
+          properties:
+            currencies:
+              type: array
+              items:
+                $ref: '#/components/schemas/Currency'
+
+    AccCreateResponse:
+      description: Ответ создание пользователя. Содержит id созданного пользователя и балансы валют, которые удалось создать
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/User'
+
+    AccDeleteRequest:
+      description: Запрос удаление пользователя. Следует передавать id пользователя, которого нужно удалить
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/UserId'
+
+    AccDeleteResponse:
+      description: Ответ удаление пользователя. Состояние операции в поле result
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          properties:
+            deleteResult:
+              $ref: '#/components/schemas/DeleteResult'
+
+    UserBalancesRequest:
+      description: Запрос состояния балансов пользователя
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/UserId'
+
+    UserBalancesResponse:
+      description: Ответ состояния балансов пользователя
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          description: Массив балансов аккаунта
+          properties:
+            currencies:
+              type: array
+              items:
+                $ref: '#/components/schemas/Currency'
+
+    SupportedCurrenciesRequest:
+      description: Запрос. доступные валюты
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+
+    SupportedCurrenciesResponse:
+      description: Ответ. доступные валюты
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          description: список доступных к торговле валют
+          properties:
+            currencies:
+              type: array
+              items:
+                type: string
+
+    TickerRequest:
+      description: Запрос курса валютных пар
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/TickerPair'
+
+    TickerResponse:
+      description: Ответ курса валютных пар
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/Ticker'
+
+    OrderCreateRequest:
+      description: Запрос. создание ордера
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/OrderBase'
+        - $ref: '#/components/schemas/UserId'
+
+    OrderCreateResponse:
+      description: Ответ. создание ордера
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/OrderId'
+
+    OrderDeleteRequest:
+      description: Запрос. удаление ордера
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/OrderId'
+        - $ref: '#/components/schemas/UserId'
+
+    OrderDeleteResponse:
+      description: Ответ. удаление ордера
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          properties:
+            deleteResult:
+              $ref: '#/components/schemas/DeleteResult'
+
+    OrderReadRequest:
+      description: Запрос. чтение ордеров
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/RequestDebug'
+        - $ref: '#/components/schemas/UserId'
+        - type: object
+          properties:
+            filter:
+              $ref: '#/components/schemas/IFilter'
+
+    OrderReadResponse:
+      description: Ответ. чтение ордеров
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - type: object
+          description: список найденных ордеров
+          properties:
+            orders:
+              type: array
+              items:
+                $ref: '#/components/schemas/Order'
+
+    RequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    RequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/Debug'
+
+    Debug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/RequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/RequestDebugStubs'
+
+    RequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - cannotDelete
+        - badFilter
