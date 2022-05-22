@@ -1,0 +1,47 @@
+### Create order
+POST http://127.0.0.1:8080/order/create/
+Content-Type: application/json
+
+{
+  "debug": {
+    "mode": "stub"
+  },
+  "requestType": "OrderCreate",
+  "requestId": "34234",
+  "pair": {
+    "first": "BTC",
+    "second": "USD"
+  },
+  "quantity": 1.0,
+  "price": 100.0,
+  "orderType": "buy",
+  "userId": "user_123"
+}
+
+### Read order
+POST http://127.0.0.1:8080/order/read/
+Content-Type: application/json
+
+{
+  "debug": {
+    "stub": "success",
+    "mode": "stub"
+  },
+  "requestType": "OrderRead",
+  "requestId": "34234",
+  "filter": null
+}
+
+### Detele order
+POST http://127.0.0.1:8080/order/delete/
+Content-Type: application/json
+
+{
+  "debug": {
+    "stub": "success",
+    "mode": "stub"
+  },
+  "requestType": "OrderDelete",
+  "requestId": "34234",
+  "orderId": "123456"
+}
