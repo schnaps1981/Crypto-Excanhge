@@ -22,7 +22,6 @@ fun CryptoUserInfoContext.fromTransport(request: UserBalancesRequest) {
     userInfoRequest.userId = request.userId.toCryptoUserId()
 }
 
-//TODO роазобраться зачем стабы вообще
 private fun Debug?.transportToStubUserInfo(): CryptoUserInfoStubs = when (this?.stub) {
     RequestDebugStubs.SUCCESS -> CryptoUserInfoStubs.SUCCESS
     else -> CryptoUserInfoStubs.NONE

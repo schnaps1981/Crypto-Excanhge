@@ -39,7 +39,6 @@ private fun List<Currency>?.fromTransport(): MutableList<CryptoCurrency> {
     }
 }
 
-//TODO роазобраться зачем стабы вообще
 private fun Debug?.transportToStubAccount(): CryptoAccountStubs = when (this?.stub) {
     RequestDebugStubs.SUCCESS -> CryptoAccountStubs.SUCCESS
     else -> CryptoAccountStubs.NONE

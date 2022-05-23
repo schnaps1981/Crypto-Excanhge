@@ -4,6 +4,7 @@ pluginManagement {
     plugins {
         val kotlinVersion: String by settings
         val openapiVersion: String by settings
+        val bmuschkoVersion: String by settings
 
         kotlin("jvm") version kotlinVersion apply false
         kotlin("multiplatfrom") version kotlinVersion apply false
@@ -18,6 +19,8 @@ pluginManagement {
         id("org.springframework.boot") version springBootVersion
         id("io.spring.dependency-management") version springDependencyVersion
         kotlin("plugin.spring") version springPluginVersion
+
+        id("com.bmuschko.docker-java-application") version bmuschkoVersion apply false
     }
 }
 
@@ -26,3 +29,4 @@ include("crypto-common")
 include("crypto-mappers-v1")
 include("crypto-stubs")
 include("crypto-app-spring")
+include("crypto-app-ktor")
