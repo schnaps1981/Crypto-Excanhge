@@ -1,9 +1,8 @@
-package crypto.app.ktor;
+package crypto.app.ktor
 
 import com.crypto.api.v1.models.*
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.jsonMapper
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -29,9 +28,6 @@ class ApplicationKtTest {
         }
 
         val response = client.post("/order/create") {
-
-
-
 
             contentType(ContentType.Application.Json)
             setBody(

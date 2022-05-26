@@ -1,8 +1,10 @@
-package crypto.app.ktor.api.controller
+package crypto.app.ktor.api
 
-import com.crypto.api.v1.models.*
+import OrderService
+import com.crypto.api.v1.models.OrderCreateRequest
+import com.crypto.api.v1.models.OrderDeleteRequest
+import com.crypto.api.v1.models.OrderReadRequest
 import context.CryptoOrderContext
-import crypto.app.ktor.api.service.OrderService
 import fromTransport
 import io.ktor.server.application.*
 import io.ktor.server.request.*

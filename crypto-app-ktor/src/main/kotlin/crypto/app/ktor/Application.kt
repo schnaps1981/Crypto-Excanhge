@@ -1,11 +1,11 @@
 package crypto.app.ktor
 
+import OrderService
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
-import crypto.app.ktor.api.controller.createOrder
-import crypto.app.ktor.api.controller.deleteOrder
-import crypto.app.ktor.api.controller.readOrders
-import crypto.app.ktor.api.service.OrderService
+import crypto.app.ktor.api.createOrder
+import crypto.app.ktor.api.deleteOrder
+import crypto.app.ktor.api.readOrders
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.callloging.*
@@ -15,6 +15,7 @@ import org.slf4j.event.Level
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
+@Suppress("unused")
 fun Application.module() {
 
     install(ContentNegotiation) {

@@ -1,12 +1,6 @@
-package crypto.app.ktor.api.service
-
-import OrderStubs
 import context.CryptoOrderContext
-import crypto.app.ktor.api.errorResponse
-import crypto.app.ktor.api.successResponse
 import models.CryptoWorkMode
 import stubs.CryptoOrderStubs
-
 
 class OrderService {
 
@@ -20,13 +14,13 @@ class OrderService {
 
         return when (context.stubCase) {
             CryptoOrderStubs.SUCCESS, CryptoOrderStubs.NONE -> context.successResponse {
-                (this as CryptoOrderContext).orderResponse = resp
+                orderResponse = resp
             }
 
             else -> context.errorResponse {
                 it.copy(field = "", message = "error create order with request: ${context.orderRequest}")
             }
-        } as CryptoOrderContext
+        }
     }
 
     fun readOrders(context: CryptoOrderContext): CryptoOrderContext {
@@ -39,13 +33,13 @@ class OrderService {
 
         return when (context.stubCase) {
             CryptoOrderStubs.SUCCESS, CryptoOrderStubs.NONE -> context.successResponse {
-                (this as CryptoOrderContext).ordersResponse = resp
+                ordersResponse = resp
             }
 
             else -> context.errorResponse {
                 it.copy(field = "", message = "error read order with request: ${context.orderRequest}")
             }
-        } as CryptoOrderContext
+        }
     }
 
     fun deleteOrder(context: CryptoOrderContext): CryptoOrderContext {
@@ -57,12 +51,12 @@ class OrderService {
 
         return when (context.stubCase) {
             CryptoOrderStubs.SUCCESS, CryptoOrderStubs.NONE -> context.successResponse {
-                (this as CryptoOrderContext).orderResponse = resp
+                orderResponse = resp
             }
 
             else -> context.errorResponse {
                 it.copy(field = "", message = "error delete order with request: ${context.orderRequest}")
             }
-        } as CryptoOrderContext
+        }
     }
 }

@@ -1,8 +1,8 @@
-package crypto.app.spring.api.controller
+package crypto.app.spring.api
 
+import OrderService
 import com.crypto.api.v1.models.*
 import context.CryptoOrderContext
-import crypto.app.spring.api.service.OrderService
 import fromTransport
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody

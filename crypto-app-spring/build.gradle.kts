@@ -3,7 +3,6 @@ plugins {
     id("io.spring.dependency-management")
     kotlin("jvm")
     kotlin("plugin.spring")
-//    kotlin("plugin.serialization")
 }
 
 group = rootProject.group
@@ -21,6 +20,7 @@ dependencies {
     implementation(project(":crypto-common"))
     implementation(project(":crypto-mappers-v1"))
     implementation(project(":crypto-transport-main-openapi-v1"))
+    implementation(project(":crypto-services"))
 
     // Stubs
     implementation(project(":crypto-stubs"))
