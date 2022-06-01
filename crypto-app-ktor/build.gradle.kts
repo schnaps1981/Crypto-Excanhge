@@ -58,4 +58,5 @@ dependencies {
     testImplementation(kotlin("test-junit"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
+    testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
 }
