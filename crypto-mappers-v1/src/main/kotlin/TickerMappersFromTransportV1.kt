@@ -32,7 +32,6 @@ fun CryptoTickerContext.fromTransport(request: SupportedCurrenciesRequest) {
     stubCase = request.debug.transportToStubTicker()
 }
 
-//TODO роазобраться зачем стабы вообще
 private fun Debug?.transportToStubTicker(): CryptoTickerStubs = when (this?.stub) {
     RequestDebugStubs.SUCCESS -> CryptoTickerStubs.SUCCESS
     else -> CryptoTickerStubs.NONE
