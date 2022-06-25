@@ -3,5 +3,6 @@ package models
 enum class CryptoState {
     NONE,
     RUNNING,
-    FAILED
+    FAILED,
+    FINISHING
 }

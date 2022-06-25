@@ -10,35 +10,30 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import toTransportCreateOrder
-import toTransportDeleteOrder
-import toTransportReadOrder
 
 suspend fun ApplicationCall.createOrder(orderService: OrderService) {
-    val request = receive<OrderCreateRequest>()
 
-    respond(
-        CryptoOrderContext().apply { fromTransport(request) }.let {
-            orderService.createOrder(it)
-        }.toTransportCreateOrder()
-    )
+    val ctx = CryptoOrderContext()
+    val request = receive<OrderCreateRequest>()
+    ctx.fromTransport(request)
+    orderService.createOrder(ctx)
+    respond(ctx.toTransportCreateOrder())
 }
 
 suspend fun ApplicationCall.readOrders(orderService: OrderService) {
-    val request = receive<OrderReadRequest>()
 
-    respond(
-        CryptoOrderContext().apply { fromTransport(request) }.let {
-            orderService.readOrders(it)
-        }.toTransportReadOrder()
-    )
+    val ctx = CryptoOrderContext()
+    val request = receive<OrderReadRequest>()
+    ctx.fromTransport(request)
+    orderService.readOrders(ctx)
+    respond(ctx.toTransportCreateOrder())
 }
 
 suspend fun ApplicationCall.deleteOrder(orderService: OrderService) {
-    val request = receive<OrderDeleteRequest>()
 
-    respond(
-        CryptoOrderContext().apply { fromTransport(request) }.let {
-            orderService.deleteOrder(it)
-        }.toTransportDeleteOrder()
-    )
+    val ctx = CryptoOrderContext()
+    val request = receive<OrderDeleteRequest>()
+    ctx.fromTransport(request)
+    orderService.deleteOrder(ctx)
+    respond(ctx.toTransportCreateOrder())
 }
