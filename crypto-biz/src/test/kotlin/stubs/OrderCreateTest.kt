@@ -1,3 +1,6 @@
+package stubs
+
+import OrderStubs
 import context.CryptoOrderContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -5,7 +8,6 @@ import models.*
 import models.commands.CryptoOrderCommands
 import org.junit.Test
 import processors.CryptoOrderProcessor
-import stubs.CryptoOrderStubs
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi

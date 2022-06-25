@@ -16,3 +16,10 @@ sealed interface CryptoBaseContext<STUB, COMMAND> {
 
     var command: COMMAND
 }
+
+fun CryptoBaseContext<*, *>.fail(error: CryptoError) {
+    addError(error)
+    state = CryptoState.FAILED
+}
+
+fun CryptoBaseContext<*, *>.addError(error: CryptoError) = errors.add(error)

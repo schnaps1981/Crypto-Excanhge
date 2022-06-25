@@ -1,3 +1,5 @@
+package stubs
+
 import context.CryptoOrderContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest

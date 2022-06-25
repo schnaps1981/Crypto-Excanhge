@@ -11,4 +11,15 @@ data class CryptoOrder(
     var price: BigDecimal = BigDecimal.valueOf(0.0),
     var orderType: CryptoOrderType = CryptoOrderType.NONE,
     var pair: CryptoPair = CryptoPair()
-)
+) {
+    fun deepCopy() = CryptoOrder(
+        orderId = this@CryptoOrder.orderId,
+        created = this@CryptoOrder.created,
+        orderState = this@CryptoOrder.orderState,
+        amount = this@CryptoOrder.amount,
+        quantity = this@CryptoOrder.quantity,
+        price = this@CryptoOrder.price,
+        orderType = this@CryptoOrder.orderType,
+        pair = this@CryptoOrder.pair.deepCopy()
+    )
+}

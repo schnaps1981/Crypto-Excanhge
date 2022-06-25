@@ -4,7 +4,7 @@ import com.crowdproj.kotlin.cor.rootChain
 import context.CryptoUserInfoContext
 import workers.initStatus
 
-class CryptoUserProcessor {
+class CryptoUserInfoProcessor {
 
     suspend fun exec(context: CryptoUserInfoContext) = UserChain.exec(context)
 
