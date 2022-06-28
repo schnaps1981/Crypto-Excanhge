@@ -4,7 +4,8 @@ Content-Type: application/json
 
 {
   "debug": {
-    "mode": "stub"
+    "mode": "stub",
+    "stub": "success"
   },
   "requestType": "OrderCreate",
   "requestId": "34234",

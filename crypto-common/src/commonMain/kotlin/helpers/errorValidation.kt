@@ -19,3 +19,15 @@ fun errorValidation(
     message = "Validation error for field $field: $description",
     level = level,
 )
+
+fun Throwable.asCryptoError(
+    code: String = "unknown",
+    group: String = "exceptions",
+    message: String = this.message ?: "",
+) = CryptoError(
+    code = code,
+    group = group,
+    field = "",
+    message = message,
+    exception = this,
+)

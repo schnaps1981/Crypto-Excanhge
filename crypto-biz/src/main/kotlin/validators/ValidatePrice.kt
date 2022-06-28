@@ -5,11 +5,12 @@ import com.crowdproj.kotlin.cor.handlers.worker
 import context.CryptoOrderContext
 import context.fail
 import helpers.errorValidation
+import models.CryptoOrder
 
 fun ICorChainDsl<CryptoOrderContext>.validatePrice(title: String) = worker {
     this.title = title
 
-    on { orderValidating.price == 0.0.toBigDecimal() }
+    on { orderValidating.price == CryptoOrder.ZERO }
     handle {
         fail(
             errorValidation(

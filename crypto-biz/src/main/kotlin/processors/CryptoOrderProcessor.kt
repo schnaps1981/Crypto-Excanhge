@@ -38,7 +38,7 @@ class CryptoOrderProcessor {
 
                     validateTradePair("Проверка торговой пары")
                     validateQuantity("Валидация количества актива")
-                    validateAmount("Валидация суммы актива")
+                    //validateAmount("Валидация суммы актива")
                     validatePrice("Валидация цены актива")
                     validateOrderType("Валидация типа ордера")
 

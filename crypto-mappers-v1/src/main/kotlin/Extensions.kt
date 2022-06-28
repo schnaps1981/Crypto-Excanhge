@@ -56,7 +56,7 @@ fun String?.toBigDecimalOrElse(block: () -> BigDecimal): BigDecimal =
     this?.toBigDecimalOrNull() ?: block()
 
 fun CryptoState.toTransportResponseResult(): ResponseResult =
-    if (this == CryptoState.FINISHING) {
+    if (this == CryptoState.FINISHING || this == CryptoState.RUNNING) {
         ResponseResult.SUCCESS
     } else {
         ResponseResult.ERROR

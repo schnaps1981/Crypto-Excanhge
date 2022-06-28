@@ -5,11 +5,12 @@ import com.crowdproj.kotlin.cor.handlers.worker
 import context.CryptoOrderContext
 import context.fail
 import helpers.errorValidation
+import models.CryptoOrderId
 
 fun ICorChainDsl<CryptoOrderContext>.validateOrderId(title: String) = worker {
     this.title = title
 
-    on { orderValidating.orderId.asString().isEmpty() }
+    on { orderValidating.orderId == CryptoOrderId.NONE }
     handle {
         fail(
             errorValidation(
