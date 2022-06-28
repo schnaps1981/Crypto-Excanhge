@@ -1,44 +1,28 @@
 package crypto.app.ktor.api
 
 import OrderService
-import com.crypto.api.v1.models.OrderCreateRequest
-import com.crypto.api.v1.models.OrderDeleteRequest
-import com.crypto.api.v1.models.OrderReadRequest
-import context.CryptoOrderContext
-import fromTransport
+import com.crypto.api.v1.models.*
+import crypto.app.ktor.helpers.orderControllerHelper
 import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import toTransportCreateOrder
-import toTransportDeleteOrder
-import toTransportReadOrder
+import models.commands.CryptoOrderCommands
 
 suspend fun ApplicationCall.createOrder(orderService: OrderService) {
-    val request = receive<OrderCreateRequest>()
 
-    respond(
-        CryptoOrderContext().apply { fromTransport(request) }.let {
-            orderService.createOrder(it)
-        }.toTransportCreateOrder()
-    )
+    orderControllerHelper<OrderCreateRequest, OrderCreateResponse>(CryptoOrderCommands.CREATE) {
+        orderService.createOrder(this)
+    }
 }
 
 suspend fun ApplicationCall.readOrders(orderService: OrderService) {
-    val request = receive<OrderReadRequest>()
 
-    respond(
-        CryptoOrderContext().apply { fromTransport(request) }.let {
-            orderService.readOrders(it)
-        }.toTransportReadOrder()
-    )
+    orderControllerHelper<OrderReadRequest, OrderReadResponse>(CryptoOrderCommands.READ) {
+        orderService.createOrder(this)
+    }
 }
 
 suspend fun ApplicationCall.deleteOrder(orderService: OrderService) {
-    val request = receive<OrderDeleteRequest>()
 
-    respond(
-        CryptoOrderContext().apply { fromTransport(request) }.let {
-            orderService.deleteOrder(it)
-        }.toTransportDeleteOrder()
-    )
+    orderControllerHelper<OrderDeleteRequest, OrderDeleteResponse>(CryptoOrderCommands.DELETE) {
+        orderService.createOrder(this)
+    }
 }

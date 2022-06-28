@@ -15,4 +15,5 @@ dependencies {
     implementation(project(":crypto-common"))
     implementation(project(":crypto-stubs"))
     implementation(project(":crypto-transport-main-openapi-v1"))
+    implementation(project(":crypto-biz"))
 }

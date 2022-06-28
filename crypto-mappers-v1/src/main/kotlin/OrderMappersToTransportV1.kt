@@ -3,7 +3,6 @@ import context.CryptoOrderContext
 import errors.UnknownCommand
 import models.CryptoOrderState
 import models.CryptoOrderType
-import models.CryptoState
 import models.commands.CryptoOrderCommands
 
 fun CryptoOrderContext.toTransport(): IResponse = when (val cmd = command) {
@@ -15,14 +14,14 @@ fun CryptoOrderContext.toTransport(): IResponse = when (val cmd = command) {
 
 fun CryptoOrderContext.toTransportCreateOrder() = OrderCreateResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == CryptoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = state.toTransportResponseResult(),
     errors = errors.toTransportErrors(),
     orderId = this.orderResponse.orderId.asString().takeIf { it.isNotBlank() }
 )
 
 fun CryptoOrderContext.toTransportReadOrder() = OrderReadResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == CryptoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = state.toTransportResponseResult(),
     errors = errors.toTransportErrors(),
     orders = ordersResponse.map { order ->
         Order(
@@ -40,7 +39,7 @@ fun CryptoOrderContext.toTransportReadOrder() = OrderReadResponse(
 
 fun CryptoOrderContext.toTransportDeleteOrder() = OrderDeleteResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == CryptoState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
+    result = state.toTransportResponseResult(),
     errors = errors.toTransportErrors(),
     deleteResult = if (orderResponse.orderState == CryptoOrderState.NONE) DeleteResult.SUCCESS else DeleteResult.ERROR
 )

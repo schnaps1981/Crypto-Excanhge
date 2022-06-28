@@ -20,7 +20,13 @@ data class CryptoOrderContext(
     var orderResponse: CryptoOrder = CryptoOrder(),
     var ordersResponse: MutableList<CryptoOrder> = mutableListOf(),
 
+    var orderValidating: CryptoOrder = CryptoOrder(),
+    var orderValidated: CryptoOrder = CryptoOrder(),
+
     var orderFilter: ICryptoFilter = ICryptoFilter.NONE,
+
+    var orderFilterValidating: ICryptoFilter = ICryptoFilter.NONE,
+    var orderFilterValidated: ICryptoFilter = ICryptoFilter.NONE,
 
     var userIdRequest: CryptoUserId = CryptoUserId.NONE
 

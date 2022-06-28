@@ -4,6 +4,7 @@ import OrderService
 import com.crypto.api.v1.models.*
 import context.CryptoOrderContext
 import fromTransport
+import kotlinx.coroutines.runBlocking
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,29 +20,26 @@ class OrderController(
 ) {
 
     @PostMapping("create")
-    fun createOrder(@RequestBody createOrderRequest: OrderCreateRequest): OrderCreateResponse {
-        val context = CryptoOrderContext().apply {
+    fun createOrder(@RequestBody createOrderRequest: OrderCreateRequest): OrderCreateResponse = runBlocking {
+        CryptoOrderContext().apply {
             fromTransport(createOrderRequest)
-        }
-
-        return orderService.createOrder(context).toTransportCreateOrder()
+            orderService.createOrder(this)
+        }.toTransportCreateOrder()
     }
 
     @PostMapping("read")
-    fun readOrders(@RequestBody readOrderRequest: OrderReadRequest): OrderReadResponse {
-        val context = CryptoOrderContext().apply {
+    fun readOrders(@RequestBody readOrderRequest: OrderReadRequest): OrderReadResponse = runBlocking {
+        CryptoOrderContext().apply {
             fromTransport(readOrderRequest)
-        }
-
-        return orderService.readOrders(context).toTransportReadOrder()
+            orderService.readOrders(this)
+        }.toTransportReadOrder()
     }
 
     @PostMapping("delete")
-    fun deleteOrder(@RequestBody deleteOrderRequest: OrderDeleteRequest): OrderDeleteResponse {
-        val context = CryptoOrderContext().apply {
+    fun deleteOrder(@RequestBody deleteOrderRequest: OrderDeleteRequest): OrderDeleteResponse = runBlocking {
+        CryptoOrderContext().apply {
             fromTransport(deleteOrderRequest)
-        }
-
-        return orderService.deleteOrder(context).toTransportDeleteOrder()
+            orderService.deleteOrder(this)
+        }.toTransportDeleteOrder()
     }
 }
