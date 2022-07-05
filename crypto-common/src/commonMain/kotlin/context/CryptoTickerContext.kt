@@ -1,5 +1,7 @@
 package context
 
+import helpers.NONE
+import kotlinx.datetime.Instant
 import models.*
 import models.commands.CryptoTickerCommands
 import stubs.CryptoTickerStubs
@@ -14,6 +16,8 @@ data class CryptoTickerContext(
     override var requestId: CryptoRequestId = CryptoRequestId.NONE,
 
     override var command: CryptoTickerCommands = CryptoTickerCommands.NONE,
+
+    override var timeStart: Instant = Instant.NONE,
 
     var supportedCurrenciesResponse: MutableList<String> = mutableListOf(),
 
