@@ -1,5 +1,7 @@
 package context
 
+import helpers.NONE
+import kotlinx.datetime.Instant
 import models.*
 import models.commands.CryptoAccountCommands
 import stubs.CryptoAccountStubs
@@ -14,6 +16,8 @@ data class CryptoAccountContext(
     override var requestId: CryptoRequestId = CryptoRequestId.NONE,
 
     override var command: CryptoAccountCommands = CryptoAccountCommands.NONE,
+
+    override var timeStart: Instant = Instant.NONE,
 
     var accountRequest: CryptoAccount = CryptoAccount(),
     var accountResponse: CryptoAccount = CryptoAccount()
