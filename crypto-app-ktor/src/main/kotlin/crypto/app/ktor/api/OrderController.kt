@@ -16,13 +16,13 @@ suspend fun ApplicationCall.createOrder(orderService: OrderService) {
 suspend fun ApplicationCall.readOrders(orderService: OrderService) {
 
     orderControllerHelper<OrderReadRequest, OrderReadResponse>(CryptoOrderCommands.READ) {
-        orderService.createOrder(this)
+        orderService.readOrders(this)
     }
 }
 
 suspend fun ApplicationCall.deleteOrder(orderService: OrderService) {
 
     orderControllerHelper<OrderDeleteRequest, OrderDeleteResponse>(CryptoOrderCommands.DELETE) {
-        orderService.createOrder(this)
+        orderService.deleteOrder(this)
     }
 }
