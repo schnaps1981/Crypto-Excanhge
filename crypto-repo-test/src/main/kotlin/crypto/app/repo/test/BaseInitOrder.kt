@@ -3,6 +3,7 @@ package crypto.app.repo.test
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import models.*
+import java.util.*
 
 abstract class BaseInitOrder(private val operation: String) : IInitObjects<CryptoOrder> {
 
@@ -12,7 +13,7 @@ abstract class BaseInitOrder(private val operation: String) : IInitObjects<Crypt
         orderState: CryptoOrderState = CryptoOrderState.ACTIVE,
         orderPair: CryptoPair = CryptoPair("BTC", "USD"),
         orderDate: Instant = Clock.System.now(),
-        orderId: CryptoOrderId = CryptoOrderId("orderId-123-$operation")
+        orderId: CryptoOrderId = CryptoOrderId("${UUID.randomUUID()}")
     ) = CryptoOrder(
         ownerId = ownerId,
         orderId = orderId,

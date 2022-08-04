@@ -67,7 +67,6 @@ abstract class RepoOrderSearchTest {
         )
     }
 
-
     private fun testFilter(filter: DbOrderFilterRequest, expected: List<CryptoOrder>) {
         val result = runBlocking { repo.searchOrders(filter) }
         assertEquals(true, result.isSuccess)
