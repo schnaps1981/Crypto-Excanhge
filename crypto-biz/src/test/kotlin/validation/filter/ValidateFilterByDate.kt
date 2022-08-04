@@ -3,6 +3,7 @@ package validation.filter
 import context.CryptoOrderContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Clock
 import models.CryptoState
 import models.CryptoWorkMode
 import models.commands.CryptoOrderCommands
@@ -24,7 +25,7 @@ class ValidateFilterByDate {
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
             orderFilter = CryptoFilterByDate(
-                orderDate = "111"
+                orderDate = timeMills
             )
         )
 
@@ -35,7 +36,7 @@ class ValidateFilterByDate {
         assertEquals(0, context.errors.size)
         assertNotEquals(CryptoState.FAILED, context.state)
 
-        assertEquals("111", (context.orderFilterValidated as CryptoFilterByDate).orderDate)
+        assertEquals(timeMills, (context.orderFilterValidated as CryptoFilterByDate).orderDate)
     }
 
     @Test
@@ -45,7 +46,7 @@ class ValidateFilterByDate {
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
             orderFilter = CryptoFilterByDate(
-                orderDate = ""
+                orderDate = timeMills
             )
         )
 
@@ -64,5 +65,8 @@ class ValidateFilterByDate {
         assertEquals(context.orderFilterValidated, ICryptoFilterNone)
     }
 
+    companion object {
+        private val timeMills = Clock.System.now()
+    }
 
 }

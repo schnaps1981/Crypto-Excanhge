@@ -242,7 +242,7 @@ class UserInfoMappersTest {
 
         assertEquals(CryptoUserId("user123"), context.userIdRequest)
         assertEquals(
-            CryptoFilterByDate(orderDate = "11111").orderDate,
+            CryptoFilterByDate(orderDate = timestamp).orderDate,
             (context.orderFilter as CryptoFilterByDate).orderDate
         )
     }

@@ -4,6 +4,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
 import models.*
 import models.filter.CryptoFilterByCurrency
+import models.filter.CryptoFilterByDate
+import models.filter.CryptoFilterByState
+import models.filter.CryptoFilterByType
 import org.junit.Test
 import repository.DbOrderFilterRequest
 import repository.IOrderRepository
@@ -16,7 +19,7 @@ abstract class RepoOrderSearchTest {
     fun searchOwner() {
         val result = runBlocking { repo.searchOrders(DbOrderFilterRequest(ownerId = searchOwnerId)) }
         assertEquals(true, result.isSuccess)
-        val expected = listOf(initObjects[1], initObjects[3])
+        val expected = listOf(initObjects[1], initObjects[6])
         assertEquals(expected, result.result?.sortedBy { it.orderId.asString() })
         assertEquals(emptyList(), result.errors)
     }
@@ -31,42 +34,61 @@ abstract class RepoOrderSearchTest {
         val result = runBlocking { repo.searchOrders(DbOrderFilterRequest(filter = CryptoFilterByCurrency("BTC"))) }
         assertEquals(true, result.isSuccess)
 
-        val expected = listOf(initObjects[2], initObjects[4]) //TODO обратить внимание
-        assertEquals(expected, result.result?.sortedBy { it.orderId.asString() })
+        val expected = listOf(initObjects[5], initObjects[10])
+        assertEquals(expected, result.result)
         assertEquals(emptyList(), result.errors)
     }
 
     @Test
     fun searchByDate() {
+        val result =
+            runBlocking { repo.searchOrders(DbOrderFilterRequest(filter = CryptoFilterByDate(orderDateInstant))) }
+        assertEquals(true, result.isSuccess)
 
+        val expected = listOf(initObjects[4], initObjects[9])
+        assertEquals(expected, result.result)
+        assertEquals(emptyList(), result.errors)
     }
 
     @Test
     fun searchByState() {
+        val result = runBlocking { repo.searchOrders(DbOrderFilterRequest(filter = CryptoFilterByState(orderState))) }
+        assertEquals(true, result.isSuccess)
 
+        val expected = listOf(initObjects[4], initObjects[9])
+        assertEquals(expected, result.result)
+        assertEquals(emptyList(), result.errors)
     }
 
     @Test
     fun searchByType() {
+        val result = runBlocking {
+            repo.searchOrders(DbOrderFilterRequest(filter = CryptoFilterByType(orderType)))
+        }
+        assertEquals(true, result.isSuccess)
 
+        val expected = listOf(initObjects[4], initObjects[9])
+        assertEquals(expected, result.result)
+        assertEquals(emptyList(), result.errors)
     }
 
     companion object : BaseInitOrder("search") {
 
-        val searchOwnerId = CryptoUserId("owner-124")
-        val orderDateInstant = Clock.System.now()
+        private val searchOwnerId = CryptoUserId("owner-124")
+        private val orderDateInstant = Clock.System.now()
+        private val orderState = CryptoOrderState.CANCELLED
+        private val orderType = CryptoOrderType.SELL
 
         override val initObjects: List<CryptoOrder> = listOf(
             createInitTestModel(),
             createInitTestModel(ownerId = searchOwnerId),
-            createInitTestModel(orderState = CryptoOrderState.CANCELLED),
-            createInitTestModel(orderType = CryptoOrderType.SELL),
+            createInitTestModel(orderState = orderState),
+            createInitTestModel(orderType = orderType),
             createInitTestModel(orderDate = orderDateInstant),
             createInitTestModel(orderPair = CryptoPair("BTC", "USD")),
-
             createInitTestModel(ownerId = searchOwnerId),
-            createInitTestModel(orderState = CryptoOrderState.CANCELLED),
-            createInitTestModel(orderType = CryptoOrderType.SELL),
+            createInitTestModel(orderState = orderState),
+            createInitTestModel(orderType = orderType),
             createInitTestModel(orderDate = orderDateInstant),
             createInitTestModel(orderPair = CryptoPair("BTC", "ETH"))
         )
