@@ -17,57 +17,61 @@ abstract class RepoOrderSearchTest {
 
     @Test
     fun searchOwner() {
-        val result = runBlocking { repo.searchOrders(DbOrderFilterRequest(ownerId = searchOwnerId)) }
-        assertEquals(true, result.isSuccess)
-        val expected = listOf(initObjects[1], initObjects[6])
-        assertEquals(expected, result.result?.sortedBy { it.orderId.asString() })
-        assertEquals(emptyList(), result.errors)
-    }
-
-    @Test
-    fun searchNotFound() {
-
+        testFilter(
+            DbOrderFilterRequest(ownerId = searchOwnerId),
+            listOf(initObjects[1], initObjects[6])
+        )
     }
 
     @Test
     fun searchByCurrency() {
-        val result = runBlocking { repo.searchOrders(DbOrderFilterRequest(filter = CryptoFilterByCurrency("BTC"))) }
-        assertEquals(true, result.isSuccess)
-
-        val expected = listOf(initObjects[5], initObjects[10])
-        assertEquals(expected, result.result)
-        assertEquals(emptyList(), result.errors)
+        testFilter(
+            DbOrderFilterRequest(filter = CryptoFilterByCurrency("BTC")),
+            listOf(initObjects[5], initObjects[10])
+        )
     }
 
     @Test
     fun searchByDate() {
-        val result =
-            runBlocking { repo.searchOrders(DbOrderFilterRequest(filter = CryptoFilterByDate(orderDateInstant))) }
-        assertEquals(true, result.isSuccess)
-
-        val expected = listOf(initObjects[4], initObjects[9])
-        assertEquals(expected, result.result)
-        assertEquals(emptyList(), result.errors)
+        testFilter(
+            DbOrderFilterRequest(filter = CryptoFilterByDate(orderDateInstant)),
+            listOf(initObjects[4], initObjects[9])
+        )
     }
 
     @Test
     fun searchByState() {
-        val result = runBlocking { repo.searchOrders(DbOrderFilterRequest(filter = CryptoFilterByState(orderState))) }
-        assertEquals(true, result.isSuccess)
-
-        val expected = listOf(initObjects[4], initObjects[9])
-        assertEquals(expected, result.result)
-        assertEquals(emptyList(), result.errors)
+        testFilter(
+            DbOrderFilterRequest(filter = CryptoFilterByState(orderState)),
+            listOf(initObjects[2], initObjects[7])
+        )
     }
 
     @Test
     fun searchByType() {
-        val result = runBlocking {
-            repo.searchOrders(DbOrderFilterRequest(filter = CryptoFilterByType(orderType)))
-        }
+        testFilter(
+            DbOrderFilterRequest(filter = CryptoFilterByType(orderType)),
+            listOf(initObjects[3], initObjects[8])
+        )
+    }
+
+    @Test
+    fun searchNotFound() {
+        val result = runBlocking { repo.searchOrders(DbOrderFilterRequest(ownerId = notFoundOwnerId)) }
+
+        assertEquals(false, result.isSuccess)
+        assertEquals(null, result.result)
+        assertEquals(
+            listOf(CryptoError(field = "id", message = "Not Found")),
+            result.errors
+        )
+    }
+
+
+    private fun testFilter(filter: DbOrderFilterRequest, expected: List<CryptoOrder>) {
+        val result = runBlocking { repo.searchOrders(filter) }
         assertEquals(true, result.isSuccess)
 
-        val expected = listOf(initObjects[4], initObjects[9])
         assertEquals(expected, result.result)
         assertEquals(emptyList(), result.errors)
     }
@@ -78,6 +82,8 @@ abstract class RepoOrderSearchTest {
         private val orderDateInstant = Clock.System.now()
         private val orderState = CryptoOrderState.CANCELLED
         private val orderType = CryptoOrderType.SELL
+
+        private val notFoundOwnerId = CryptoUserId("filter-not-found-by-owner")
 
         override val initObjects: List<CryptoOrder> = listOf(
             createInitTestModel(),
