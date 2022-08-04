@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform")
+    kotlin("jvm")
 }
 
 group = rootProject.group
@@ -9,24 +9,12 @@ repositories {
     mavenCentral()
 }
 
-kotlin {
-    jvm {}
+dependencies {
+    val datetimeVersion: String by project
 
-    sourceSets {
-        val datetimeVersion: String by project
+    implementation(kotlin("stdlib-common"))
+    api("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
 
-        val commonMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-common"))
-
-                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
-    }
+    testImplementation(kotlin("test-common"))
+    testImplementation(kotlin("test-annotations-common"))
 }
