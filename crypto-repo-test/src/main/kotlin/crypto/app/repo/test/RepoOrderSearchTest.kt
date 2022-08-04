@@ -54,20 +54,20 @@ abstract class RepoOrderSearchTest {
     companion object : BaseInitOrder("search") {
 
         val searchOwnerId = CryptoUserId("owner-124")
-        val mills = Clock.System.now()
+        val orderDateInstant = Clock.System.now()
 
         override val initObjects: List<CryptoOrder> = listOf(
             createInitTestModel(),
             createInitTestModel(ownerId = searchOwnerId),
             createInitTestModel(orderState = CryptoOrderState.CANCELLED),
             createInitTestModel(orderType = CryptoOrderType.SELL),
-            createInitTestModel(orderDate = mills.toString()),
+            createInitTestModel(orderDate = orderDateInstant),
             createInitTestModel(orderPair = CryptoPair("BTC", "USD")),
 
             createInitTestModel(ownerId = searchOwnerId),
             createInitTestModel(orderState = CryptoOrderState.CANCELLED),
             createInitTestModel(orderType = CryptoOrderType.SELL),
-            createInitTestModel(orderDate = mills.toString()),
+            createInitTestModel(orderDate = orderDateInstant),
             createInitTestModel(orderPair = CryptoPair("BTC", "ETH"))
         )
     }

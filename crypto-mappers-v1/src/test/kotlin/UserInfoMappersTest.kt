@@ -1,6 +1,7 @@
 import com.crypto.api.v1.models.*
 import context.CryptoOrderContext
 import context.CryptoTickerContext
+import kotlinx.datetime.Clock
 import models.*
 import models.commands.CryptoOrderCommands
 import models.commands.CryptoTickerCommands
@@ -151,7 +152,7 @@ class UserInfoMappersTest {
             ordersResponse = mutableListOf(
                 CryptoOrder(
                     orderId = CryptoOrderId("order123"),
-                    created = 123,
+                    created = timestamp,
                     orderState = CryptoOrderState.COMPLETED,
                     amount = 2.0.toBigDecimal(),
                     quantity = 3.0.toBigDecimal(),
@@ -178,7 +179,7 @@ class UserInfoMappersTest {
         assertEquals("couldn't create some balance", response.errors?.firstOrNull()?.message)
 
         assertEquals("order123", response.orders?.firstOrNull()?.orderId)
-        assertEquals(123, response.orders?.firstOrNull()?.created)
+        assertEquals(timestamp.toString(), response.orders?.firstOrNull()?.created)
         assertEquals(OrderState.COMPLETED, response.orders?.firstOrNull()?.orderState)
         assertEquals("2.0", response.orders?.firstOrNull()?.amount)
         assertEquals("3.0", response.orders?.firstOrNull()?.quantity)
@@ -271,5 +272,9 @@ class UserInfoMappersTest {
 
         assertEquals("BTC", context.ratesRequest.first)
         assertEquals("USD", context.ratesRequest.second)
+    }
+
+    companion object {
+        val timestamp = Clock.System.now()
     }
 }

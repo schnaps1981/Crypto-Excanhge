@@ -1,10 +1,14 @@
 package models
 
+import helpers.NONE
+import kotlinx.datetime.Instant
 import java.math.BigDecimal
 
+
 data class CryptoOrder(
+    var ownerId: CryptoUserId = CryptoUserId.NONE,
     var orderId: CryptoOrderId = CryptoOrderId.NONE,
-    var created: Int = 0,
+    var created: Instant = Instant.NONE,
     var orderState: CryptoOrderState = CryptoOrderState.NONE,
     var amount: BigDecimal = ZERO,
     var quantity: BigDecimal = ZERO,
@@ -13,6 +17,7 @@ data class CryptoOrder(
     var pair: CryptoPair = CryptoPair()
 ) {
     fun deepCopy() = CryptoOrder(
+        ownerId = this@CryptoOrder.ownerId,
         orderId = this@CryptoOrder.orderId,
         created = this@CryptoOrder.created,
         orderState = this@CryptoOrder.orderState,

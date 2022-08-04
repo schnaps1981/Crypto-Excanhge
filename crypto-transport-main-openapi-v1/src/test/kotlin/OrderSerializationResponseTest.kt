@@ -71,7 +71,7 @@ class OrderSerializationResponseTest {
                     orderType = OrderType.SELL,
                     quantity = "10.0",
                     orderState = OrderState.COMPLETED,
-                    created = 111,
+                    created = "111",
                     amount = "100.0"
                 )
             )
@@ -109,7 +109,7 @@ class OrderSerializationResponseTest {
         assertEquals("1.0", decoded.orders?.get(0)?.price)
         assertEquals(OrderType.SELL, decoded.orders?.get(0)?.orderType)
         assertEquals("orderId_123", decoded.orders?.get(0)?.orderId)
-        assertEquals(111, decoded.orders?.get(0)?.created)
+        assertEquals("111", decoded.orders?.get(0)?.created)
         assertEquals(OrderState.COMPLETED, decoded.orders?.get(0)?.orderState)
         assertEquals("100.0", decoded.orders?.get(0)?.amount)
     }

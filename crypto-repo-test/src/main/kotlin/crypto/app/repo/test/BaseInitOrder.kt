@@ -1,5 +1,7 @@
 package crypto.app.repo.test
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import models.*
 
 abstract class BaseInitOrder(private val operation: String) : IInitObjects<CryptoOrder> {
@@ -9,11 +11,12 @@ abstract class BaseInitOrder(private val operation: String) : IInitObjects<Crypt
         orderType: CryptoOrderType = CryptoOrderType.BUY,
         orderState: CryptoOrderState = CryptoOrderState.ACTIVE,
         orderPair: CryptoPair = CryptoPair("BTC", "USD"),
-        orderDate: String = "0"//TODO пределать в INSTANT
+        orderDate: Instant = Clock.System.now(),
+        orderId: CryptoOrderId = CryptoOrderId("orderId-123-$operation")
     ) = CryptoOrder(
-        //TODO добавить в модель CryptoOrder поле ownerId = ownerId
-        orderId = CryptoOrderId("crypto-reo-$operation"),
-        created = System.currentTimeMillis().toInt(), //TODO пределать в INSTANT
+        ownerId = ownerId,
+        orderId = orderId,
+        created = orderDate,
         orderState = orderState,
         amount = 1.0.toBigDecimal(),
         quantity = 2.0.toBigDecimal(),
