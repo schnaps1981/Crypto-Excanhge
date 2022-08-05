@@ -2,11 +2,14 @@ package crypto.app.inmemory
 
 import crypto.app.inmemory.model.OrderEntity
 import helpers.NONE
+import helpers.errorConcurrency
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone.Companion.currentSystemDefault
@@ -24,7 +27,6 @@ import org.ehcache.config.builders.ExpiryPolicyBuilder
 import org.ehcache.config.builders.ResourcePoolsBuilder
 import repository.*
 import java.time.Duration
-import java.util.*
 
 
 class OrderRepositoryInMemory(
@@ -40,6 +42,8 @@ class OrderRepositoryInMemory(
         )
     }
 
+    private val mutex = Mutex()
+
     init {
         runBlocking {
             initObjects.forEach {
@@ -50,17 +54,13 @@ class OrderRepositoryInMemory(
 
     private fun save(order: CryptoOrder): DbOrderResponse {
         val entity = OrderEntity(order)
+
         if (entity.orderId == null) {
-            return DbOrderResponse(
-                result = null, isSuccess = false, errors = listOf(
-                    CryptoError(
-                        field = "id",
-                        message = "Id must not be null or empty",
-                    )
-                )
-            )
+            return resultErrorIdIsEmpty
         }
+
         cache.put(entity.orderId, entity)
+
         return DbOrderResponse(
             result = entity.toInternal(),
             isSuccess = true,
@@ -79,64 +79,82 @@ class OrderRepositoryInMemory(
                     isSuccess = true,
                 )
 
-            } ?: DbOrderResponse(
-                result = null, isSuccess = false, errors = listOf(
-                    CryptoError(
-                        field = "id",
-                        message = "Not Found",
-                    )
-                )
-            )
+            } ?: resultErrorIdNotFound
         } else {
-            DbOrderResponse(
-                result = null, isSuccess = false, errors = listOf(
-                    CryptoError(
-                        field = "id",
-                        message = "Id must not be null or empty",
-                    )
-                )
-            )
+            resultErrorIdIsEmpty
         }
 
-    override suspend fun createOrder(request: DbOrderRequest): DbOrderResponse =
-        save(
-            request.order.copy(
-                orderId = CryptoOrderId("${UUID.randomUUID()}"),
-                created = if (request.order.created == Instant.NONE) Clock.System.now() else request.order.created
-            )
+    override suspend fun createOrder(request: DbOrderRequest): DbOrderResponse {
+        val key = uuid
+
+        val order = request.order.copy(
+            orderId = CryptoOrderId(key),
+            created = if (request.order.created == Instant.NONE) Clock.System.now() else request.order.created,
+            lock = CryptoLock(uuid)
         )
 
-    override suspend fun deleteOrder(request: DbOrderIdRequest) = getOrRemoveById(request.id, true)
+        val entity = OrderEntity(order)
 
-    override suspend fun readOrder(request: DbOrderIdRequest) = getOrRemoveById(request.id)
+        mutex.withLock {
+            cache.put(key, entity)
+        }
+
+        return DbOrderResponse(
+            result = order,
+            isSuccess = true
+        )
+    }
+
+
+    override suspend fun deleteOrder(request: DbOrderIdRequest): DbOrderResponse {
+        val key = request.id.takeIf { it != CryptoOrderId.NONE }?.asString() ?: return resultErrorIdIsEmpty
+
+        mutex.withLock {
+            val local = cache.get(key) ?: return resultErrorIdNotFound
+
+            if (local.lock == null || local.lock == request.lock.asString()) {
+                cache.remove(key)
+
+                return DbOrderResponse(
+                    result = null,
+                    isSuccess = true,
+                    errors = emptyList()
+                )
+            } else {
+                return resultErrorConcurrent
+            }
+        }
+    }
+
+    override suspend fun readOrder(request: DbOrderIdRequest): DbOrderResponse {
+        val key = request.id.takeIf { it != CryptoOrderId.NONE }?.asString() ?: return resultErrorIdIsEmpty
+
+        return cache.get(key)?.let {
+            DbOrderResponse(
+                result = it.toInternal(),
+                isSuccess = true
+            )
+        } ?: resultErrorIdNotFound
+    }
 
     override suspend fun updateOrder(request: DbOrderRequest): DbOrderResponse {
-        val key = request.order.orderId.takeIf { it != CryptoOrderId.NONE }?.asString()
-            ?: return DbOrderResponse(
-                result = null,
-                isSuccess = false,
-                errors = listOf(
-                    CryptoError(
-                        field = "id",
-                        message = "Id must not be null or blank"
-                    )
-                )
-            )
+        val key = request.order.orderId.takeIf { it != CryptoOrderId.NONE }?.asString() ?: return resultErrorIdIsEmpty
+        val oldLock = request.order.lock.takeIf { it != CryptoLock.NONE }?.asString()
+        val newOrder = request.order.copy(lock = CryptoLock(uuid))
+        val entity = OrderEntity(newOrder)
 
-        return if (cache.containsKey(key)) {
-            save(request.order)
-        } else {
-            DbOrderResponse(
-                result = null,
-                isSuccess = false,
-                errors = listOf(
-                    CryptoError(
-                        field = "id",
-                        message = "Not Found"
-                    )
-                )
-            )
+        mutex.withLock {
+            val local = cache.get(key)
+            when {
+                local == null -> return resultErrorIdNotFound
+                local.lock == null || local.lock == oldLock -> cache.put(key, entity)
+                else -> return resultErrorConcurrent
+            }
         }
+        return DbOrderResponse(
+            result = newOrder,
+            isSuccess = true
+        )
     }
 
     override suspend fun searchOrders(request: DbOrderFilterRequest): DbOrdersResponse {
@@ -176,6 +194,41 @@ class OrderRepositoryInMemory(
         return DbOrdersResponse(
             result = result,
             isSuccess = true
+        )
+    }
+
+    companion object {
+        val resultErrorIdNotFound = DbOrderResponse(
+            result = null,
+            isSuccess = false,
+            errors = listOf(
+                CryptoError(
+                    field = "id",
+                    message = "Not Found"
+                )
+            )
+        )
+
+        val resultErrorIdIsEmpty = DbOrderResponse(
+            result = null,
+            isSuccess = false,
+            errors = listOf(
+                CryptoError(
+                    field = "id",
+                    message = "Id must not be null or blank"
+                )
+            )
+        )
+
+        val resultErrorConcurrent = DbOrderResponse(
+            result = null,
+            isSuccess = false,
+            errors = listOf(
+                errorConcurrency(
+                    violationCode = "changed",
+                    description = "Object has changed during request handling"
+                ),
+            )
         )
     }
 }

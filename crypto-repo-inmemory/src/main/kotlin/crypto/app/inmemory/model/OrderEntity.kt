@@ -15,6 +15,7 @@ data class OrderEntity(
     val price: String? = null,
     val orderType: String? = null,
     val pair: PairEntity? = null,
+    val lock: String? = null
 ) {
 
     constructor(model: CryptoOrder) : this(
@@ -26,7 +27,8 @@ data class OrderEntity(
         quantity = model.quantity.toStringOrNull(),
         price = model.price.toStringOrNull(),
         orderType = model.orderType.takeIf { it != CryptoOrderType.NONE }?.name,
-        pair = model.pair.toEntity()
+        pair = model.pair.toEntity(),
+        lock = model.lock.asString().takeIf { it.isNotBlank() }
     )
 
     fun toInternal() = CryptoOrder(
@@ -38,7 +40,8 @@ data class OrderEntity(
         quantity = quantity?.let { BigDecimal(it) } ?: CryptoOrder.ZERO,
         price = price?.let { BigDecimal(it) } ?: CryptoOrder.ZERO,
         orderType = orderType?.let { CryptoOrderType.valueOf(it) } ?: CryptoOrderType.NONE,
-        pair = pair?.toInternal() ?: CryptoPair.EMPTY
+        pair = pair?.toInternal() ?: CryptoPair.EMPTY,
+        lock = lock?.let { CryptoLock(it) } ?: CryptoLock.NONE,
     )
 }
 

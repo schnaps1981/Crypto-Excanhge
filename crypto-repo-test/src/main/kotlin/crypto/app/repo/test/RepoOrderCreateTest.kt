@@ -8,7 +8,6 @@ import org.junit.Test
 import repository.DbOrderRequest
 import repository.IOrderRepository
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 
 abstract class RepoOrderCreateTest {
     abstract val repo: IOrderRepository
@@ -20,9 +19,10 @@ abstract class RepoOrderCreateTest {
 
         println(result)
 
-        assertEquals(true, result.isSuccess)
-        assertEquals(expected, result.result)
-        assertNotEquals(CryptoOrderId.NONE, result.result?.orderId)
+        assertEquals(expected.ownerId, result.result?.ownerId)
+        assertEquals(expected.orderState, result.result?.orderState)
+        assertEquals(expected.orderType, result.result?.orderType)
+        assertEquals(expected.pair, result.result?.pair)
         assertEquals(emptyList(), result.errors)
     }
 

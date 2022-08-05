@@ -18,7 +18,7 @@ abstract class RepoOrderDeleteTest {
         println(result)
 
         assertEquals(true, result.isSuccess)
-        assertEquals(deleteSuccessStub, result.result)
+        assertEquals(null, result.result)
         assertEquals(emptyList(), result.errors)
     }
 
