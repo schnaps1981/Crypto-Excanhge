@@ -2,6 +2,7 @@ package crypto.app.repo.test
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import models.*
 import models.filter.CryptoFilterByCurrency
 import models.filter.CryptoFilterByDate
@@ -11,6 +12,7 @@ import org.junit.Test
 import repository.DbOrderFilterRequest
 import repository.IOrderRepository
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 abstract class RepoOrderSearchTest {
     abstract val repo: IOrderRepository
@@ -34,7 +36,7 @@ abstract class RepoOrderSearchTest {
     @Test
     fun searchByDate() {
         testFilter(
-            DbOrderFilterRequest(filter = CryptoFilterByDate(orderDateInstant)),
+            DbOrderFilterRequest(filter = CryptoFilterByDate(created)),
             listOf(initObjects[4], initObjects[9])
         )
     }
@@ -42,7 +44,7 @@ abstract class RepoOrderSearchTest {
     @Test
     fun searchByState() {
         testFilter(
-            DbOrderFilterRequest(filter = CryptoFilterByState(orderState)),
+            DbOrderFilterRequest(filter = CryptoFilterByState(searchOrderState)),
             listOf(initObjects[2], initObjects[7])
         )
     }
@@ -50,7 +52,7 @@ abstract class RepoOrderSearchTest {
     @Test
     fun searchByType() {
         testFilter(
-            DbOrderFilterRequest(filter = CryptoFilterByType(orderType)),
+            DbOrderFilterRequest(filter = CryptoFilterByType(searchOrderType)),
             listOf(initObjects[3], initObjects[8])
         )
     }
@@ -59,43 +61,63 @@ abstract class RepoOrderSearchTest {
     fun searchNotFound() {
         val result = runBlocking { repo.searchOrders(DbOrderFilterRequest(ownerId = notFoundOwnerId)) }
 
-        assertEquals(false, result.isSuccess)
-        assertEquals(null, result.result)
-        assertEquals(
-            listOf(CryptoError(field = "id", message = "Not Found")),
-            result.errors
-        )
+        println(result)
+
+        assertEquals(true, result.isSuccess)
+        assertEquals(emptyList(), result.result)
+        assertEquals(emptyList(), result.errors)
     }
 
     private fun testFilter(filter: DbOrderFilterRequest, expected: List<CryptoOrder>) {
         val result = runBlocking { repo.searchOrders(filter) }
+
+        println(result)
+
         assertEquals(true, result.isSuccess)
 
-        assertEquals(expected, result.result)
+        val equal = expected isEqualIgnoreOrder result.result.orEmpty()
+
+        assertTrue(equal)
         assertEquals(emptyList(), result.errors)
     }
 
     companion object : BaseInitOrder("search") {
 
+        private val created: Instant = Clock.System.now()
+
         private val searchOwnerId = CryptoUserId("owner-124")
-        private val orderDateInstant = Clock.System.now()
-        private val orderState = CryptoOrderState.CANCELLED
-        private val orderType = CryptoOrderType.SELL
+        private val searchOrderState = CryptoOrderState.CANCELLED
+        private val searchOrderType = CryptoOrderType.SELL
 
         private val notFoundOwnerId = CryptoUserId("filter-not-found-by-owner")
 
         override val initObjects: List<CryptoOrder> = listOf(
-            createInitTestModel(),
-            createInitTestModel(ownerId = searchOwnerId),
-            createInitTestModel(orderState = orderState),
-            createInitTestModel(orderType = orderType),
-            createInitTestModel(orderDate = orderDateInstant),
-            createInitTestModel(orderPair = CryptoPair("BTC", "USD")),
-            createInitTestModel(ownerId = searchOwnerId),
-            createInitTestModel(orderState = orderState),
-            createInitTestModel(orderType = orderType),
-            createInitTestModel(orderDate = orderDateInstant),
-            createInitTestModel(orderPair = CryptoPair("BTC", "ETH"))
+            createInitTestModel(orderId = "ord-1"),
+            createInitTestModel(orderId = "ord-2", ownerId = searchOwnerId),
+            createInitTestModel(orderId = "ord-3", orderState = searchOrderState),
+            createInitTestModel(orderId = "ord-4", orderType = searchOrderType),
+            createInitTestModel(orderId = "ord-5", orderDate = created),
+            createInitTestModel(orderId = "ord-6", orderPair = CryptoPair("BTC", "USD")),
+            createInitTestModel(orderId = "ord-7", ownerId = searchOwnerId),
+            createInitTestModel(orderId = "ord-8", orderState = searchOrderState),
+            createInitTestModel(orderId = "ord-9", orderType = searchOrderType),
+            createInitTestModel(orderId = "ord-10", orderDate = created),
+            createInitTestModel(orderId = "ord-11", orderPair = CryptoPair("ETH", "BTC"))
         )
     }
+}
+
+infix fun <T> Collection<T>.isEqualIgnoreOrder(other: Collection<T>): Boolean {
+    if (this !== other) {
+
+        if (this.size != other.size) return false
+
+        val areNotEqual = this.asSequence()
+            .map { it in other }
+            .contains(false)
+
+        if (areNotEqual) return false
+    }
+
+    return true
 }

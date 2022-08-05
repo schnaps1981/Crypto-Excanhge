@@ -15,6 +15,8 @@ abstract class RepoOrderReadTest {
     fun readSuccess() {
         val result = runBlocking { repo.readOrder(DbOrderIdRequest(successId)) }
 
+        println(result)
+
         assertEquals(true, result.isSuccess)
         assertEquals(readSuccessStub, result.result)
         assertEquals(emptyList(), result.errors)
@@ -23,6 +25,8 @@ abstract class RepoOrderReadTest {
     @Test
     fun readNotFound() {
         val result = runBlocking { repo.readOrder(DbOrderIdRequest(notFoundId)) }
+
+        println(result)
 
         assertEquals(false, result.isSuccess)
         assertEquals(null, result.result)
@@ -38,9 +42,11 @@ abstract class RepoOrderReadTest {
                 CryptoUserId("test-owner-123-read"),
                 CryptoOrderType.BUY,
                 CryptoOrderState.ACTIVE,
-                CryptoPair("BTC", "USD")
+                CryptoPair("BTC", "USD"),
+                orderId = "read-success"
             )
         )
+
         private val readSuccessStub = initObjects.first()
 
         val successId = readSuccessStub.orderId

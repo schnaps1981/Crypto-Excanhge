@@ -15,6 +15,8 @@ abstract class RepoOrderDeleteTest {
     fun deleteSuccess() {
         val result = runBlocking { repo.deleteOrder(DbOrderIdRequest(successId)) }
 
+        println(result)
+
         assertEquals(true, result.isSuccess)
         assertEquals(deleteSuccessStub, result.result)
         assertEquals(emptyList(), result.errors)
@@ -23,6 +25,8 @@ abstract class RepoOrderDeleteTest {
     @Test
     fun deleteNotFound() {
         val result = runBlocking { repo.deleteOrder(DbOrderIdRequest(notFoundId)) }
+
+        println(result)
 
         assertEquals(false, result.isSuccess)
         assertEquals(null, result.result)
@@ -38,7 +42,8 @@ abstract class RepoOrderDeleteTest {
                 CryptoUserId("test-owner-123-delete"),
                 CryptoOrderType.BUY,
                 CryptoOrderState.ACTIVE,
-                CryptoPair("BTC", "USD")
+                CryptoPair("BTC", "USD"),
+                orderId = "delete-success"
             )
         )
         private val deleteSuccessStub = initObjects.first()

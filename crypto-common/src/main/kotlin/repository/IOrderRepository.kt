@@ -1,10 +1,9 @@
 package repository
 
 interface IOrderRepository {
-    suspend fun createOrder(order: DbOrderRequest): DbOrderResponse
-    suspend fun deleteOrder(order: DbOrderIdRequest): DbOrderResponse
-    suspend fun readOrder(order: DbOrderIdRequest): DbOrderResponse
-    suspend fun updateOrder(order: DbOrderRequest): DbOrderResponse
-    suspend fun searchOrders(order: DbOrderFilterRequest): DbOrdersResponse
-
+    suspend fun createOrder(request: DbOrderRequest): DbOrderResponse
+    suspend fun deleteOrder(request: DbOrderIdRequest): DbOrderResponse
+    suspend fun readOrder(request: DbOrderIdRequest): DbOrderResponse
+    suspend fun updateOrder(request: DbOrderRequest): DbOrderResponse
+    suspend fun searchOrders(request: DbOrderFilterRequest): DbOrdersResponse
 }
