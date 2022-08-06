@@ -52,6 +52,9 @@ dependencies {
     //stubs
     implementation(project(":crypto-stubs"))
 
+    //repository
+    implementation(project(":crypto-repo-inmemory"))
+
     testImplementation(kotlin("test-junit"))
     testImplementation("org.testcontainers:kafka:$kafkaTestContainerVersion")
 }

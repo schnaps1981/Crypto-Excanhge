@@ -1,11 +1,13 @@
 package crypto.app.kafka
 
 import OrderService
+import crypto.app.inmemory.OrderRepositoryInMemory
 
 fun main() {
     val config = KafkaConfig(hosts = listOf("localhost:9094"), groupId = "kafkaApp")
 
-    val service = OrderService()
+    val repo = OrderRepositoryInMemory()
+    val service = OrderService(repo)
 
     val processor by lazy {
         KafkaProcessor(
