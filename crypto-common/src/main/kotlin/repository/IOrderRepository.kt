@@ -11,4 +11,29 @@ interface IOrderRepository {
 
     val uuid: String
         get() = "${UUID.randomUUID()}"
+
+    companion object {
+        val NONE = object : IOrderRepository {
+            override suspend fun createOrder(request: DbOrderRequest): DbOrderResponse {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun deleteOrder(request: DbOrderIdRequest): DbOrderResponse {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun readOrder(request: DbOrderIdRequest): DbOrderResponse {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun updateOrder(request: DbOrderRequest): DbOrderResponse {
+                TODO("Not yet implemented")
+            }
+
+            override suspend fun searchOrders(request: DbOrderFilterRequest): DbOrdersResponse {
+                TODO("Not yet implemented")
+            }
+
+        }
+    }
 }

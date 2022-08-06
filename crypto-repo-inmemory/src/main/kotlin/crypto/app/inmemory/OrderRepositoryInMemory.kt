@@ -67,30 +67,14 @@ class OrderRepositoryInMemory(
         )
     }
 
-    private fun getOrRemoveById(id: CryptoOrderId, remove: Boolean = false): DbOrderResponse =
-        if (id != CryptoOrderId.NONE) {
-            cache.get(id.asString())?.let {
-                if (remove) {
-                    cache.remove(it.orderId)
-                }
-
-                DbOrderResponse(
-                    result = it.toInternal(),
-                    isSuccess = true,
-                )
-
-            } ?: resultErrorIdNotFound
-        } else {
-            resultErrorIdIsEmpty
-        }
-
     override suspend fun createOrder(request: DbOrderRequest): DbOrderResponse {
         val key = uuid
 
         val order = request.order.copy(
             orderId = CryptoOrderId(key),
             created = if (request.order.created == Instant.NONE) Clock.System.now() else request.order.created,
-            lock = CryptoLock(uuid)
+            lock = CryptoLock(uuid),
+            orderState = CryptoOrderState.ACTIVE
         )
 
         val entity = OrderEntity(order)
@@ -116,7 +100,7 @@ class OrderRepositoryInMemory(
                 cache.remove(key)
 
                 return DbOrderResponse(
-                    result = null,
+                    result = local.toInternal().copy(orderState = CryptoOrderState.NONE),
                     isSuccess = true,
                     errors = emptyList()
                 )
@@ -145,12 +129,14 @@ class OrderRepositoryInMemory(
 
         mutex.withLock {
             val local = cache.get(key)
+
             when {
                 local == null -> return resultErrorIdNotFound
                 local.lock == null || local.lock == oldLock -> cache.put(key, entity)
                 else -> return resultErrorConcurrent
             }
         }
+
         return DbOrderResponse(
             result = newOrder,
             isSuccess = true

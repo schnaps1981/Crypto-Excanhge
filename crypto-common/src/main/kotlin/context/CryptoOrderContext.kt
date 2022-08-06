@@ -5,6 +5,7 @@ import kotlinx.datetime.Instant
 import models.*
 import models.commands.CryptoOrderCommands
 import models.filter.ICryptoFilter
+import repository.IOrderRepository
 import stubs.CryptoOrderStubs
 
 data class CryptoOrderContext(
@@ -21,6 +22,7 @@ data class CryptoOrderContext(
     override var timeStart: Instant = Instant.NONE,
 
     var orderRequest: CryptoOrder = CryptoOrder(),
+
     var orderResponse: CryptoOrder = CryptoOrder(),
     var ordersResponse: MutableList<CryptoOrder> = mutableListOf(),
 
@@ -34,5 +36,8 @@ data class CryptoOrderContext(
 
     var userIdRequest: CryptoUserId = CryptoUserId.NONE,
 
+    var orderRepo: IOrderRepository = IOrderRepository.NONE,
 
-    ) : CryptoBaseContext<CryptoOrderStubs, CryptoOrderCommands>
+    var orderRepoPrepare: CryptoOrder = CryptoOrder()
+
+) : CryptoBaseContext<CryptoOrderStubs, CryptoOrderCommands>

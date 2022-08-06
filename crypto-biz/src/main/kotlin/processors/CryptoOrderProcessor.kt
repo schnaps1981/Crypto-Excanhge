@@ -12,7 +12,12 @@ import validators.filter.validateFilterCurrency
 import validators.filter.validateFilterDate
 import validators.filter.validateFilterState
 import validators.filter.validateFilterType
+import workers.finishProcess
 import workers.initStatus
+import workers.repo.order.repoOrderCreate
+import workers.repo.order.repoOrderDelete
+import workers.repo.order.repoOrderRead
+import workers.repo.order.repoOrdersRead
 import workers.stubNoCase
 import workers.stubs.*
 
@@ -24,6 +29,7 @@ class CryptoOrderProcessor {
     companion object {
         private val OrderChain = rootChain<CryptoOrderContext> {
             initStatus("Инициализация статуса")
+            //initRepo("Инициализация репозитория")
 
             operation("Создание ордера", CryptoOrderCommands.CREATE) {
                 stubs("Обработка стабов") {
@@ -46,6 +52,10 @@ class CryptoOrderProcessor {
                         orderValidated = orderValidating
                     }
                 }
+
+                repoOrderCreate("Создание ордера в БД")
+
+                finishProcess("завершение процесса обработки запроса")
             }
 
             operation("Удаление ордера", CryptoOrderCommands.DELETE) {
@@ -63,10 +73,17 @@ class CryptoOrderProcessor {
 
                     validateOrderId("Валидация id ордера")
 
+                    worker("создание lock") { }
+
                     finishOrderValidation("Успешное завершение валидации запроса") {
                         orderValidated = orderValidating
                     }
                 }
+
+                repoOrderRead("Чтение ордера для подготовки к удалению")
+                repoOrderDelete("Удаление ордера из БД")
+
+                finishProcess("завершение процесса обработки запроса")
             }
 
             operation("Чтение ордера", CryptoOrderCommands.READ) {
@@ -91,6 +108,10 @@ class CryptoOrderProcessor {
                         orderFilterValidated = orderFilterValidating
                     }
                 }
+
+                repoOrdersRead("Чтение ордеров из БД")
+
+                finishProcess("завершение процесса обработки запроса")
             }
 
         }.build()
