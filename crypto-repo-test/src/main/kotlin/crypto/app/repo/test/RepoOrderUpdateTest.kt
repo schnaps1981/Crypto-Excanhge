@@ -20,7 +20,6 @@ abstract class RepoOrderUpdateTest {
         println(result)
 
         assertEquals(true, result.isSuccess)
-        assertEquals(updateObj.orderType, result.result?.orderType)
         assertEquals(updateObj.orderId, result.result?.orderId)
         assertEquals(updateObj.orderState, result.result?.orderState)
         assertEquals(emptyList(), result.errors)

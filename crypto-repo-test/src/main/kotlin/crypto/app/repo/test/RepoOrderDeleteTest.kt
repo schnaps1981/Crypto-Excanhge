@@ -5,6 +5,7 @@ import models.*
 import org.junit.Test
 import repository.DbOrderIdRequest
 import repository.IOrderRepository
+import java.util.*
 import kotlin.test.assertEquals
 
 
@@ -18,7 +19,7 @@ abstract class RepoOrderDeleteTest {
         println(result)
 
         assertEquals(true, result.isSuccess)
-        assertEquals(null, result.result)
+        assertEquals(CryptoOrderState.NONE, result.result?.orderState)
         assertEquals(emptyList(), result.errors)
     }
 
@@ -43,12 +44,12 @@ abstract class RepoOrderDeleteTest {
                 CryptoOrderType.BUY,
                 CryptoOrderState.ACTIVE,
                 CryptoPair("BTC", "USD"),
-                orderId = "delete-success"
+                orderId = "${UUID.randomUUID()}"
             )
         )
         private val deleteSuccessStub = initObjects.first()
         val successId = deleteSuccessStub.orderId
 
-        val notFoundId = CryptoOrderId("repo-delete-notFound")
+        val notFoundId = CryptoOrderId("${UUID.randomUUID()}")
     }
 }

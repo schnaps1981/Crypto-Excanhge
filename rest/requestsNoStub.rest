@@ -6,11 +6,11 @@ Content-Type: application/json
   "requestType": "OrderCreate",
   "requestId": "34234",
   "pair": {
-    "first": "BTC",
+    "first": "ETH",
     "second": "USD"
   },
   "quantity": 1.0,
-  "price": 100.0,
+  "price": 150.0,
   "amount": 3.0,
   "orderType": "sell"
 }

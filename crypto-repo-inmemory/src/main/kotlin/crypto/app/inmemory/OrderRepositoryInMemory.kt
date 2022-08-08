@@ -2,7 +2,9 @@ package crypto.app.inmemory
 
 import crypto.app.inmemory.model.OrderEntity
 import helpers.NONE
-import helpers.errorConcurrency
+import helpers.resultErrorConcurrent
+import helpers.resultErrorIdIsEmpty
+import helpers.resultErrorIdNotFound
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
@@ -180,41 +182,6 @@ class OrderRepositoryInMemory(
         return DbOrdersResponse(
             result = result,
             isSuccess = true
-        )
-    }
-
-    companion object {
-        val resultErrorIdNotFound = DbOrderResponse(
-            result = null,
-            isSuccess = false,
-            errors = listOf(
-                CryptoError(
-                    field = "id",
-                    message = "Not Found"
-                )
-            )
-        )
-
-        val resultErrorIdIsEmpty = DbOrderResponse(
-            result = null,
-            isSuccess = false,
-            errors = listOf(
-                CryptoError(
-                    field = "id",
-                    message = "Id must not be null or blank"
-                )
-            )
-        )
-
-        val resultErrorConcurrent = DbOrderResponse(
-            result = null,
-            isSuccess = false,
-            errors = listOf(
-                errorConcurrency(
-                    violationCode = "changed",
-                    description = "Object has changed during request handling"
-                ),
-            )
         )
     }
 }

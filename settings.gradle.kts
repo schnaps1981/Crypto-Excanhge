@@ -35,3 +35,5 @@ include("crypto-biz")
 include("crypto-app-kafka")
 include("crypto-repo-test")
 include("crypto-repo-inmemory")
+include("crypto-repo-sql")
+

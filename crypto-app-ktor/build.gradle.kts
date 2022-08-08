@@ -58,6 +58,7 @@ dependencies {
 
     //Repositories
     implementation(project(":crypto-repo-inmemory"))
+    implementation(project(":crypto-repo-sql"))
 
     testImplementation(kotlin("test-junit"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
