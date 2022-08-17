@@ -8,11 +8,12 @@ import com.crypto.api.v1.models.IResponse
 import context.CryptoOrderContext
 import crypto.app.inmemory.OrderRepositoryInMemory
 import fromTransport
+import helpers.nowMicros
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -20,7 +21,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecords
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.errors.WakeupException
-import repository.IOrderRepository
 import toTransport
 import java.time.Duration
 import java.util.*
@@ -41,7 +41,7 @@ class KafkaProcessor(
             consumer.subscribe(listOf(config.topicInbound))
 
             val context = CryptoOrderContext(
-                timeStart = Clock.System.now()
+                timeStart = Instant.nowMicros
             )
 
             while (true) {

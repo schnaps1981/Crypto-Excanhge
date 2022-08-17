@@ -20,7 +20,6 @@ object OrderTable : IntIdTable("Orders") {
     val pair = reference("tradePair", PairTable, onDelete = ReferenceOption.CASCADE)
     val lock = varchar("lock", 50)
 
-    // Mapper functions from sql-like table to MkplAd
     fun from(res: InsertStatement<Number>): CryptoOrder {
 
         val cryptoPair = transaction {

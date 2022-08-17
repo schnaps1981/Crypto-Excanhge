@@ -1,10 +1,7 @@
 package crypto.app.inmemory
 
 import crypto.app.inmemory.model.OrderEntity
-import helpers.NONE
-import helpers.resultErrorConcurrent
-import helpers.resultErrorIdIsEmpty
-import helpers.resultErrorIdNotFound
+import helpers.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
@@ -12,7 +9,6 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone.Companion.currentSystemDefault
 import kotlinx.datetime.toLocalDateTime
@@ -74,7 +70,7 @@ class OrderRepositoryInMemory(
 
         val order = request.order.copy(
             orderId = CryptoOrderId(key),
-            created = if (request.order.created == Instant.NONE) Clock.System.now() else request.order.created,
+            created = if (request.order.created == Instant.NONE) Instant.nowMicros else request.order.created,
             lock = CryptoLock(uuid),
             orderState = CryptoOrderState.ACTIVE
         )

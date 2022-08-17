@@ -1,7 +1,8 @@
 import com.crypto.api.v1.models.*
 import context.CryptoOrderContext
 import context.CryptoTickerContext
-import kotlinx.datetime.Clock
+import helpers.nowMicros
+import kotlinx.datetime.Instant
 import models.*
 import models.commands.CryptoOrderCommands
 import models.commands.CryptoTickerCommands
@@ -275,6 +276,6 @@ class UserInfoMappersTest {
     }
 
     companion object {
-        val timestamp = Clock.System.now()
+        val timestamp = Instant.nowMicros
     }
 }

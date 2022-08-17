@@ -9,11 +9,12 @@ import context.addError
 import crypto.app.ktor.helpers.KtorUserSession
 import fromTransport
 import helpers.asCryptoError
+import helpers.nowMicros
 import io.ktor.websocket.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.flow.*
-import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import toTransport
 
 
@@ -43,7 +44,7 @@ suspend fun WebSocketSession.wsOrderHandler(
 
         .map { request ->
             val ctx = CryptoOrderContext(
-                timeStart = Clock.System.now()
+                timeStart = Instant.nowMicros
             ).apply { fromTransport(request) }
             service.exec(ctx)
             ctx
@@ -63,7 +64,7 @@ suspend fun WebSocketSession.wsOrderHandler(
                 sessions.remove(userSession)
             } else {
                 val ctx = CryptoOrderContext(
-                    timeStart = Clock.System.now()
+                    timeStart = Instant.nowMicros
                 )
                 ctx.addError(e.asCryptoError())
                 outgoing.send(Frame.Text(apiV1ResponseSerialize(ctx.toTransport())))

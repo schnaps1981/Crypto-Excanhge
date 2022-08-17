@@ -1,8 +1,8 @@
 package crypto.app.repo.test
 
 import helpers.isEqualIgnoreOrder
+import helpers.nowMicros
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import models.*
 import models.filter.CryptoFilterByCurrency
@@ -72,7 +72,8 @@ abstract class RepoOrderSearchTest {
     private fun testFilter(filter: DbOrderFilterRequest, expected: List<CryptoOrder>) {
         val result = runBlocking { repo.searchOrders(filter) }
 
-        println(result)
+        println("Expected\n $expected")
+        println("Result\n $result")
 
         assertEquals(true, result.isSuccess)
 
@@ -84,7 +85,7 @@ abstract class RepoOrderSearchTest {
 
     companion object : BaseInitOrder("search") {
 
-        private val created: Instant = Clock.System.now()
+        private val created: Instant = Instant.nowMicros
 
         private val searchOwnerId = CryptoUserId("owner-124")
         private val searchOrderState = CryptoOrderState.CANCELLED

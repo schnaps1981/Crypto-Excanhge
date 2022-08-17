@@ -4,9 +4,9 @@ import context.CryptoOrderContext
 import crypto.app.inmemory.OrderRepositoryInMemory
 import crypto.app.repo.test.BaseInitOrder
 import helpers.isEqualIgnoreOrder
+import helpers.nowMicros
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import models.*
 import models.commands.CryptoOrderCommands
@@ -84,7 +84,7 @@ class RepoOrderReadTest {
     }
 
     companion object : BaseInitOrder("read") {
-        private val created: Instant = Clock.System.now()
+        private val created: Instant = Instant.nowMicros
 
         private val readByOrderState = CryptoOrderState.CANCELLED
         private val readByOrderType = CryptoOrderType.SELL

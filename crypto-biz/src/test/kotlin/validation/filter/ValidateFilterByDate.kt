@@ -1,9 +1,10 @@
 package validation.filter
 
 import context.CryptoOrderContext
+import helpers.nowMicros
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import models.CryptoState
 import models.CryptoWorkMode
 import models.commands.CryptoOrderCommands
@@ -66,7 +67,7 @@ class ValidateFilterByDate {
     }
 
     companion object {
-        private val timeMills = Clock.System.now()
+        private val timeMills = Instant.nowMicros
     }
 
 }

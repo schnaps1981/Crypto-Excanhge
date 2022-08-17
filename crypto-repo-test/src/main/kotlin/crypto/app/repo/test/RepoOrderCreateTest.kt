@@ -1,7 +1,7 @@
 package crypto.app.repo.test
 
+import helpers.nowMicros
 import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import models.*
 import org.junit.Test
@@ -29,7 +29,7 @@ abstract class RepoOrderCreateTest {
     companion object : BaseInitOrder("create") {
         override val initObjects: List<CryptoOrder> = emptyList()
 
-        private val created: Instant = Clock.System.now()
+        private val created: Instant = Instant.nowMicros
 
         val order = createInitTestModel(
             CryptoUserId("test-owner-123-create"),
