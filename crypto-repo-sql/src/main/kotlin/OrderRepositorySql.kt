@@ -13,7 +13,7 @@ import repository.*
 import java.sql.SQLException
 import java.util.*
 
-class RepoOrderSql(
+class OrderRepositorySql(
     url: String = "jdbc:postgresql://localhost:5432/cryptodevdb",
     user: String = "postgres",
     password: String = "crypto-pass",

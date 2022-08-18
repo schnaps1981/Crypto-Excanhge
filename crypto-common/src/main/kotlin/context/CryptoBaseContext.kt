@@ -1,12 +1,11 @@
 package context
 
 import kotlinx.datetime.Instant
-import models.CryptoError
-import models.CryptoRequestId
-import models.CryptoState
-import models.CryptoWorkMode
+import models.*
 
 sealed interface CryptoBaseContext<STUB, COMMAND> {
+    var settings: CryptoSettings
+
     var timeStart: Instant
 
     var state: CryptoState

@@ -19,6 +19,8 @@ data class CryptoAccountContext(
 
     override var timeStart: Instant = Instant.NONE,
 
+    override var settings: CryptoSettings = CryptoSettings(),
+
     var accountRequest: CryptoAccount = CryptoAccount(),
     var accountResponse: CryptoAccount = CryptoAccount()
 

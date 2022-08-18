@@ -1,13 +1,18 @@
 package crypto.app.kafka
 
+import OrderRepositorySql
 import OrderService
 import crypto.app.inmemory.OrderRepositoryInMemory
+import models.CryptoSettings
 
 fun main() {
     val config = KafkaConfig(hosts = listOf("localhost:9094"), groupId = "kafkaApp")
 
-    val repo = OrderRepositoryInMemory()
-    val service = OrderService(repo)
+    val settings = CryptoSettings(
+        repoTest = OrderRepositoryInMemory(),
+        repoProd = OrderRepositorySql()
+    )
+    val service = OrderService(settings)
 
     val processor by lazy {
         KafkaProcessor(

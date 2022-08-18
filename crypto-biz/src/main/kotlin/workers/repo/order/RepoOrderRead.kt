@@ -13,9 +13,9 @@ fun ICorChainDsl<CryptoOrderContext>.repoOrderRead(title: String) = worker {
     handle {
         val request = DbOrderIdRequest(orderValidated.orderId)
         val result = orderRepo.readOrder(request)
-        val resultAd = result.result
-        if (result.isSuccess && resultAd != null) {
-            orderRepoPrepare = resultAd
+        val resultOrder = result.result
+        if (result.isSuccess && resultOrder != null) {
+            orderRepoPrepare = resultOrder
         } else {
             state = CryptoState.FAILED
             errors.addAll(result.errors)

@@ -21,7 +21,7 @@ object SqlTestCompanion {
 
     private val url: String by lazy { container.jdbcUrl }
 
-    fun repoUnderTestContainer(initObjects: Collection<CryptoOrder> = emptyList()): RepoOrderSql {
-        return RepoOrderSql(url, USER, PASS, SCHEMA, initObjects)
+    fun repoUnderTestContainer(initObjects: Collection<CryptoOrder> = emptyList()): OrderRepositorySql {
+        return OrderRepositorySql(url, USER, PASS, SCHEMA, initObjects)
     }
 }

@@ -19,6 +19,8 @@ data class CryptoUserInfoContext(
 
     override var timeStart: Instant = Instant.NONE,
 
+    override var settings: CryptoSettings = CryptoSettings(),
+
     var userInfoRequest: CryptoUserInfo = CryptoUserInfo(),
     var userInfoResponse: CryptoUserInfo = CryptoUserInfo()
 

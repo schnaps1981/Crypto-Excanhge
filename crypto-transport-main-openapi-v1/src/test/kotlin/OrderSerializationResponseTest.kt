@@ -87,7 +87,7 @@ class OrderSerializationResponseTest {
         assertContains(jsonString, "\"price\":\"1.0\"")
         assertContains(jsonString, "\"orderType\":\"sell\"")
         assertContains(jsonString, "\"orderId\":\"orderId_123\"")
-        assertContains(jsonString, "\"created\":111")
+        assertContains(jsonString, "\"created\":\"111\"")
         assertContains(jsonString, "\"orderState\":\"completed\"")
         assertContains(jsonString, "\"amount\":\"100.0\"")
 

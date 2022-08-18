@@ -19,6 +19,8 @@ data class CryptoTickerContext(
 
     override var timeStart: Instant = Instant.NONE,
 
+    override var settings: CryptoSettings = CryptoSettings(),
+
     var supportedCurrenciesResponse: MutableList<String> = mutableListOf(),
 
     var ratesRequest: CryptoPair = CryptoPair(),

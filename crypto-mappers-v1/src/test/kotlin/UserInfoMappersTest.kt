@@ -228,7 +228,7 @@ class UserInfoMappersTest {
                 stub = RequestDebugStubs.SUCCESS
             ),
             userId = "user123",
-            filter = FilterByDate(date = "11111")
+            filter = FilterByDate(date = timestamp.toString())
         )
 
         val context = CryptoOrderContext()

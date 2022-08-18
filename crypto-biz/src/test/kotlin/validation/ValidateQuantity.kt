@@ -1,6 +1,7 @@
 package validation
 
 import context.CryptoOrderContext
+import crypto.app.inmemory.OrderRepositoryInMemory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import models.*
@@ -11,7 +12,13 @@ import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class ValidateQuantity {
-    private val processor = CryptoOrderProcessor()
+    private val settings by lazy {
+        CryptoSettings(
+            repoTest = OrderRepositoryInMemory()
+        )
+    }
+
+    private val processor = CryptoOrderProcessor(settings)
 
     @Test
     fun `validate zero quantity`() = runTest {

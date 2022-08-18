@@ -1,6 +1,7 @@
 package validation
 
 import context.CryptoOrderContext
+import crypto.app.inmemory.OrderRepositoryInMemory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import models.*
@@ -12,6 +13,12 @@ import kotlin.test.assertNotEquals
 
 @ExperimentalCoroutinesApi
 class ValidateTradePair {
+    private val settings by lazy {
+        CryptoSettings(
+            repoTest = OrderRepositoryInMemory()
+        )
+    }
+
     private val context = CryptoOrderContext(
         command = CryptoOrderCommands.CREATE,
         state = CryptoState.NONE,
@@ -27,7 +34,7 @@ class ValidateTradePair {
     private fun CryptoOrderContext.setTradePair(tradePair: CryptoPair) =
         this.copy(orderRequest = this.orderRequest.copy(pair = tradePair))
 
-    private val processor = CryptoOrderProcessor()
+    private val processor = CryptoOrderProcessor(settings)
 
     private fun `validate trade pair incorrect field`(pair: CryptoPair) = runTest {
         val ctx = context.setTradePair(pair)

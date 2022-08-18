@@ -15,8 +15,14 @@ import kotlin.test.assertTrue
 
 class RepoOrderCreateTest {
     private val command = CryptoOrderCommands.CREATE
-    private val repo = OrderRepositoryInMemory()
-    private val processor = CryptoOrderProcessor()
+
+    private val settings by lazy {
+        CryptoSettings(
+            repoTest = OrderRepositoryInMemory()
+        )
+    }
+
+    private val processor = CryptoOrderProcessor(settings)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
@@ -25,7 +31,6 @@ class RepoOrderCreateTest {
 
         val context = CryptoOrderContext(
             command = command,
-            orderRepo = repo,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
             orderRequest = CryptoOrder(

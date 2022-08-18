@@ -21,6 +21,8 @@ data class CryptoOrderContext(
 
     override var timeStart: Instant = Instant.NONE,
 
+    override var settings: CryptoSettings = CryptoSettings(),
+
     var orderRequest: CryptoOrder = CryptoOrder(),
 
     var orderResponse: CryptoOrder = CryptoOrder(),

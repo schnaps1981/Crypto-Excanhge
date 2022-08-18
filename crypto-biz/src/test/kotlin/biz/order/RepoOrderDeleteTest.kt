@@ -31,9 +31,13 @@ class RepoOrderDeleteTest {
         lock = CryptoLock(uuidOld)
     )
 
-    private val repo = OrderRepositoryInMemory(initObjects = listOf(initOrder))
+    private val settings by lazy {
+        CryptoSettings(
+            repoTest = OrderRepositoryInMemory(initObjects = listOf(initOrder))
+        )
+    }
 
-    private val processor = CryptoOrderProcessor()
+    private val processor = CryptoOrderProcessor(settings)
 
     @Test
     fun repoDeleteOrderSuccessTest() = runTest {
@@ -41,7 +45,6 @@ class RepoOrderDeleteTest {
 
         val context = CryptoOrderContext(
             command = command,
-            orderRepo = repo,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
             orderRequest = orderToDelete,
@@ -62,7 +65,6 @@ class RepoOrderDeleteTest {
 
         val context = CryptoOrderContext(
             command = command,
-            orderRepo = repo,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
             orderRequest = orderToDelete,
@@ -82,7 +84,6 @@ class RepoOrderDeleteTest {
             command = command,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
-            orderRepo = repo,
             orderRequest = CryptoOrder(orderId = CryptoOrderId("12345")),
         )
 

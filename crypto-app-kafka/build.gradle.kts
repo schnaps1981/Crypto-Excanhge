@@ -54,6 +54,7 @@ dependencies {
 
     //repository
     implementation(project(":crypto-repo-inmemory"))
+    implementation(project(":crypto-repo-sql"))
 
     testImplementation(kotlin("test-junit"))
     testImplementation("org.testcontainers:kafka:$kafkaTestContainerVersion")

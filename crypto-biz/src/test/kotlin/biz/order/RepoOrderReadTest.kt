@@ -22,8 +22,13 @@ class RepoOrderReadTest {
 
     private val command = CryptoOrderCommands.READ
 
-    private val repo = OrderRepositoryInMemory(initObjects = initObjects)
-    private val processor = CryptoOrderProcessor()
+    private val settings by lazy {
+        CryptoSettings(
+            repoTest = OrderRepositoryInMemory(initObjects = initObjects)
+        )
+    }
+
+    private val processor = CryptoOrderProcessor(settings)
 
     @Test
     fun repoReadSuccessTest() = runTest {
@@ -69,7 +74,6 @@ class RepoOrderReadTest {
     private suspend fun testFilter(expected: List<CryptoOrder>, filter: ICryptoFilter) {
         val context = CryptoOrderContext(
             command = command,
-            orderRepo = repo,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
             orderFilter = filter

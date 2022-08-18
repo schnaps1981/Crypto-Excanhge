@@ -6,6 +6,7 @@ import com.crowdproj.kotlin.cor.rootChain
 import context.CryptoOrderContext
 import groups.operation
 import groups.stubs
+import models.CryptoSettings
 import models.commands.CryptoOrderCommands
 import validators.*
 import validators.filter.validateFilterCurrency
@@ -13,6 +14,7 @@ import validators.filter.validateFilterDate
 import validators.filter.validateFilterState
 import validators.filter.validateFilterType
 import workers.finishProcess
+import workers.initRepo
 import workers.initStatus
 import workers.repo.order.repoOrderCreate
 import workers.repo.order.repoOrderDelete
@@ -22,14 +24,15 @@ import workers.stubNoCase
 import workers.stubs.*
 
 
-class CryptoOrderProcessor {
+class CryptoOrderProcessor(private val settings: CryptoSettings) {
 
-    suspend fun exec(context: CryptoOrderContext) = OrderChain.exec(context)
+    suspend fun exec(context: CryptoOrderContext) =
+        OrderChain.exec(context.apply { settings = this@CryptoOrderProcessor.settings })
 
     companion object {
         private val OrderChain = rootChain<CryptoOrderContext> {
             initStatus("Инициализация статуса")
-            //initRepo("Инициализация репозитория")
+            initRepo("Инициализация репозитория")
 
             operation("Создание ордера", CryptoOrderCommands.CREATE) {
                 stubs("Обработка стабов") {
@@ -44,7 +47,7 @@ class CryptoOrderProcessor {
 
                     validateTradePair("Проверка торговой пары")
                     validateQuantity("Валидация количества актива")
-                    //validateAmount("Валидация суммы актива")
+                    validateAmount("Валидация суммы актива")
                     validatePrice("Валидация цены актива")
                     validateOrderType("Валидация типа ордера")
 

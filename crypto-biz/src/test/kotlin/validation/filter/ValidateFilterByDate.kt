@@ -1,10 +1,13 @@
 package validation.filter
 
 import context.CryptoOrderContext
+import crypto.app.inmemory.OrderRepositoryInMemory
+import helpers.NONE
 import helpers.nowMicros
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
+import models.CryptoSettings
 import models.CryptoState
 import models.CryptoWorkMode
 import models.commands.CryptoOrderCommands
@@ -17,7 +20,13 @@ import kotlin.test.assertNotEquals
 
 @ExperimentalCoroutinesApi
 class ValidateFilterByDate {
-    private val processor = CryptoOrderProcessor()
+    private val settings by lazy {
+        CryptoSettings(
+            repoTest = OrderRepositoryInMemory()
+        )
+    }
+
+    private val processor = CryptoOrderProcessor(settings)
 
     @Test
     fun `validate filter by date`() = runTest {
@@ -47,7 +56,7 @@ class ValidateFilterByDate {
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
             orderFilter = CryptoFilterByDate(
-                orderDate = timeMills
+                orderDate = Instant.NONE
             )
         )
 

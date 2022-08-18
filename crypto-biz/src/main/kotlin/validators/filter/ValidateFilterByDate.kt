@@ -12,7 +12,9 @@ import models.filter.CryptoFilterByDate
 fun ICorChainDsl<CryptoOrderContext>.validateFilterDate(title: String) = worker {
     this.title = title
 
-    on { (orderFilterValidating as? CryptoFilterByDate)?.orderDate == Instant.NONE }
+    on {
+        (orderFilterValidating as? CryptoFilterByDate)?.orderDate == Instant.NONE
+    }
     handle {
         fail(
             errorValidation(

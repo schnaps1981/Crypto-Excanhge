@@ -6,7 +6,6 @@ import apiV1ResponseSerialize
 import com.crypto.api.v1.models.IRequest
 import com.crypto.api.v1.models.IResponse
 import context.CryptoOrderContext
-import crypto.app.inmemory.OrderRepositoryInMemory
 import fromTransport
 import helpers.nowMicros
 import kotlinx.coroutines.Dispatchers
@@ -14,6 +13,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
+import models.CryptoSettings
 import mu.KotlinLogging
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -31,7 +31,8 @@ private val log = KotlinLogging.logger {}
 
 class KafkaProcessor(
     val config: KafkaConfig,
-    private val service: OrderService = OrderService(OrderRepositoryInMemory()),
+    private val settings: CryptoSettings = CryptoSettings(),
+    private val service: OrderService = OrderService(settings),
     private val consumer: Consumer<String, String> = config.createKafkaConsumer(),
     private val producer: Producer<String, String> = config.createKafkaProducer()
 ) {
