@@ -40,6 +40,8 @@ data class CryptoOrderContext(
 
     var orderRepo: IOrderRepository = IOrderRepository.NONE,
 
-    var orderRepoPrepare: CryptoOrder = CryptoOrder()
+    var orderRepoPrepare: CryptoOrder = CryptoOrder(),
+    var orderRepoRead: CryptoOrder = CryptoOrder(),
+    var orderRepoDone: CryptoOrder = CryptoOrder()
 
 ) : CryptoBaseContext<CryptoOrderStubs, CryptoOrderCommands>

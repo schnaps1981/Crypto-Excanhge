@@ -41,7 +41,10 @@ class RepoOrderDeleteTest {
 
     @Test
     fun repoDeleteOrderSuccessTest() = runTest {
-        val orderToDelete = CryptoOrder(orderId = orderIdSuccessDel, lock = CryptoLock(uuidOld))
+        val orderToDelete = CryptoOrder(
+            orderId = orderIdSuccessDel,
+            lock = CryptoLock(uuidOld)
+        )
 
         val context = CryptoOrderContext(
             command = command,
@@ -61,7 +64,10 @@ class RepoOrderDeleteTest {
 
     @Test
     fun repoDeleteConcurrentTest() = runTest {
-        val orderToDelete = CryptoOrder(orderId = orderIdSuccessDel, lock = CryptoLock(uuidBad))
+        val orderToDelete = CryptoOrder(
+            orderId = orderIdSuccessDel,
+            lock = CryptoLock(uuidBad)
+        )
 
         val context = CryptoOrderContext(
             command = command,
@@ -84,7 +90,10 @@ class RepoOrderDeleteTest {
             command = command,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
-            orderRequest = CryptoOrder(orderId = CryptoOrderId("12345")),
+            orderRequest = CryptoOrder(
+                orderId = CryptoOrderId("12345"),
+                lock = CryptoLock(uuidOld)
+            )
         )
 
         processor.exec(ctx)

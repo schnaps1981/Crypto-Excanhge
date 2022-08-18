@@ -13,13 +13,16 @@ fun ICorChainDsl<CryptoOrderContext>.repoOrderCreate(title: String) = worker {
 
     handle {
         val request = DbOrderRequest(orderValidated)
+
         val result = orderRepo.createOrder(request)
         val resultOrder = result.result
 
         if (result.isSuccess && resultOrder != null) {
             orderResponse = resultOrder
         } else {
+
             state = CryptoState.FAILED
+
             errors.addAll(result.errors)
         }
     }

@@ -6,6 +6,8 @@ import com.crowdproj.kotlin.cor.rootChain
 import context.CryptoOrderContext
 import groups.operation
 import groups.stubs
+import models.CryptoLock
+import models.CryptoOrderId
 import models.CryptoSettings
 import models.commands.CryptoOrderCommands
 import validators.*
@@ -16,10 +18,7 @@ import validators.filter.validateFilterType
 import workers.finishProcess
 import workers.initRepo
 import workers.initStatus
-import workers.repo.order.repoOrderCreate
-import workers.repo.order.repoOrderDelete
-import workers.repo.order.repoOrderRead
-import workers.repo.order.repoOrdersRead
+import workers.repo.order.*
 import workers.stubNoCase
 import workers.stubs.*
 
@@ -73,17 +72,22 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                 chain {
                     title = "Валидация запроса удаления ордера"
                     worker("копирование полей в Validating") { orderValidating = orderRequest.deepCopy() }
+                    worker("Очистка id") {
+                        orderValidating.orderId = CryptoOrderId(orderValidating.orderId.asString().trim())
+                    }
+                    worker("Очистка lock") { orderValidating.lock = CryptoLock(orderValidating.lock.asString().trim()) }
 
                     validateOrderId("Валидация id ордера")
-
-                    worker("создание lock") { }
+                    validateLockNotEmpty("Проверка на непустой lock")
 
                     finishOrderValidation("Успешное завершение валидации запроса") {
                         orderValidated = orderValidating
                     }
                 }
 
-                repoOrderRead("Чтение ордера для подготовки к удалению")
+                repoOrderRead("Чтение ордера из БД. Получаем блокировку")
+                repoCheckReadLock("Проверяем блокировку")
+                repoPrepareDelete("Подготовка объекта для удаления")
                 repoOrderDelete("Удаление ордера из БД")
 
                 finishProcess("завершение процесса обработки запроса")
