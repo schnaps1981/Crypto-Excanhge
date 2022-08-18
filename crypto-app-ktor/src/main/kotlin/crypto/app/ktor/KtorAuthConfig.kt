@@ -21,9 +21,9 @@ data class KtorAuthConfig(
 
         val TEST = KtorAuthConfig(
             secret = "secret",
-            issuer = "crypto",
-            audience = "crypto-users",
-            realm = "Access to CryptoApp"
+            issuer = "CryptoExchange",
+            audience = "users",
+            realm = "exchange"
         )
     }
 }

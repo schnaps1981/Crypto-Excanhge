@@ -12,8 +12,7 @@ import java.sql.SQLException
 import java.util.*
 
 class OrderRepositorySql(
-    config: SQLDbConfig,
-    initObjects: Collection<CryptoOrder> = emptyList()
+    config: SQLDbConfig, initObjects: Collection<CryptoOrder> = emptyList()
 ) : IOrderRepository {
 
     private val db by lazy {
@@ -27,8 +26,9 @@ class OrderRepositorySql(
     }
 
     override suspend fun createOrder(request: DbOrderRequest): DbOrderResponse {
-        val order = request.order.copy(lock = CryptoLock(UUID.randomUUID().toString()))
+        val order = request.order.copy(created = Instant.nowMicros, lock = CryptoLock(UUID.randomUUID().toString()))
         return save(order)
+
     }
 
     override suspend fun deleteOrder(request: DbOrderIdRequest): DbOrderResponse {
@@ -93,38 +93,30 @@ class OrderRepositorySql(
         return safeTransaction({
 
             val results = (OrderTable innerJoin PairTable).select {
-                (
-                        request.filter.filterPermissions.map {
-                            when (it) {
-                                CryptoFilterApplyTo.ANY -> Op.TRUE
+                (request.filter.filterPermissions.map {
+                    when (it) {
+                        CryptoFilterApplyTo.ANY -> Op.TRUE
 
-                                CryptoFilterApplyTo.OWN -> OrderTable.ownerId eq request.ownerId.asString()
+                        CryptoFilterApplyTo.OWN -> OrderTable.ownerId eq request.ownerId.asString()
 
-                                CryptoFilterApplyTo.NONE -> Op.FALSE
-                            }
-                        }.compoundAnd()
-                        ) and (
-                        (request.filter as? CryptoFilterByType)?.let {
-                            OrderTable.orderType eq it.orderType
-                        } ?: Op.TRUE
-                        ) and (
-                        (request.filter as? CryptoFilterByState)?.let {
-                            OrderTable.orderState eq it.orderState
-                        } ?: Op.TRUE
-                        ) and (
-                        (request.filter as? CryptoFilterByDate)?.orderDate?.takeIf { it != Instant.NONE }?.let {
+                        CryptoFilterApplyTo.NONE -> Op.FALSE
+                    }
+                }.compoundAnd()) and ((request.filter as? CryptoFilterByType)?.let {
+                    OrderTable.orderType eq it.orderType
+                } ?: Op.TRUE) and ((request.filter as? CryptoFilterByState)?.let {
+                    OrderTable.orderState eq it.orderState
+                } ?: Op.TRUE) and ((request.filter as? CryptoFilterByDate)?.orderDate?.takeIf { it != Instant.NONE }
+                    ?.let {
 
-                            val filterDateStart = it.toBeginDay()
-                            val filterDateEnd = it.toEndDay()
+                        val filterDateStart = it.toBeginDay()
+                        val filterDateEnd = it.toEndDay()
 
-                            OrderTable.created.greaterEq(filterDateStart) and OrderTable.created.less(filterDateEnd)
+                        OrderTable.created.greaterEq(filterDateStart) and OrderTable.created.less(filterDateEnd)
 
-                        } ?: Op.TRUE
-                        ) and (
-                        (request.filter as? CryptoFilterByCurrency)?.ticker?.takeIf { it.isNotBlank() }?.let {
-                            ((PairTable.first eq it) or (PairTable.second eq it))
-                        } ?: Op.TRUE
-                        )
+                    } ?: Op.TRUE) and ((request.filter as? CryptoFilterByCurrency)?.ticker?.takeIf { it.isNotBlank() }
+                    ?.let {
+                        ((PairTable.first eq it) or (PairTable.second eq it))
+                    } ?: Op.TRUE)
             }
 
             DbOrdersResponse(result = results.map { OrderTable.from(it) }, isSuccess = true)
@@ -190,20 +182,15 @@ class OrderRepositorySql(
         }
     }
 
-    private fun CryptoOrder.toNewOrder(newOrder: CryptoOrder) = CryptoOrder(
-        orderId = newOrder.orderId.takeIf { it != CryptoOrderId.NONE } ?: this.orderId,
-        ownerId = newOrder.ownerId.takeIf { it != CryptoUserId.NONE } ?: this.ownerId,
-        created = newOrder.created.takeIf { it != Instant.NONE } ?: this.created,
-        orderState = newOrder.orderState.takeIf { it != CryptoOrderState.NONE } ?: this.orderState,
-        amount = newOrder.amount.takeIf { it != CryptoOrder.ZERO } ?: this.amount,
-        quantity = newOrder.quantity.takeIf { it != CryptoOrder.ZERO } ?: this.quantity,
-        price = newOrder.price.takeIf { it != CryptoOrder.ZERO } ?: this.price,
-        orderType = newOrder.orderType.takeIf { it != CryptoOrderType.NONE } ?: this.orderType,
-        pair = newOrder.pair.takeIf { it != CryptoPair.EMPTY } ?: this.pair,
-        lock = CryptoLock("${UUID.randomUUID()}")
-    )
-
-    private fun List<Op<Boolean>>.toAny(): Op<Boolean> {
-        return if (this.any { it is Op.TRUE }) Op.TRUE else Op.FALSE
-    }
+    private fun CryptoOrder.toNewOrder(newOrder: CryptoOrder) =
+        CryptoOrder(orderId = newOrder.orderId.takeIf { it != CryptoOrderId.NONE } ?: this.orderId,
+            ownerId = newOrder.ownerId.takeIf { it != CryptoUserId.NONE } ?: this.ownerId,
+            created = newOrder.created.takeIf { it != Instant.NONE } ?: this.created,
+            orderState = newOrder.orderState.takeIf { it != CryptoOrderState.NONE } ?: this.orderState,
+            amount = newOrder.amount.takeIf { it != CryptoOrder.ZERO } ?: this.amount,
+            quantity = newOrder.quantity.takeIf { it != CryptoOrder.ZERO } ?: this.quantity,
+            price = newOrder.price.takeIf { it != CryptoOrder.ZERO } ?: this.price,
+            orderType = newOrder.orderType.takeIf { it != CryptoOrderType.NONE } ?: this.orderType,
+            pair = newOrder.pair.takeIf { it != CryptoPair.EMPTY } ?: this.pair,
+            lock = CryptoLock("${UUID.randomUUID()}"))
 }
