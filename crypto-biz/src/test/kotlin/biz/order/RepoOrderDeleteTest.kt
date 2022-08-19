@@ -1,5 +1,7 @@
 package biz.order
 
+import biz.helpers.principalAdmin
+import biz.helpers.principalUser
 import context.CryptoOrderContext
 import crypto.app.inmemory.OrderRepositoryInMemory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -8,6 +10,7 @@ import models.*
 import models.commands.CryptoOrderCommands
 import processors.CryptoOrderProcessor
 import kotlin.test.Test
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -50,6 +53,7 @@ class RepoOrderDeleteTest {
             command = command,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
+            principal = principalUser(id = initOrder.ownerId),
             orderRequest = orderToDelete,
         )
 
@@ -72,6 +76,7 @@ class RepoOrderDeleteTest {
         val context = CryptoOrderContext(
             command = command,
             state = CryptoState.NONE,
+            principal = principalUser(id = initOrder.ownerId),
             workMode = CryptoWorkMode.TEST,
             orderRequest = orderToDelete,
         )
@@ -90,6 +95,7 @@ class RepoOrderDeleteTest {
             command = command,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
+            principal = principalUser(id = initOrder.ownerId),
             orderRequest = CryptoOrder(
                 orderId = CryptoOrderId("12345"),
                 lock = CryptoLock(uuidOld)
@@ -106,4 +112,51 @@ class RepoOrderDeleteTest {
         assertEquals("id", ctx.errors.first().field)
     }
 
+    @Test
+    fun repoDeleteOrderSuccessByAdminTest() = runTest {
+        val orderToDelete = CryptoOrder(
+            orderId = orderIdSuccessDel,
+            lock = CryptoLock(uuidOld),
+            ownerId = CryptoUserId("created-by-user")
+        )
+
+        val context = CryptoOrderContext(
+            command = command,
+            state = CryptoState.NONE,
+            workMode = CryptoWorkMode.TEST,
+            principal = principalAdmin(id = CryptoUserId("im-admin")),
+            orderRequest = orderToDelete,
+        )
+
+        processor.exec(context)
+        println(context)
+
+        assertEquals(CryptoState.FINISHING, context.state)
+        assertTrue(context.errors.isEmpty())
+        assertEquals(context.orderResponse.orderState, CryptoOrderState.NONE)
+        assertEquals(uuidOld, context.orderResponse.lock.asString())
+    }
+
+    @Test
+    fun repoDeleteOrderMustFailByBannedUserTest() = runTest {
+        val orderToDelete = CryptoOrder(
+            orderId = orderIdSuccessDel,
+            lock = CryptoLock(uuidOld)
+        )
+
+        val context = CryptoOrderContext(
+            command = command,
+            state = CryptoState.NONE,
+            workMode = CryptoWorkMode.TEST,
+            principal = principalUser(id = initOrder.ownerId, banned = true),
+            orderRequest = orderToDelete,
+        )
+
+        processor.exec(context)
+        println(context)
+
+        assertEquals(CryptoState.FAILED, context.state)
+        assertTrue(context.errors.isNotEmpty())
+        assertEquals("User is not allowed to this operation", context.errors.firstOrNull()?.message)
+    }
 }

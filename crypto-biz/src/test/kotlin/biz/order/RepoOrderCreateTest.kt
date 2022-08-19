@@ -1,5 +1,6 @@
 package biz.order
 
+import biz.helpers.principalUser
 import context.CryptoOrderContext
 import crypto.app.inmemory.OrderRepositoryInMemory
 import helpers.NONE
@@ -33,6 +34,7 @@ class RepoOrderCreateTest {
             command = command,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
+            principal = principalUser(),
             orderRequest = CryptoOrder(
                 ownerId = CryptoUserId("user-123"),
                 quantity = "1.4".toBigDecimal(),
@@ -57,5 +59,34 @@ class RepoOrderCreateTest {
         assertEquals(context.orderResponse.price, "100.3".toBigDecimal())
         assertEquals(context.orderResponse.pair, tradePair)
         assertEquals(context.errors, emptyList())
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun createFailedByBannedUserTest() = runTest {
+        val tradePair = CryptoPair(first = "BTC", second = "USD")
+
+        val context = CryptoOrderContext(
+            command = command,
+            state = CryptoState.NONE,
+            workMode = CryptoWorkMode.TEST,
+            principal = principalUser(banned = true),
+            orderRequest = CryptoOrder(
+                ownerId = CryptoUserId("user-123"),
+                quantity = "1.4".toBigDecimal(),
+                price = "100.3".toBigDecimal(),
+                amount = "1".toBigDecimal(),
+                orderType = CryptoOrderType.SELL,
+                pair = tradePair
+            )
+        )
+
+        processor.exec(context)
+
+        println(context)
+
+        assertEquals(CryptoState.FAILED, context.state)
+        assertTrue(context.errors.isNotEmpty())
+        assertEquals("User is not allowed to this operation", context.errors.firstOrNull()?.message)
     }
 }

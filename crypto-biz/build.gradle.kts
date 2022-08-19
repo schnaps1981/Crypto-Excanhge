@@ -23,5 +23,6 @@ dependencies {
     testImplementation(kotlin("test-junit"))
     testImplementation(project(":crypto-repo-inmemory"))
     testImplementation(project(":crypto-repo-test"))
+    testImplementation(project(":crypto-stubs"))
     api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 }

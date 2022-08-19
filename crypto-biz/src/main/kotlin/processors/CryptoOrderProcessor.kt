@@ -6,10 +6,10 @@ import com.crowdproj.kotlin.cor.rootChain
 import context.CryptoOrderContext
 import groups.operation
 import groups.stubs
-import models.CryptoState
 import models.CryptoLock
 import models.CryptoOrderId
 import models.CryptoSettings
+import models.CryptoState
 import models.commands.CryptoOrderCommands
 import permissions.accessValidation
 import permissions.chainPermissions
@@ -135,13 +135,13 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     }
                 }
 
-                repoOrdersRead("Чтение ордеров из БД")
-
-                finishProcess("завершение процесса обработки запроса")
-
                 chainPermissions("Вычисление разрешений для пользователя")
 
+                repoOrdersRead("Чтение ордеров из БД")
+
                 accessValidation("Вычисление прав доступа")
+
+                finishProcess("завершение процесса обработки запроса")
             }
 
         }.build()

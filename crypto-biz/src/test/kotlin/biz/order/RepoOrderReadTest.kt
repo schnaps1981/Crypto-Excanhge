@@ -1,5 +1,6 @@
 package biz.order
 
+import biz.helpers.principalUser
 import context.CryptoOrderContext
 import crypto.app.inmemory.OrderRepositoryInMemory
 import crypto.app.repo.test.BaseInitOrder
@@ -75,6 +76,7 @@ class RepoOrderReadTest {
         val context = CryptoOrderContext(
             command = command,
             state = CryptoState.NONE,
+            principal = principalUser(),
             workMode = CryptoWorkMode.TEST,
             orderFilter = filter
         )
