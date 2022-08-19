@@ -10,10 +10,13 @@ import models.*
 fun ICorChainDsl<CryptoOrderContext>.accessValidation(title: String) = chain {
     this.title = title
     description = "Вычисление прав доступа по группе принципала и таблице прав доступа"
+
     on { state == CryptoState.RUNNING }
+
     worker("Вычисление отношения объявления к принципалу") {
         orderRepoRead.principalRelations = orderRepoRead.resolveRelationsTo(principal)
     }
+
     worker("Вычисление доступа к объявлению") {
         permitted = orderRepoRead.principalRelations.asSequence().flatMap { relation ->
             chainPermissions.map { permission ->
@@ -27,6 +30,7 @@ fun ICorChainDsl<CryptoOrderContext>.accessValidation(title: String) = chain {
             accessTable[it] ?: false
         }
     }
+
     worker {
         this.title = "Валидация прав доступа"
         description = "Проверка наличия прав для выполнения операции"
@@ -37,7 +41,7 @@ fun ICorChainDsl<CryptoOrderContext>.accessValidation(title: String) = chain {
     }
 }
 
-private fun CryptoOrder.resolveRelationsTo(principal: CryptoPrincipalModel): Set<CryptoPrincipalRelations> =
+fun CryptoOrder.resolveRelationsTo(principal: CryptoPrincipalModel): Set<CryptoPrincipalRelations> =
     setOfNotNull(
         CryptoPrincipalRelations.NONE,
         CryptoPrincipalRelations.OWN.takeIf { principal.id == ownerId },

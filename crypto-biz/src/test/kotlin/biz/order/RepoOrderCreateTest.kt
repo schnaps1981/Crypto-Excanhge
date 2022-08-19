@@ -27,7 +27,7 @@ class RepoOrderCreateTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun createSuccessTest() = runTest {
+    fun `create order success`() = runTest {
         val tradePair = CryptoPair(first = "BTC", second = "USD")
 
         val context = CryptoOrderContext(
@@ -63,7 +63,7 @@ class RepoOrderCreateTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun createFailedByBannedUserTest() = runTest {
+    fun `create order fail by banned user`() = runTest {
         val tradePair = CryptoPair(first = "BTC", second = "USD")
 
         val context = CryptoOrderContext(

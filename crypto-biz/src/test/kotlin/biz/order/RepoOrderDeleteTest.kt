@@ -43,7 +43,7 @@ class RepoOrderDeleteTest {
     private val processor = CryptoOrderProcessor(settings)
 
     @Test
-    fun repoDeleteOrderSuccessTest() = runTest {
+    fun `delete user order success test`() = runTest {
         val orderToDelete = CryptoOrder(
             orderId = orderIdSuccessDel,
             lock = CryptoLock(uuidOld)
@@ -67,7 +67,7 @@ class RepoOrderDeleteTest {
     }
 
     @Test
-    fun repoDeleteConcurrentTest() = runTest {
+    fun `delete order concurrent test`() = runTest {
         val orderToDelete = CryptoOrder(
             orderId = orderIdSuccessDel,
             lock = CryptoLock(uuidBad)
@@ -90,7 +90,7 @@ class RepoOrderDeleteTest {
     }
 
     @Test
-    fun repoDeleteNotFoundTest() = runTest {
+    fun `delete order not found test`() = runTest {
         val ctx = CryptoOrderContext(
             command = command,
             state = CryptoState.NONE,
@@ -113,7 +113,7 @@ class RepoOrderDeleteTest {
     }
 
     @Test
-    fun repoDeleteOrderSuccessByAdminTest() = runTest {
+    fun `delete user order by admin success test`() = runTest {
         val orderToDelete = CryptoOrder(
             orderId = orderIdSuccessDel,
             lock = CryptoLock(uuidOld),
@@ -138,7 +138,7 @@ class RepoOrderDeleteTest {
     }
 
     @Test
-    fun repoDeleteOrderMustFailByBannedUserTest() = runTest {
+    fun `delete order by banned user test`() = runTest {
         val orderToDelete = CryptoOrder(
             orderId = orderIdSuccessDel,
             lock = CryptoLock(uuidOld)

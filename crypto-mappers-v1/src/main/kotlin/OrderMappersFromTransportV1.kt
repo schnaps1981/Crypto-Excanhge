@@ -29,6 +29,7 @@ fun CryptoOrderContext.fromTransport(request: OrderCreateRequest) {
     orderRequest.quantity = request.quantity.toBigDecimalOrElse { 0.0.toBigDecimal() }
     orderRequest.price = request.price.toBigDecimalOrElse { 0.0.toBigDecimal() }
     orderRequest.orderType = request.orderType.transportToCryptoOrderType()
+    orderRequest.amount = request.quantity.toBigDecimalOrElse { 0.0.toBigDecimal() }
 
     userIdRequest = request.userId.toCryptoUserId()
 }

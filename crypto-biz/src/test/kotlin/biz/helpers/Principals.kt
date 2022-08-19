@@ -9,20 +9,14 @@ fun principalUser(id: CryptoUserId = oneOrderStub.ownerId, banned: Boolean = fal
     id = id,
     groups = setOf(
         CryptoUserGroups.USER,
-
         if (banned) CryptoUserGroups.BANNED else null
-    )
-        .filterNotNull()
-        .toSet()
+    ).filterNotNull().toSet()
 )
 
 fun principalAdmin(id: CryptoUserId = oneOrderStub.ownerId, banned: Boolean = false) = CryptoPrincipalModel(
     id = id,
     groups = setOf(
         CryptoUserGroups.ADMIN,
-
         if (banned) CryptoUserGroups.BANNED else null
-    )
-        .filterNotNull()
-        .toSet()
+    ).filterNotNull().toSet()
 )

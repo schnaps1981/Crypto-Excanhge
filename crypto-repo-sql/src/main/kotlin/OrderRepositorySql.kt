@@ -91,15 +91,18 @@ class OrderRepositorySql(
 
     override suspend fun searchOrders(request: DbOrderFilterRequest): DbOrdersResponse {
         return safeTransaction({
-            DbOrdersResponse()
 
             val results = (OrderTable innerJoin PairTable).select {
                 (
-                        if (request.ownerId == CryptoUserId.NONE) {
-                            Op.TRUE
-                        } else {
-                            OrderTable.ownerId eq request.ownerId.asString()
-                        }
+                        request.filter.filterPermissions.map {
+                            when (it) {
+                                CryptoFilterApplyTo.ANY -> Op.TRUE
+
+                                CryptoFilterApplyTo.OWN -> OrderTable.ownerId eq request.ownerId.asString()
+
+                                CryptoFilterApplyTo.NONE -> Op.FALSE
+                            }
+                        }.compoundAnd()
                         ) and (
                         (request.filter as? CryptoFilterByType)?.let {
                             OrderTable.orderType eq it.orderType
@@ -199,4 +202,8 @@ class OrderRepositorySql(
         pair = newOrder.pair.takeIf { it != CryptoPair.EMPTY } ?: this.pair,
         lock = CryptoLock("${UUID.randomUUID()}")
     )
+
+    private fun List<Op<Boolean>>.toAny(): Op<Boolean> {
+        return if (this.any { it is Op.TRUE }) Op.TRUE else Op.FALSE
+    }
 }

@@ -19,7 +19,8 @@ fun ICorChainDsl<CryptoOrderContext>.chainPermissions(title: String) = worker {
                 CryptoUserGroups.USER -> setOf(
                     CryptoUserPermissions.CREATE_OWN,
                     CryptoUserPermissions.READ_OWN,
-                    CryptoUserPermissions.DELETE_OWN
+                    CryptoUserPermissions.DELETE_OWN,
+                    CryptoUserPermissions.FILTER_OWN
                 )
 
                 CryptoUserGroups.ADMIN -> setOf(
@@ -27,7 +28,8 @@ fun ICorChainDsl<CryptoOrderContext>.chainPermissions(title: String) = worker {
                     CryptoUserPermissions.READ_OWN,
                     CryptoUserPermissions.DELETE_OWN,
                     CryptoUserPermissions.READ_ANY,
-                    CryptoUserPermissions.DELETE_ANY
+                    CryptoUserPermissions.DELETE_ANY,
+                    CryptoUserPermissions.FILTER_ANY
                 )
 
                 CryptoUserGroups.BANNED -> setOf()
@@ -44,7 +46,11 @@ fun ICorChainDsl<CryptoOrderContext>.chainPermissions(title: String) = worker {
                 CryptoUserGroups.BANNED -> setOf(
                     CryptoUserPermissions.CREATE_OWN,
                     CryptoUserPermissions.READ_OWN,
-                    CryptoUserPermissions.DELETE_OWN
+                    CryptoUserPermissions.DELETE_OWN,
+                    CryptoUserPermissions.READ_ANY,
+                    CryptoUserPermissions.DELETE_ANY,
+                    CryptoUserPermissions.FILTER_OWN,
+                    CryptoUserPermissions.FILTER_ANY
                 )
             }
         }.flatten().toSet()

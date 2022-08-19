@@ -4,15 +4,12 @@ import com.crowdproj.kotlin.cor.handlers.chain
 import com.crowdproj.kotlin.cor.handlers.worker
 import com.crowdproj.kotlin.cor.rootChain
 import context.CryptoOrderContext
+import context.fail
 import groups.operation
 import groups.stubs
-import models.CryptoLock
-import models.CryptoOrderId
-import models.CryptoSettings
-import models.CryptoState
+import models.*
 import models.commands.CryptoOrderCommands
-import permissions.accessValidation
-import permissions.chainPermissions
+import permissions.*
 import validators.*
 import validators.filter.validateFilterCurrency
 import validators.filter.validateFilterDate
@@ -136,10 +133,42 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                 }
 
                 chainPermissions("Вычисление разрешений для пользователя")
+                applyFilerPermissions("Настройка разрешений для фильтра")
 
                 repoOrdersRead("Чтение ордеров из БД")
 
-                accessValidation("Вычисление прав доступа")
+                chain {
+                    title = "Вычисление прав доступа"
+
+                    worker {
+                        on { state == CryptoState.RUNNING }
+
+                        handle {
+                            ordersRepoDone = ordersRepoRead.map { order ->
+                                order.copy(principalRelations = order.resolveRelationsTo(principal))
+                            }.toMutableList()
+
+                            permitted =
+                                ordersRepoDone.flatMap { it.principalRelations }.asSequence().flatMap { relation ->
+                                    chainPermissions.map { permission ->
+                                        AccessTableConditions(
+                                            command = command,
+                                            permission = permission,
+                                            relation = relation,
+                                        )
+                                    }
+                                }.any {
+                                    accessTable[it] ?: false
+                                }
+
+                            if (permitted) {
+                                ordersResponse = ordersRepoRead
+                            } else {
+                                fail(CryptoError(message = "User is not allowed to this operation"))
+                            }
+                        }
+                    }
+                }
 
                 finishProcess("завершение процесса обработки запроса")
             }
