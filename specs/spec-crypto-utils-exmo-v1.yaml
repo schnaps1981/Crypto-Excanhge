@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Exmo Api
+  description: Спецификация Websocket-API биржи EXMO. нужна только для генерации транспортных моделей
+  version: 1.0.0
+servers:
+  - url: 'https://localhost/'
+paths:
+  /:
+    post:
+      requestBody:
+        description: Request to EXMP ws-api
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExmoRequest'
+      responses:
+        200:
+          description: Response from EXMP ws-api
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExmoResponse'
+
+components:
+  schemas:
+    ExmoResponse:
+      description: Ответ на команду от ws-api EXMO
+      type: object
+      properties:
+        id:
+          type: integer
+        ts:
+          type: integer
+        code:
+          type: integer
+        message:
+          type: string
+        session_id:
+          type: string
+        topic:
+          type: string
+        error:
+          type: string
+        data:
+          $ref: '#/components/schemas/dataTicker'
+        event:
+          $ref: '#/components/schemas/event'
+
+    ExmoRequest:
+      description: Запрос, или можно считать это командой в ws-api EXMO
+      type: object
+      properties:
+        id:
+          type: string
+        method:
+          $ref: '#/components/schemas/method'
+        topics:
+          type: array
+          items:
+            type: string
+
+    method:
+      type: string
+      description: команды, которые может принимать ws-api
+      enum:
+        - subscribe
+        - unsubscribe
+
+    event:
+      type: string
+      description: название события с которым связан ответ api
+      enum:
+        - info
+        - subscribed
+        - error
+        - unsubscribed
+        - update
+
+    dataTicker:
+      type: object
+      description: данные тикера
+      properties:
+        buy_price:
+          type: string
+        sell_price:
+          type: string
+        last_trade:
+          type: string
+        high:
+          type: string
+        low:
+          type: string
+        avg:
+          type: string
+        vol:
+          type: string
+        vol_curr:
+          type: string
+        updated:
+          type: integer
