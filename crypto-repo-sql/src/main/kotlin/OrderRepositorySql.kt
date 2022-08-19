@@ -26,9 +26,13 @@ class OrderRepositorySql(
     }
 
     override suspend fun createOrder(request: DbOrderRequest): DbOrderResponse {
-        val order = request.order.copy(created = Instant.nowMicros, lock = CryptoLock(UUID.randomUUID().toString()))
-        return save(order)
+        val order = request.order.copy(
+            created = if (request.order.created == Instant.NONE) Instant.nowMicros else request.order.created,
+            lock = CryptoLock(UUID.randomUUID().toString()),
+            orderState = CryptoOrderState.ACTIVE
+        )
 
+        return save(order)
     }
 
     override suspend fun deleteOrder(request: DbOrderIdRequest): DbOrderResponse {

@@ -13,7 +13,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsI
   "quantity": 1.0,
   "price": 150.0,
   "amount": 3.0,
-  "orderType": "sell"
+  "orderType": "buy"
 }
 
 ### Read order
