@@ -6,10 +6,13 @@ import com.crowdproj.kotlin.cor.rootChain
 import context.CryptoOrderContext
 import groups.operation
 import groups.stubs
+import models.CryptoState
 import models.CryptoLock
 import models.CryptoOrderId
 import models.CryptoSettings
 import models.commands.CryptoOrderCommands
+import permissions.accessValidation
+import permissions.chainPermissions
 import validators.*
 import validators.filter.validateFilterCurrency
 import validators.filter.validateFilterDate
@@ -55,6 +58,17 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     }
                 }
 
+                chainPermissions("Вычисление разрешений для пользователя")
+                worker {
+                    title = "инициализация orderRead"
+                    on { state == CryptoState.RUNNING }
+                    handle {
+                        orderRepoRead = orderValidated
+                        orderRepoRead.ownerId = principal.id
+                    }
+                }
+                accessValidation("Вычисление прав доступа")
+
                 repoOrderCreate("Создание ордера в БД")
 
                 finishProcess("завершение процесса обработки запроса")
@@ -85,7 +99,12 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     }
                 }
 
+                chainPermissions("Вычисление разрешений для пользователя")
+
                 repoOrderRead("Чтение ордера из БД. Получаем блокировку")
+
+                accessValidation("Вычисление прав доступа")
+
                 repoCheckReadLock("Проверяем блокировку")
                 repoPrepareDelete("Подготовка объекта для удаления")
                 repoOrderDelete("Удаление ордера из БД")
@@ -119,6 +138,10 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                 repoOrdersRead("Чтение ордеров из БД")
 
                 finishProcess("завершение процесса обработки запроса")
+
+                chainPermissions("Вычисление разрешений для пользователя")
+
+                accessValidation("Вычисление прав доступа")
             }
 
         }.build()

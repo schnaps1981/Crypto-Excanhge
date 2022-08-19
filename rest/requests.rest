@@ -1,6 +1,7 @@
 ### Create order
 POST http://127.0.0.1:8080/order/create/
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
 
 {
   "debug": {
@@ -22,6 +23,7 @@ Content-Type: application/json
 ### Read order
 POST http://127.0.0.1:8080/order/read/
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
 
 {
   "debug": {
@@ -53,6 +55,7 @@ Content-Type: application/json
 ### Read order no stub
 POST http://127.0.0.1:8080/order/read/
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
 
 {
   "requestType": "OrderRead",
@@ -66,6 +69,7 @@ Content-Type: application/json
 ### Detele order
 POST http://127.0.0.1:8080/order/delete/
 Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
 
 {
   "debug": {

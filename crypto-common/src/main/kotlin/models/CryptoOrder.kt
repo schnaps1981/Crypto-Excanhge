@@ -15,7 +15,8 @@ data class CryptoOrder(
     var price: BigDecimal = ZERO,
     var orderType: CryptoOrderType = CryptoOrderType.NONE,
     var pair: CryptoPair = CryptoPair(),
-    var lock: CryptoLock = CryptoLock.NONE
+    var lock: CryptoLock = CryptoLock.NONE,
+    var principalRelations: Set<CryptoPrincipalRelations> = emptySet(),
 ) {
     fun deepCopy() = CryptoOrder(
         ownerId = this@CryptoOrder.ownerId,
@@ -27,7 +28,8 @@ data class CryptoOrder(
         price = this@CryptoOrder.price,
         orderType = this@CryptoOrder.orderType,
         pair = this@CryptoOrder.pair.deepCopy(),
-        lock = this@CryptoOrder.lock
+        lock = this@CryptoOrder.lock,
+        principalRelations = this@CryptoOrder.principalRelations
     )
 
     companion object {

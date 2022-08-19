@@ -23,6 +23,10 @@ data class CryptoOrderContext(
 
     override var settings: CryptoSettings = CryptoSettings(),
 
+    var principal: CryptoPrincipalModel = CryptoPrincipalModel.NONE,
+    val chainPermissions: MutableSet<CryptoUserPermissions> = mutableSetOf(),
+    var permitted: Boolean = false,
+
     var orderRequest: CryptoOrder = CryptoOrder(),
 
     var orderResponse: CryptoOrder = CryptoOrder(),
