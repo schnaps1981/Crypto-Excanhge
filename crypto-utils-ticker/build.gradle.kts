@@ -19,6 +19,7 @@ sourceSets {
 dependencies {
     val ktorVersion: String by project
     val jacksonVersion: String by project
+    val datetimeVersion: String by project
 
     implementation(kotlin("stdlib"))
 
@@ -28,8 +29,12 @@ dependencies {
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
 
+    api("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+
+    implementation(project(":crypto-common"))
 
     testImplementation(kotlin("test-junit"))
 }
