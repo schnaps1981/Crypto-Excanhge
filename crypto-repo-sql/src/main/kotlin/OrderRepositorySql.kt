@@ -1,6 +1,4 @@
 import helpers.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.datetime.Instant
 import models.*
 import models.filter.CryptoFilterByCurrency
@@ -14,17 +12,13 @@ import java.sql.SQLException
 import java.util.*
 
 class OrderRepositorySql(
-    url: String = "jdbc:postgresql://localhost:5432/cryptodevdb",
-    user: String = "postgres",
-    password: String = "crypto-pass",
-    schema: String = "crypto",
+    config: SQLDbConfig,
     initObjects: Collection<CryptoOrder> = emptyList()
 ) : IOrderRepository {
 
-    val db by lazy {
-        SqlConnector(url, user, password, schema).connect(OrderTable, PairTable)
+    private val db by lazy {
+        SqlConnector(config).connect(OrderTable, PairTable)
     }
-    private val mutex = Mutex()
 
     init {
         initObjects.forEach {
@@ -34,33 +28,29 @@ class OrderRepositorySql(
 
     override suspend fun createOrder(request: DbOrderRequest): DbOrderResponse {
         val order = request.order.copy(lock = CryptoLock(UUID.randomUUID().toString()))
-        return mutex.withLock {
-            save(order)
-        }
+        return save(order)
     }
 
     override suspend fun deleteOrder(request: DbOrderIdRequest): DbOrderResponse {
         val key = request.id.takeIf { it != CryptoOrderId.NONE }?.asString() ?: return resultErrorIdIsEmpty
 
-        return mutex.withLock {
-            safeTransaction({
-                val local = OrderTable.select { OrderTable.orderId.eq(key) }.single().let { OrderTable.from(it) }
+        return safeTransaction({
+            val local = OrderTable.select { OrderTable.orderId.eq(key) }.single().let { OrderTable.from(it) }
 
-                if (local.lock == request.lock) {
-                    val deletedCount = OrderTable.deleteWhere { OrderTable.orderId.eq(key) }
+            if (local.lock == request.lock) {
+                val deletedCount = OrderTable.deleteWhere { OrderTable.orderId.eq(key) }
 
-                    if (deletedCount == 1) {
-                        DbOrderResponse(result = local.copy(orderState = CryptoOrderState.NONE), isSuccess = true)
-                    } else {
-                        DbOrderResponse.withErrorMessage("Not deleted")
-                    }
+                if (deletedCount == 1) {
+                    DbOrderResponse(result = local.copy(orderState = CryptoOrderState.NONE), isSuccess = true)
                 } else {
-                    resultErrorConcurrent
+                    DbOrderResponse.withErrorMessage("Not deleted")
                 }
-            }, {
-                resultErrorIdNotFound
-            })
-        }
+            } else {
+                resultErrorConcurrent
+            }
+        }, {
+            resultErrorIdNotFound
+        })
     }
 
     override suspend fun readOrder(request: DbOrderIdRequest): DbOrderResponse {
@@ -83,22 +73,20 @@ class OrderRepositorySql(
         val key = request.order.orderId.takeIf { it != CryptoOrderId.NONE }?.asString() ?: return resultErrorIdIsEmpty
         val oldLock = request.order.lock.takeIf { it != CryptoLock.NONE }?.asString()
 
-        return mutex.withLock {
-            safeTransaction({
-                val oldOrder = OrderTable.select { OrderTable.orderId.eq(key) }.singleOrNull()?.let {
-                    OrderTable.from(it)
-                } ?: return@safeTransaction resultErrorIdNotFound
+        return safeTransaction({
+            val oldOrder = OrderTable.select { OrderTable.orderId.eq(key) }.singleOrNull()?.let {
+                OrderTable.from(it)
+            } ?: return@safeTransaction resultErrorIdNotFound
 
-                val newOrder = oldOrder.toNewOrder(request.order)
+            val newOrder = oldOrder.toNewOrder(request.order)
 
-                return@safeTransaction when (oldLock) {
-                    null, oldOrder.lock.asString() -> updateDb(newOrder)
-                    else -> resultErrorConcurrent
-                }
-            }, {
-                DbOrderResponse.withErrorMessage(message ?: localizedMessage)
-            })
-        }
+            return@safeTransaction when (oldLock) {
+                null, oldOrder.lock.asString() -> updateDb(newOrder)
+                else -> resultErrorConcurrent
+            }
+        }, {
+            DbOrderResponse.withErrorMessage(message ?: localizedMessage)
+        })
     }
 
     override suspend fun searchOrders(request: DbOrderFilterRequest): DbOrdersResponse {

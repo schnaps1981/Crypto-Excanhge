@@ -21,7 +21,9 @@ object SqlTestCompanion {
 
     private val url: String by lazy { container.jdbcUrl }
 
+    private val config: SQLDbConfig = SQLDbConfig(url, USER, PASS, SCHEMA)
+
     fun repoUnderTestContainer(initObjects: Collection<CryptoOrder> = emptyList()): OrderRepositorySql {
-        return OrderRepositorySql(url, USER, PASS, SCHEMA, initObjects)
+        return OrderRepositorySql(config, initObjects)
     }
 }

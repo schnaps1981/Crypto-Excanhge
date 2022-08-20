@@ -14,7 +14,7 @@ data class OrderEntity(
     val quantity: String? = null,
     val price: String? = null,
     val orderType: String? = null,
-    val pair: PairEntity? = null,
+    val pair: Pair<String, String>? = null,
     val lock: String? = null
 ) {
 
@@ -43,6 +43,17 @@ data class OrderEntity(
         pair = pair?.toInternal() ?: CryptoPair.EMPTY,
         lock = lock?.let { CryptoLock(it) } ?: CryptoLock.NONE,
     )
+}
+
+fun CryptoPair.toEntity(): Pair<String, String>? =
+    if (first.isNotBlank() && second.isNotBlank()) {
+        Pair(first, second)
+    } else {
+        null
+    }
+
+fun Pair<String, String>.toInternal(): CryptoPair {
+    return CryptoPair(this.first, this.second)
 }
 
 fun BigDecimal.toStringOrNull(): String? = if (this != CryptoOrder.ZERO) {

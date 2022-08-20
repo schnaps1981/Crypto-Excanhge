@@ -1,7 +1,8 @@
 package crypto.app.ktor
 
-import OrderService
 import OrderRepositorySql
+import OrderService
+import SQLDbConfig
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import crypto.app.inmemory.OrderRepositoryInMemory
@@ -10,6 +11,7 @@ import crypto.app.ktor.api.deleteOrder
 import crypto.app.ktor.api.readOrders
 import crypto.app.ktor.api.wsOrderHandler
 import crypto.app.ktor.helpers.KtorUserSession
+import crypto.app.ktor.helpers.fromEnvironment
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.callloging.*
@@ -24,7 +26,8 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused")
 fun Application.module(
-    repoSettings: CryptoSettings? = null
+    repoSettings: CryptoSettings? = null,
+    dbConfig: SQLDbConfig = SQLDbConfig.fromEnvironment(environment)
 ) {
 
     install(ContentNegotiation) {
@@ -47,7 +50,7 @@ fun Application.module(
     val settings by lazy {
         repoSettings ?: CryptoSettings(
             repoTest = OrderRepositoryInMemory(ttl = Duration.ofMinutes(10)),
-            repoProd = OrderRepositorySql()
+            repoProd = OrderRepositorySql(dbConfig)
         )
     }
 
