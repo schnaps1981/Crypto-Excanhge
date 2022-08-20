@@ -44,5 +44,20 @@ val accessTable = mapOf(
         command = CryptoOrderCommands.DELETE,
         permission = CryptoUserPermissions.DELETE_ANY,
         relation = CryptoPrincipalRelations.ANY
-    ) to true
+    ) to true,
+
+    //Фильтр может вернуть только ордера владельца
+    AccessTableConditions(
+        command = CryptoOrderCommands.READ,
+        permission = CryptoUserPermissions.FILTER_OWN,
+        relation = CryptoPrincipalRelations.OWN
+    ) to true,
+
+    //Фильтр может вернуть ордера любого владельца
+    AccessTableConditions(
+        command = CryptoOrderCommands.READ,
+        permission = CryptoUserPermissions.FILTER_ANY,
+        relation = CryptoPrincipalRelations.ANY
+    ) to true,
+
 )

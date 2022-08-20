@@ -41,9 +41,6 @@ class ValidateCorrect {
 
         println(context)
 
-        assertEquals(0, context.errors.size)
-        assertEquals(CryptoState.FINISHING, context.state)
-
         assertEquals(order, context.orderValidated)
     }
 }

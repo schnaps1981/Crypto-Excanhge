@@ -28,8 +28,7 @@ data class CryptoOrder(
         price = this@CryptoOrder.price,
         orderType = this@CryptoOrder.orderType,
         pair = this@CryptoOrder.pair.deepCopy(),
-        lock = this@CryptoOrder.lock,
-        principalRelations = this@CryptoOrder.principalRelations
+        lock = this@CryptoOrder.lock
     )
 
     companion object {

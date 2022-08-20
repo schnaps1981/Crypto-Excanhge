@@ -51,7 +51,7 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     validateOrderType("Валидация типа ордера")
 
                     finishOrderValidation("Успешное завершение валидации запроса") {
-                        orderValidated = orderValidating
+                        orderValidated = orderValidating.deepCopy()
                     }
                 }
 
@@ -60,7 +60,7 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     title = "инициализация orderRead"
                     on { state == CryptoState.RUNNING }
                     handle {
-                        orderRepoRead = orderValidated
+                        orderRepoRead = orderValidated.deepCopy()
                         orderRepoRead.ownerId = principal.id
                     }
                 }
@@ -92,7 +92,7 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     validateLockNotEmpty("Проверка на непустой lock")
 
                     finishOrderValidation("Успешное завершение валидации запроса") {
-                        orderValidated = orderValidating
+                        orderValidated = orderValidating.deepCopy()
                     }
                 }
 
@@ -128,7 +128,7 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     validateFilterType("Проверка фильтра по типу ордера")
 
                     finishOrderValidation("Успешное завершение валидации фильтра") {
-                        orderFilterValidated = orderFilterValidating
+                        orderFilterValidated = orderFilterValidating.deepCopy()
                     }
                 }
 
@@ -161,7 +161,7 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                                     accessTable[it] ?: false
                                 }
 
-                            if (permitted) {
+                            if (permitted || ordersRepoRead.isEmpty()) {
                                 ordersResponse = ordersRepoRead
                             } else {
                                 fail(CryptoError(message = "User is not allowed to this operation"))
