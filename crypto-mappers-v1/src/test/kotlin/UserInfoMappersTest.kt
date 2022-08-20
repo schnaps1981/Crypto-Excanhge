@@ -1,6 +1,8 @@
 import com.crypto.api.v1.models.*
 import context.CryptoOrderContext
 import context.CryptoTickerContext
+import helpers.nowMicros
+import kotlinx.datetime.Instant
 import models.*
 import models.commands.CryptoOrderCommands
 import models.commands.CryptoTickerCommands
@@ -151,7 +153,7 @@ class UserInfoMappersTest {
             ordersResponse = mutableListOf(
                 CryptoOrder(
                     orderId = CryptoOrderId("order123"),
-                    created = 123,
+                    created = timestamp,
                     orderState = CryptoOrderState.COMPLETED,
                     amount = 2.0.toBigDecimal(),
                     quantity = 3.0.toBigDecimal(),
@@ -178,7 +180,7 @@ class UserInfoMappersTest {
         assertEquals("couldn't create some balance", response.errors?.firstOrNull()?.message)
 
         assertEquals("order123", response.orders?.firstOrNull()?.orderId)
-        assertEquals(123, response.orders?.firstOrNull()?.created)
+        assertEquals(timestamp.toString(), response.orders?.firstOrNull()?.created)
         assertEquals(OrderState.COMPLETED, response.orders?.firstOrNull()?.orderState)
         assertEquals("2.0", response.orders?.firstOrNull()?.amount)
         assertEquals("3.0", response.orders?.firstOrNull()?.quantity)
@@ -226,7 +228,7 @@ class UserInfoMappersTest {
                 stub = RequestDebugStubs.SUCCESS
             ),
             userId = "user123",
-            filter = FilterByDate(date = "11111")
+            filter = FilterByDate(date = timestamp.toString())
         )
 
         val context = CryptoOrderContext()
@@ -241,7 +243,7 @@ class UserInfoMappersTest {
 
         assertEquals(CryptoUserId("user123"), context.userIdRequest)
         assertEquals(
-            CryptoFilterByDate(orderDate = "11111").orderDate,
+            CryptoFilterByDate(orderDate = timestamp).orderDate,
             (context.orderFilter as CryptoFilterByDate).orderDate
         )
     }
@@ -271,5 +273,9 @@ class UserInfoMappersTest {
 
         assertEquals("BTC", context.ratesRequest.first)
         assertEquals("USD", context.ratesRequest.second)
+    }
+
+    companion object {
+        val timestamp = Instant.nowMicros
     }
 }

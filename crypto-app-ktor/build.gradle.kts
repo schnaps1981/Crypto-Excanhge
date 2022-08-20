@@ -56,6 +56,10 @@ dependencies {
     // Stubs
     implementation(project(":crypto-stubs"))
 
+    //Repositories
+    implementation(project(":crypto-repo-inmemory"))
+    implementation(project(":crypto-repo-sql"))
+
     testImplementation(kotlin("test-junit"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")

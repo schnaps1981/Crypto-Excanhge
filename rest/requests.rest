@@ -33,6 +33,23 @@ Content-Type: application/json
   "filter": null
 }
 
+### Read order
+POST http://127.0.0.1:8080/order/read/
+Content-Type: application/json
+
+{
+  "debug": {
+    "stub": "success",
+    "mode": "stub"
+  },
+  "requestType": "OrderRead",
+  "requestId": "34234",
+  "filter": {
+    "filterType": "byType",
+    "type": "buy"
+  }
+}
+
 ### Read order no stub
 POST http://127.0.0.1:8080/order/read/
 Content-Type: application/json
@@ -40,7 +57,10 @@ Content-Type: application/json
 {
   "requestType": "OrderRead",
   "requestId": "34234",
-  "filter": {"filterType":"byState","state":"active"}
+  "filter": {
+    "filterType": "byState",
+    "state": "active"
+  }
 }
 
 ### Detele order

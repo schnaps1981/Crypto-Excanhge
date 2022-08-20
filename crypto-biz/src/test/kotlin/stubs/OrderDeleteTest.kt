@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class OrderDeleteTest {
-    private val processor = CryptoOrderProcessor()
+    private val processor = CryptoOrderProcessor(CryptoSettings())
 
     @Test
     fun `stub success delete order test`() = runTest {

@@ -22,6 +22,9 @@ dependencies {
     implementation(project(":crypto-transport-main-openapi-v1"))
     implementation(project(":crypto-services"))
 
+    // repository
+    implementation(project(":crypto-repo-inmemory"))
+
     // Stubs
     implementation(project(":crypto-stubs"))
 

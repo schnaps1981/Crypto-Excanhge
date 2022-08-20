@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 @ExperimentalCoroutinesApi
 class OrderCreateTest {
 
-    private val processor = CryptoOrderProcessor()
+    private val processor = CryptoOrderProcessor(CryptoSettings())
 
     @Test
     fun `stub success create order test`() = runTest {

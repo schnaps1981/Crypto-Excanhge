@@ -21,5 +21,7 @@ dependencies {
     implementation("com.github.crowdproj.kotlin-cor:kotlin-cor:$corVersion")
 
     testImplementation(kotlin("test-junit"))
+    testImplementation(project(":crypto-repo-inmemory"))
+    testImplementation(project(":crypto-repo-test"))
     api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 }

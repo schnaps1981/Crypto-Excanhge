@@ -4,10 +4,7 @@ import OrderStubs
 import context.CryptoOrderContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import models.CryptoOrder
-import models.CryptoRequestId
-import models.CryptoState
-import models.CryptoWorkMode
+import models.*
 import models.commands.CryptoOrderCommands
 import org.junit.Test
 import processors.CryptoOrderProcessor
@@ -15,7 +12,7 @@ import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class OrderReadTest {
-    private val processor = CryptoOrderProcessor()
+    private val processor = CryptoOrderProcessor(CryptoSettings())
 
     @Test
     fun `stub success read order  test`() = runTest {

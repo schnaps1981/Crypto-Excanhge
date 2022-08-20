@@ -2,6 +2,7 @@ import com.crypto.api.v1.models.*
 import context.CryptoOrderContext
 import errors.UnknownFilter
 import errors.UnknownRequestClass
+import kotlinx.datetime.Instant
 import models.CryptoPair
 import models.commands.CryptoOrderCommands
 import models.filter.*
@@ -64,7 +65,7 @@ private fun IFilter?.transportToCryptoOrderFilter(): ICryptoFilter = when (this)
     else -> throw UnknownFilter(this)
 }
 
-private fun fromTransport(filter: FilterByDate) = CryptoFilterByDate(orderDate = filter.date ?: "")
+private fun fromTransport(filter: FilterByDate) = CryptoFilterByDate(orderDate = Instant.parse(filter.date ?: ""))
 
 private fun fromTransport(filter: FilterByCurrency) = CryptoFilterByCurrency(ticker = filter.currency ?: "")
 

@@ -1,3 +1,4 @@
+import kotlinx.datetime.Instant
 import models.*
 
 object OrderStubs {
@@ -13,7 +14,7 @@ object OrderStubs {
         quantity = 1.0.toBigDecimal(),
         orderId = CryptoOrderId("orderID-123213"),
         amount = 1.0.toBigDecimal(),
-        created = 1653155017 //Sat May 21 2022 10:43:37 GMT+0000
+        created = Instant.fromEpochMilliseconds(1653155017)  //Sat May 21 2022 10:43:37 GMT+0000
     )
 
     val listOfOrders = mutableListOf(
@@ -28,7 +29,7 @@ object OrderStubs {
             quantity = 1.0.toBigDecimal(),
             orderId = CryptoOrderId("orderID-123213"),
             amount = 1.0.toBigDecimal(),
-            created = 1653155017 //Sat May 21 2022 10:43:37 GMT+0000
+            created = Instant.fromEpochMilliseconds(1653155017) //Sat May 21 2022 10:43:37 GMT+0000
         ),
         CryptoOrder(
             orderType = CryptoOrderType.SELL,
@@ -41,7 +42,7 @@ object OrderStubs {
             quantity = 0.5.toBigDecimal(),
             orderId = CryptoOrderId("orderID-55555"),
             amount = 1.0.toBigDecimal(),
-            created = 1653155017 //Sat May 21 2022 10:43:37 GMT+0000
+            created = Instant.fromEpochMilliseconds(1653155017) //Sat May 21 2022 10:43:37 GMT+0000
         )
     )
 

@@ -1,6 +1,7 @@
 package validation
 
 import context.CryptoOrderContext
+import crypto.app.inmemory.OrderRepositoryInMemory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import models.*
@@ -8,11 +9,16 @@ import models.commands.CryptoOrderCommands
 import org.junit.Test
 import processors.CryptoOrderProcessor
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 
 @ExperimentalCoroutinesApi
 class ValidateOrderId {
-    private val processor = CryptoOrderProcessor()
+    private val settings by lazy {
+        CryptoSettings(
+            repoTest = OrderRepositoryInMemory()
+        )
+    }
+
+    private val processor = CryptoOrderProcessor(settings)
 
     @Test
     fun `validate order id empty`() = runTest {
@@ -48,8 +54,10 @@ class ValidateOrderId {
 
         processor.exec(context)
 
-        assertEquals(0, context.errors.size)
-        assertNotEquals(CryptoState.FAILED, context.state)
+        println(context)
+
+        assertEquals(1, context.errors.size)
+        assertEquals(CryptoState.FAILED, context.state)
 
         assertEquals(context.orderValidated.orderId, CryptoOrderId("123321"))
     }

@@ -6,24 +6,32 @@ import com.crowdproj.kotlin.cor.rootChain
 import context.CryptoOrderContext
 import groups.operation
 import groups.stubs
+import models.CryptoLock
+import models.CryptoOrderId
+import models.CryptoSettings
 import models.commands.CryptoOrderCommands
 import validators.*
 import validators.filter.validateFilterCurrency
 import validators.filter.validateFilterDate
 import validators.filter.validateFilterState
 import validators.filter.validateFilterType
+import workers.finishProcess
+import workers.initRepo
 import workers.initStatus
+import workers.repo.order.*
 import workers.stubNoCase
 import workers.stubs.*
 
 
-class CryptoOrderProcessor {
+class CryptoOrderProcessor(private val settings: CryptoSettings) {
 
-    suspend fun exec(context: CryptoOrderContext) = OrderChain.exec(context)
+    suspend fun exec(context: CryptoOrderContext) =
+        OrderChain.exec(context.apply { settings = this@CryptoOrderProcessor.settings })
 
     companion object {
         private val OrderChain = rootChain<CryptoOrderContext> {
             initStatus("Инициализация статуса")
+            initRepo("Инициализация репозитория")
 
             operation("Создание ордера", CryptoOrderCommands.CREATE) {
                 stubs("Обработка стабов") {
@@ -38,7 +46,7 @@ class CryptoOrderProcessor {
 
                     validateTradePair("Проверка торговой пары")
                     validateQuantity("Валидация количества актива")
-                    //validateAmount("Валидация суммы актива")
+                    validateAmount("Валидация суммы актива")
                     validatePrice("Валидация цены актива")
                     validateOrderType("Валидация типа ордера")
 
@@ -46,6 +54,10 @@ class CryptoOrderProcessor {
                         orderValidated = orderValidating
                     }
                 }
+
+                repoOrderCreate("Создание ордера в БД")
+
+                finishProcess("завершение процесса обработки запроса")
             }
 
             operation("Удаление ордера", CryptoOrderCommands.DELETE) {
@@ -60,13 +72,25 @@ class CryptoOrderProcessor {
                 chain {
                     title = "Валидация запроса удаления ордера"
                     worker("копирование полей в Validating") { orderValidating = orderRequest.deepCopy() }
+                    worker("Очистка id") {
+                        orderValidating.orderId = CryptoOrderId(orderValidating.orderId.asString().trim())
+                    }
+                    worker("Очистка lock") { orderValidating.lock = CryptoLock(orderValidating.lock.asString().trim()) }
 
                     validateOrderId("Валидация id ордера")
+                    validateLockNotEmpty("Проверка на непустой lock")
 
                     finishOrderValidation("Успешное завершение валидации запроса") {
                         orderValidated = orderValidating
                     }
                 }
+
+                repoOrderRead("Чтение ордера из БД. Получаем блокировку")
+                repoCheckReadLock("Проверяем блокировку")
+                repoPrepareDelete("Подготовка объекта для удаления")
+                repoOrderDelete("Удаление ордера из БД")
+
+                finishProcess("завершение процесса обработки запроса")
             }
 
             operation("Чтение ордера", CryptoOrderCommands.READ) {
@@ -91,6 +115,10 @@ class CryptoOrderProcessor {
                         orderFilterValidated = orderFilterValidating
                     }
                 }
+
+                repoOrdersRead("Чтение ордеров из БД")
+
+                finishProcess("завершение процесса обработки запроса")
             }
 
         }.build()

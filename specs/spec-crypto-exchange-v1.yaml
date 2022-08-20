@@ -353,7 +353,7 @@ components:
               type: string
             created:
               description: Метка времени создания ордера
-              type: integer
+              type: string
             orderState:
               $ref: '#/components/schemas/OrderState'
             amount:
