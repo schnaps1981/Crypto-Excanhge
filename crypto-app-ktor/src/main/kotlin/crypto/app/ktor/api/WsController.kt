@@ -15,12 +15,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.flow.*
 import kotlinx.datetime.Instant
+import ru.otus.otuskotlin.marketplace.logging.LogWrapper
 import toTransport
 
 
 suspend fun WebSocketSession.wsOrderHandler(
     service: OrderService,
     sessions: MutableSet<KtorUserSession>,
+    logger: LogWrapper
 ) {
     val userSession = KtorUserSession(this)
     sessions.add(userSession)

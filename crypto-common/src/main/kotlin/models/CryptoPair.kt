@@ -11,6 +11,8 @@ data class CryptoPair(
         second = this@CryptoPair.second
     )
 
+    override fun toString() = "$first/$second"
+
     companion object {
         val EMPTY = CryptoPair()
     }

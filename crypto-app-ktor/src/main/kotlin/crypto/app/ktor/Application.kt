@@ -20,6 +20,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import models.CryptoSettings
 import org.slf4j.event.Level
+import ru.otus.otuskotlin.marketplace.logging.logger
 import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -58,23 +59,25 @@ fun Application.module(
 
     val sessions = mutableSetOf<KtorUserSession>()
 
+    val logger = logger(Route::class.java)
+
     routing {
         route("/order") {
             post("/create") {
-                call.createOrder(orderService)
+                call.createOrder(orderService, logger)
             }
 
             post("/read") {
-                call.readOrders(orderService)
+                call.readOrders(orderService, logger)
             }
 
             post("/delete") {
-                call.deleteOrder(orderService)
+                call.deleteOrder(orderService, logger)
             }
         }
 
         webSocket("/ws/order") {
-            wsOrderHandler(orderService, sessions)
+            wsOrderHandler(orderService, sessions, logger)
         }
     }
 }

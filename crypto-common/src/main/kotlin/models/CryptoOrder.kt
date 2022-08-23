@@ -32,5 +32,7 @@ data class CryptoOrder(
 
     companion object {
         val ZERO: BigDecimal = BigDecimal.valueOf(0.0)
+
+        val EMPTY = CryptoOrder()
     }
 }

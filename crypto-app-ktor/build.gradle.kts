@@ -60,6 +60,11 @@ dependencies {
     implementation(project(":crypto-repo-inmemory"))
     implementation(project(":crypto-repo-sql"))
 
+    // Logging
+    implementation(project(":crypto-logging"))
+    implementation(project(":crypto-logging-mapper"))
+    implementation(project(":crypto-api-logs"))
+
     testImplementation(kotlin("test-junit"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
