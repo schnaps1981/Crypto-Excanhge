@@ -18,9 +18,9 @@ import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import logger
 import models.CryptoSettings
 import org.slf4j.event.Level
-import ru.otus.otuskotlin.marketplace.logging.logger
 import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -59,7 +59,7 @@ fun Application.module(
 
     val sessions = mutableSetOf<KtorUserSession>()
 
-    val logger = logger(Route::class.java)
+    val logger = logger("CryptoKtorLogger")
 
     routing {
         route("/order") {

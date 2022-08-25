@@ -12,3 +12,4 @@
 /crypto-transport-main-openapi-v1/build/
 /crypto-common/build/
 **/build/
+/dockers/elk-stack/volumes/

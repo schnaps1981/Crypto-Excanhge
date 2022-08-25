@@ -1,5 +1,4 @@
 import kotlinx.coroutines.runBlocking
-import ru.otus.otuskotlin.marketplace.logging.logger
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import kotlin.test.Test

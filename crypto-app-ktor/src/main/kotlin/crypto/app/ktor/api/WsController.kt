@@ -1,5 +1,6 @@
 package crypto.app.ktor.api
 
+import LogWrapper
 import OrderService
 import apiV1RequestDeserialize
 import apiV1ResponseSerialize
@@ -15,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.flow.*
 import kotlinx.datetime.Instant
-import ru.otus.otuskotlin.marketplace.logging.LogWrapper
 import toTransport
 
 

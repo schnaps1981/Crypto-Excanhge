@@ -1,5 +1,3 @@
-package ru.otus.otuskotlin.marketplace.logging
-
 import ch.qos.logback.classic.Logger
 import net.logstash.logback.argument.StructuredArguments
 import org.slf4j.Marker
@@ -7,7 +5,7 @@ import org.slf4j.event.Level
 import org.slf4j.event.LoggingEvent
 import java.time.Instant
 
-class LogWrapper (
+class LogWrapper(
     /**
      * Экземпляр логера (Logback)
      */
@@ -86,7 +84,8 @@ class LogWrapper (
         log(
             msg = "$loggerId Failing $id",
             level = Level.ERROR,
-            e = e)
+            e = e
+        )
         throw e
     }
 
@@ -104,7 +103,8 @@ class LogWrapper (
         log(
             msg = "$loggerId Failing $id",
             level = Level.ERROR,
-            e = e)
+            e = e
+        )
         if (throwRequired) throw e else null
     }
 }

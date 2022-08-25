@@ -1,5 +1,6 @@
 package crypto.app.ktor.helpers
 
+import LogWrapper
 import com.crypto.api.v1.models.IRequest
 import com.crypto.api.v1.models.IResponse
 import context.CryptoOrderContext
@@ -10,12 +11,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import models.CryptoState
 import models.commands.CryptoOrderCommands
-import ru.otus.otuskotlin.marketplace.logging.LogWrapper
 import toLog
 import toTransport
 
-suspend inline fun <reified Q : IRequest, reified R : IResponse>
-        ApplicationCall.orderControllerHelper(
+suspend inline fun <reified Q : IRequest, reified R : IResponse> ApplicationCall.orderControllerHelper(
     logger: LogWrapper,
     logId: String,
     command: CryptoOrderCommands? = null,

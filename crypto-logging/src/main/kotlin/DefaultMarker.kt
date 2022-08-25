@@ -1,14 +1,12 @@
-package ru.otus.otuskotlin.marketplace.logging
-
 import org.slf4j.Marker
 
 /**
  * Реализация SLF4J маркера логов для маркировки различных типов логов
  */
 class DefaultMarker(
-        private val name: String,
-        private val submarkers: List<Marker> = emptyList()
-): Marker {
+    private val name: String,
+    private val submarkers: List<Marker> = emptyList()
+) : Marker {
     override fun getName(): String = name
 
     override fun add(reference: Marker) {}

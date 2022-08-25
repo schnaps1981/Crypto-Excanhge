@@ -4,13 +4,13 @@
     <property name="LOGS_KAFKA_HOSTS" value="${BOOTSTRAP_SERVERS:-localhost:9094}"/>
 
     <!-- For ELK-Stack: Kafka log's topic -->
-    <property name="LOGS_KAFKA_TOPIC" value="${LOGS_KAFKA_TOPIC:-ok-mkpl-logs}"/>
+    <property name="LOGS_KAFKA_TOPIC" value="${LOGS_KAFKA_TOPIC:-crypto-logs}"/>
 
     <!-- For log files: App name -->
-    <property name="SERVICE_NAME" value="${SERVICE_NAME:-ok_marketplace}"/>
+    <property name="SERVICE_NAME" value="${SERVICE_NAME:-crypto}"/>
 
-<!--    &lt;!&ndash; Log level for packages "ru.otus..." &ndash;&gt;-->
-<!--    <property name="LOG_OTUS_LEVEL" value="${LOG_OTUS_LEVEL:-info}"/>-->
+    <!-- Log level for packages "com.crypto..." -->
+    <property name="LOG_CRYPTO_LEVEL" value="${LOG_CRYPTO_LEVEL:-info}"/>
 
     <!-- Log level for other packages -->
     <property name="LOG_COMMON_LEVEL" value="${LOG_COMMON_LEVEL:-error}"/>
@@ -56,17 +56,17 @@
                     </encoder>
                     <topic>${LOGS_KAFKA_TOPIC}</topic>
                     <deliveryStrategy
-                        class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+                            class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
                     <producerConfig>bootstrap.servers=${LOGS_KAFKA_HOSTS}</producerConfig>
                 </appender>
             </then>
         </if>
     </appender>
 
-<!--    <logger name="ru.otus" level="${LOG_OTUS_LEVEL}" additivity="false">-->
-<!--        <appender-ref ref="asyncMyLogKafka"/>-->
-<!--        <appender-ref ref="STDOUT"/>-->
-<!--    </logger>-->
+    <logger name="CryptoKtorLogger" level="${LOG_CRYPTO_LEVEL}" additivity="false">
+        <appender-ref ref="asyncMyLogKafka"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
 
     <root level="${LOG_COMMON_LEVEL}">
         <appender-ref ref="asyncMyLogKafka"/>
