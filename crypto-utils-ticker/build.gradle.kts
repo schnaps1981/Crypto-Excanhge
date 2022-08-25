@@ -20,6 +20,7 @@ dependencies {
     val ktorVersion: String by project
     val jacksonVersion: String by project
     val datetimeVersion: String by project
+    val corVersion: String by project
 
     implementation(kotlin("stdlib"))
 
@@ -33,6 +34,8 @@ dependencies {
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
+
+    implementation("com.github.crowdproj.kotlin-cor:kotlin-cor:$corVersion")
 
     implementation(project(":crypto-common"))
 

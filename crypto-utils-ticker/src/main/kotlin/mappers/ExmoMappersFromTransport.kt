@@ -13,10 +13,10 @@ import java.math.BigDecimal
 
 
 fun ExmoContext.fromTransport(response: ExmoResponse) {
-    exmoInData.id = response.id?.let { ExmoId(it.toString()) } ?: ExmoId.NONE
+    exmoInData.id = response.id?.let { ExmoId(it) } ?: ExmoId.NONE
 
     exmoInData.timestamp = response.ts?.let {
-        Instant.fromEpochMilliseconds(it.toLong())
+        Instant.fromEpochMilliseconds(it)
     } ?: Instant.NONE //TODO здесь будет не округленный до мкс инстант
 
     exmoInData.code = response.code ?: 0
@@ -50,7 +50,7 @@ private fun DataTicker?.fromTransport(): ExmoTickerData {
             volCurr = it.volCurr.toBigDecimalOrElse { BigDecimal.ZERO },
 
             updated = it.updated?.let {
-                Instant.fromEpochMilliseconds(it.toLong())
+                Instant.fromEpochMilliseconds(it)
             } ?: Instant.NONE //TODO здесь будет не округленный до мкс инстант
         )
     } ?: ExmoTickerData.EMPTY

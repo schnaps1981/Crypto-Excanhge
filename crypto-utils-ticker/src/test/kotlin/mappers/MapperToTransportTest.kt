@@ -11,7 +11,7 @@ class MapperToTransportTest {
     @Test
     fun `map to transport`() {
         val exmoOutData = ExmoOutData(
-            id = ExmoId("id"),
+            id = ExmoId(10),
             method = ExmoMethod.SUBSCRIBE,
             topics = listOf("topic1", "topic2")
         )
@@ -24,7 +24,7 @@ class MapperToTransportTest {
 
         println(response)
 
-        assertEquals("id", response.id)
+        assertEquals(10, response.id)
         assertEquals("SUBSCRIBE", response.method?.name)
         assertEquals("topic1", response.topics?.firstOrNull())
     }

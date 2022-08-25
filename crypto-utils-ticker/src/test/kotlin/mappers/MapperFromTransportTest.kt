@@ -41,7 +41,7 @@ class MapperFromTransportTest {
 
         println(context.exmoInData)
 
-        assertEquals(ExmoId("100"), context.exmoInData.id)
+        assertEquals(ExmoId(100), context.exmoInData.id)
         assertEquals(ExmoEvent.INFO, context.exmoInData.event)
         assertEquals("topic", context.exmoInData.topic)
         assertEquals("error", context.exmoInData.error)

@@ -11,7 +11,7 @@ class ExmoSerializationRequestTest {
     @Test
     fun `serialize EXMO api request test`() {
         val request = ExmoRequest(
-            id = "exmo-id",
+            id = 10,
             method = Method.SUBSCRIBE,
             topics = listOf("BTC/USD", "ETH/RUB")
         )
@@ -20,20 +20,20 @@ class ExmoSerializationRequestTest {
 
         println(jsonString)
 
-        assertContains(jsonString, "\"id\":\"exmo-id\"")
+        assertContains(jsonString, "\"id\":\"10\"")
         assertContains(jsonString, "\"method\":\"subscribe\"")
         assertContains(jsonString, "\"topics\":[\"BTC/USD\",\"ETH/RUB\"")
     }
 
     @Test
     fun `deserialize EXMO api request test`() {
-        val jsonString = "{\"id\":\"exmo-id\",\"method\":\"subscribe\",\"topics\":[\"BTC/USD\",\"ETH/RUB\"]}"
+        val jsonString = "{\"id\":\"10\",\"method\":\"subscribe\",\"topics\":[\"BTC/USD\",\"ETH/RUB\"]}"
 
         val obj = apiExmoRequestDeserialize(jsonString)
 
         println(obj)
 
-        assertEquals("exmo-id", obj.id)
+        assertEquals(10, obj.id)
         assertEquals(Method.SUBSCRIBE, obj.method)
         assertEquals(2, obj.topics?.size)
         assertEquals("BTC/USD", obj.topics?.firstOrNull())

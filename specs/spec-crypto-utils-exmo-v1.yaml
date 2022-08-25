@@ -32,6 +32,7 @@ components:
           type: integer
         ts:
           type: integer
+          format: int64
         code:
           type: integer
         message:
@@ -52,7 +53,7 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         method:
           $ref: '#/components/schemas/method'
         topics:
@@ -99,3 +100,4 @@ components:
           type: string
         updated:
           type: integer
+          format: int64

@@ -11,6 +11,8 @@ data class ExmoOutData(
         topics = this@ExmoOutData.topics
     )
 
+    fun isEmpty() = this === EMPTY
+
     companion object {
         val EMPTY = ExmoOutData()
     }
