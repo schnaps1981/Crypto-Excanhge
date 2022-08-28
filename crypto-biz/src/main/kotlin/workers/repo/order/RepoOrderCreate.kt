@@ -12,7 +12,7 @@ fun ICorChainDsl<CryptoOrderContext>.repoOrderCreate(title: String) = worker {
     on { state == CryptoState.RUNNING }
 
     handle {
-        val request = DbOrderRequest(orderValidated)
+        val request = DbOrderRequest(orderRepoRead)
 
         val result = orderRepo.createOrder(request)
         val resultOrder = result.result
