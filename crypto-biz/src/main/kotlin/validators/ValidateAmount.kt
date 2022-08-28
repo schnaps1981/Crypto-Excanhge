@@ -10,7 +10,9 @@ import models.CryptoOrder
 fun ICorChainDsl<CryptoOrderContext>.validateAmount(title: String) = worker {
     this.title = title
 
-    on { orderValidating.amount == CryptoOrder.ZERO }
+    on {
+        orderValidating.amount == CryptoOrder.ZERO
+    }
     handle {
         fail(
             errorValidation(

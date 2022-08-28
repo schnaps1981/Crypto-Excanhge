@@ -35,6 +35,7 @@ class ApplicationKtTest {
         val response = client.post("/order/create") {
 
             contentType(ContentType.Application.Json)
+            addAuth()
             setBody(
                 OrderCreateRequest(
                     requestId = "requestId-123",
@@ -71,6 +72,7 @@ class ApplicationKtTest {
         val response = client.post("/order/read") {
 
             contentType(ContentType.Application.Json)
+            addAuth()
             setBody(
                 OrderReadRequest(
                     requestId = "requestId-123",
@@ -99,6 +101,7 @@ class ApplicationKtTest {
         val response = client.post("/order/delete") {
 
             contentType(ContentType.Application.Json)
+            addAuth()
             setBody(
                 OrderDeleteRequest(
                     requestId = "requestId-123",

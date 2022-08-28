@@ -3,9 +3,12 @@ package crypto.app.ktor
 import OrderRepositorySql
 import OrderService
 import SQLDbConfig
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import crypto.app.inmemory.OrderRepositoryInMemory
+import crypto.app.ktor.KtorAuthConfig.Companion.GROUPS_CLAIM
 import crypto.app.ktor.api.createOrder
 import crypto.app.ktor.api.deleteOrder
 import crypto.app.ktor.api.readOrders
@@ -14,6 +17,8 @@ import crypto.app.ktor.helpers.KtorUserSession
 import crypto.app.ktor.helpers.fromEnvironment
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
@@ -28,7 +33,8 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @Suppress("unused")
 fun Application.module(
     repoSettings: CryptoSettings? = null,
-    dbConfig: SQLDbConfig = SQLDbConfig.fromEnvironment(environment)
+    dbConfig: SQLDbConfig = SQLDbConfig.fromEnvironment(environment),
+    authConfig: KtorAuthConfig = KtorAuthConfig(environment)
 ) {
 
     install(ContentNegotiation) {
@@ -56,23 +62,45 @@ fun Application.module(
     }
 
     val orderService = OrderService(settings)
-
     val sessions = mutableSetOf<KtorUserSession>()
-
     val logger = logger("CryptoKtorLogger")
 
+    install(Authentication) {
+        jwt("auth-jwt") {
+            realm = authConfig.realm
+            verifier(
+                JWT
+                    .require(Algorithm.HMAC256(authConfig.secret))
+                    .withAudience(authConfig.audience)
+                    .withIssuer(authConfig.issuer)
+                    .build()
+            )
+            validate { jwtCredential: JWTCredential ->
+                when {
+                    jwtCredential.payload.getClaim(GROUPS_CLAIM).asList(String::class.java).isNullOrEmpty() -> {
+                        this@module.log.error("Groups claim must not be empty in JWT token")
+                        null
+                    }
+                    else -> JWTPrincipal(jwtCredential.payload)
+                }
+            }
+        }
+    }
+
     routing {
-        route("/order") {
-            post("/create") {
-                call.createOrder(orderService, logger)
-            }
+        authenticate("auth-jwt") {
+            route("/order") {
+                post("/create") {
+                    call.createOrder(orderService, logger)
+                }
 
-            post("/read") {
-                call.readOrders(orderService, logger)
-            }
+                post("/read") {
+                    call.readOrders(orderService, logger)
+                }
 
-            post("/delete") {
-                call.deleteOrder(orderService, logger)
+                post("/delete") {
+                    call.deleteOrder(orderService, logger)
+                }
             }
         }
 

@@ -144,11 +144,6 @@ class OrderRepositoryInMemory(
     override suspend fun searchOrders(request: DbOrderFilterRequest): DbOrdersResponse {
         val result = cache.asFlow()
             .filter { entry ->
-                request.ownerId.takeIf { it != CryptoUserId.NONE }?.let {
-                    it.asString() == entry.value.ownerId
-                } ?: true
-            }
-            .filter { entry ->
                 (request.filter as? CryptoFilterByCurrency)?.ticker?.takeIf { it.isNotBlank() }?.let {
                     entry.value.pair?.first == it || entry.value.pair?.second == it
                 } ?: true
@@ -171,6 +166,17 @@ class OrderRepositoryInMemory(
                 (request.filter as? CryptoFilterByType)?.orderType.takeIf { it != CryptoOrderType.NONE }?.let {
                     it.name == entry.value.orderType
                 } ?: true
+            }
+            .filter { entry ->
+                request.filter.filterPermissions.map {
+                    when (it) {
+                        CryptoFilterApplyTo.ANY -> true
+
+                        CryptoFilterApplyTo.OWN -> entry.value.ownerId == request.ownerId.asString()
+
+                        else -> false
+                    }
+                }.any { it }
             }
             .map { it.value.toInternal() }
             .toList()

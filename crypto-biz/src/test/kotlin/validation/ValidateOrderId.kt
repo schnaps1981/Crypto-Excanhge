@@ -9,6 +9,7 @@ import models.commands.CryptoOrderCommands
 import org.junit.Test
 import processors.CryptoOrderProcessor
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
 class ValidateOrderId {
@@ -25,7 +26,8 @@ class ValidateOrderId {
         val context = CryptoOrderContext(
             command = CryptoOrderCommands.DELETE,
             state = CryptoState.NONE,
-            workMode = CryptoWorkMode.TEST
+            workMode = CryptoWorkMode.TEST,
+            orderRequest = CryptoOrder(lock = CryptoLock("lock"))
         )
 
         processor.exec(context)
@@ -49,14 +51,14 @@ class ValidateOrderId {
             command = CryptoOrderCommands.DELETE,
             state = CryptoState.NONE,
             workMode = CryptoWorkMode.TEST,
-            orderRequest = CryptoOrder(orderId = CryptoOrderId("123321"))
+            orderRequest = CryptoOrder(orderId = CryptoOrderId("123321"), lock = CryptoLock("lock"))
         )
 
         processor.exec(context)
 
         println(context)
 
-        assertEquals(1, context.errors.size)
+        assertTrue( context.errors.isNotEmpty())
         assertEquals(CryptoState.FAILED, context.state)
 
         assertEquals(context.orderValidated.orderId, CryptoOrderId("123321"))

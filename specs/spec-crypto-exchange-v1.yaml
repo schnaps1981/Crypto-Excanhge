@@ -359,6 +359,9 @@ components:
             amount:
               description: количество получаемой валюты (amount = price * quantity)
               type: string
+            ownerId:
+              description: Идентификатор владельца ордера
+              type: string
 
     IRequest:
       type: object

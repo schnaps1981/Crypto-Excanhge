@@ -32,7 +32,8 @@ fun CryptoOrderContext.toTransportReadOrder() = OrderReadResponse(
             orderId = order.orderId.asString().takeIf { it.isNotBlank() },
             created = order.created.toString(),
             orderState = order.orderState.toTransport(),
-            amount = order.amount.toString()
+            amount = order.amount.toString(),
+            ownerId = order.ownerId.asString()
         )
     }
 )
