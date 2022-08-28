@@ -21,7 +21,11 @@ import serialize.apiExmoResponseDeserialize
 import service.ExmoService
 import java.util.concurrent.Executors
 
-class WsClientController(private val url: String, private val exmoService: ExmoService, tickerPairs: List<Pair<String, String>>) {
+class WsClientController(
+    private val url: String,
+    private val exmoService: ExmoService,
+    tickerPairs: List<Pair<String, String>> = listOf("BTC" to "USD")
+) {
     private val client = HttpClient(CIO) {
         install(WebSockets)
     }

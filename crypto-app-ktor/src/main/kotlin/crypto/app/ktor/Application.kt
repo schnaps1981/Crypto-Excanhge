@@ -58,14 +58,13 @@ fun Application.module(
 
     val orderService = OrderService(settings)
 
-    val tickers = listOf(Pair("BTC", "USD"))
-    val exmoService = ExmoService(settings, tickers)
+    val exmoService = ExmoService(settings)
 
     val sessions = mutableSetOf<KtorUserSession>()
 
 
     val tickerApiUrl = "wss://ws-api.exmo.com:443/v1/public"
-    val wsClient = WsClientController(tickerApiUrl, exmoService, tickers)
+    val wsClient = WsClientController(tickerApiUrl, exmoService)
 
     wsClient.start()
 
