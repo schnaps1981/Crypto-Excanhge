@@ -4,12 +4,12 @@ import com.crowdproj.kotlin.cor.handlers.chain
 import com.crowdproj.kotlin.cor.handlers.worker
 import com.crowdproj.kotlin.cor.rootChain
 import context.CryptoOrderContext
+import context.fail
 import groups.operation
 import groups.stubs
-import models.CryptoLock
-import models.CryptoOrderId
-import models.CryptoSettings
+import models.*
 import models.commands.CryptoOrderCommands
+import permissions.*
 import validators.*
 import validators.filter.validateFilterCurrency
 import validators.filter.validateFilterDate
@@ -51,9 +51,20 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     validateOrderType("Валидация типа ордера")
 
                     finishOrderValidation("Успешное завершение валидации запроса") {
-                        orderValidated = orderValidating
+                        orderValidated = orderValidating.deepCopy()
                     }
                 }
+
+                chainPermissions("Вычисление разрешений для пользователя")
+                worker {
+                    title = "инициализация orderRead"
+                    on { state == CryptoState.RUNNING }
+                    handle {
+                        orderRepoRead = orderValidated.deepCopy()
+                        orderRepoRead.ownerId = principal.id
+                    }
+                }
+                accessValidation("Вычисление прав доступа")
 
                 repoOrderCreate("Создание ордера в БД")
 
@@ -81,11 +92,16 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     validateLockNotEmpty("Проверка на непустой lock")
 
                     finishOrderValidation("Успешное завершение валидации запроса") {
-                        orderValidated = orderValidating
+                        orderValidated = orderValidating.deepCopy()
                     }
                 }
 
+                chainPermissions("Вычисление разрешений для пользователя")
+
                 repoOrderRead("Чтение ордера из БД. Получаем блокировку")
+
+                accessValidation("Вычисление прав доступа")
+
                 repoCheckReadLock("Проверяем блокировку")
                 repoPrepareDelete("Подготовка объекта для удаления")
                 repoOrderDelete("Удаление ордера из БД")
@@ -112,11 +128,47 @@ class CryptoOrderProcessor(private val settings: CryptoSettings) {
                     validateFilterType("Проверка фильтра по типу ордера")
 
                     finishOrderValidation("Успешное завершение валидации фильтра") {
-                        orderFilterValidated = orderFilterValidating
+                        orderFilterValidated = orderFilterValidating.deepCopy()
                     }
                 }
 
+                chainPermissions("Вычисление разрешений для пользователя")
+                applyFilerPermissions("Настройка разрешений для фильтра")
+
                 repoOrdersRead("Чтение ордеров из БД")
+
+                chain {
+                    title = "Вычисление прав доступа"
+
+                    worker {
+                        on { state == CryptoState.RUNNING }
+
+                        handle {
+                            ordersRepoDone = ordersRepoRead.map { order ->
+                                order.copy(principalRelations = order.resolveRelationsTo(principal))
+                            }.toMutableList()
+
+                            permitted =
+                                ordersRepoDone.flatMap { it.principalRelations }.asSequence().flatMap { relation ->
+                                    chainPermissions.map { permission ->
+                                        AccessTableConditions(
+                                            command = command,
+                                            permission = permission,
+                                            relation = relation,
+                                        )
+                                    }
+                                }.any {
+                                    accessTable[it] ?: false
+                                }
+
+                            if (permitted || ordersRepoRead.isEmpty()) {
+                                ordersResponse = ordersRepoRead
+                            } else {
+                                fail(CryptoError(message = "User is not allowed to this operation"))
+                            }
+                        }
+                    }
+                }
 
                 finishProcess("завершение процесса обработки запроса")
             }

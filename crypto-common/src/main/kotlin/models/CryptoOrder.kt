@@ -15,7 +15,8 @@ data class CryptoOrder(
     var price: BigDecimal = ZERO,
     var orderType: CryptoOrderType = CryptoOrderType.NONE,
     var pair: CryptoPair = CryptoPair(),
-    var lock: CryptoLock = CryptoLock.NONE
+    var lock: CryptoLock = CryptoLock.NONE,
+    var principalRelations: Set<CryptoPrincipalRelations> = emptySet(),
 ) {
     fun deepCopy() = CryptoOrder(
         ownerId = this@CryptoOrder.ownerId,

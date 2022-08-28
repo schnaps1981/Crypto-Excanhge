@@ -12,7 +12,7 @@ fun ICorChainDsl<CryptoOrderContext>.repoOrdersRead(title: String) = worker {
 
     handle {
         val request = DbOrderFilterRequest(
-            ownerId = userIdRequest,
+            ownerId = principal.id,
             filter = orderFilterValidated
         )
 
@@ -20,7 +20,7 @@ fun ICorChainDsl<CryptoOrderContext>.repoOrdersRead(title: String) = worker {
         val resultOrders = result.result
 
         if (result.isSuccess && resultOrders != null) {
-            ordersResponse = resultOrders.toMutableList()
+            ordersRepoRead = resultOrders.toMutableList()
         } else {
             state = CryptoState.FAILED
 

@@ -112,3 +112,10 @@
 19.05.2022 В силу того, что MVP получился достаточно большим для учебного проекта, принимается решение сократить его
 реализацию до сущности **order**, так как она больше всего подходит под CRUD и сущности **user**, так как выяснено, что
 в курсе будет отдельный модуль для работы с пользователями.
+
+Токены для авторизации:
+1. USER
+   eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
+
+2. ADMIN
+   eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIkFETUlOIl0sImlkIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMTExIiwiZXhwIjoyMDgyNzU4NDAwfQ.xEXlcXVVXcQUYMN4ICqldxvPRrxaVAtXn1ywwy62vsM

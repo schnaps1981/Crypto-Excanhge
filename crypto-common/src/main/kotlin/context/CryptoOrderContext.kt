@@ -23,6 +23,10 @@ data class CryptoOrderContext(
 
     override var settings: CryptoSettings = CryptoSettings(),
 
+    var principal: CryptoPrincipalModel = CryptoPrincipalModel.NONE,
+    val chainPermissions: MutableSet<CryptoUserPermissions> = mutableSetOf(),
+    var permitted: Boolean = false,
+
     var orderRequest: CryptoOrder = CryptoOrder(),
 
     var orderResponse: CryptoOrder = CryptoOrder(),
@@ -41,7 +45,11 @@ data class CryptoOrderContext(
     var orderRepo: IOrderRepository = IOrderRepository.NONE,
 
     var orderRepoPrepare: CryptoOrder = CryptoOrder(),
+
     var orderRepoRead: CryptoOrder = CryptoOrder(),
-    var orderRepoDone: CryptoOrder = CryptoOrder()
+    var ordersRepoRead: MutableList<CryptoOrder> = mutableListOf(),
+
+    var orderRepoDone: CryptoOrder = CryptoOrder(),
+    var ordersRepoDone: MutableList<CryptoOrder> = mutableListOf(),
 
 ) : CryptoBaseContext<CryptoOrderStubs, CryptoOrderCommands>
