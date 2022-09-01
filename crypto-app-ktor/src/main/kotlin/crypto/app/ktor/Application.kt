@@ -19,6 +19,7 @@ import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.config.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
@@ -36,6 +37,7 @@ fun Application.module(
     dbConfig: SQLDbConfig = SQLDbConfig.fromEnvironment(environment),
     authConfig: KtorAuthConfig = KtorAuthConfig(environment)
 ) {
+    println("DATABASE!!!!! $dbConfig")
 
     install(ContentNegotiation) {
         jackson {
