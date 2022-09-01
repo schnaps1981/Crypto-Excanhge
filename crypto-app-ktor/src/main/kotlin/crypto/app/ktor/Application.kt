@@ -24,6 +24,7 @@ import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import logger
 import models.CryptoSettings
 import org.slf4j.event.Level
 import java.time.Duration
@@ -63,8 +64,8 @@ fun Application.module(
     }
 
     val orderService = OrderService(settings)
-
     val sessions = mutableSetOf<KtorUserSession>()
+    val logger = logger("CryptoKtorLogger")
 
     install(Authentication) {
         jwt("auth-jwt") {
@@ -92,21 +93,21 @@ fun Application.module(
         authenticate("auth-jwt") {
             route("/order") {
                 post("/create") {
-                    call.createOrder(orderService)
+                    call.createOrder(orderService, logger)
                 }
 
                 post("/read") {
-                    call.readOrders(orderService)
+                    call.readOrders(orderService, logger)
                 }
 
                 post("/delete") {
-                    call.deleteOrder(orderService)
+                    call.deleteOrder(orderService, logger)
                 }
             }
         }
 
         webSocket("/ws/order") {
-            wsOrderHandler(orderService, sessions)
+            wsOrderHandler(orderService, sessions, logger)
         }
     }
 }

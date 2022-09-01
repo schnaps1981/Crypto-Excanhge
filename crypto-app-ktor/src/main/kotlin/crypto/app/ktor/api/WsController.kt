@@ -1,5 +1,6 @@
 package crypto.app.ktor.api
 
+import LogWrapper
 import OrderService
 import apiV1RequestDeserialize
 import apiV1ResponseSerialize
@@ -21,6 +22,7 @@ import toTransport
 suspend fun WebSocketSession.wsOrderHandler(
     service: OrderService,
     sessions: MutableSet<KtorUserSession>,
+    logger: LogWrapper
 ) {
     val userSession = KtorUserSession(this)
     sessions.add(userSession)
