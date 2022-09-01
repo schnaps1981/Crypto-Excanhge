@@ -1,0 +1,52 @@
+### Create order
+POST http://127.0.0.1:8080/order/create/
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
+
+{
+  "requestType": "OrderCreate",
+  "requestId": "34234",
+  "pair": {
+    "first": "ETH",
+    "second": "USD"
+  },
+  "quantity": 1.5,
+  "price": 150.0,
+  "orderType": "buy"
+}
+
+### Read order
+POST http://127.0.0.1:8080/order/read/
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
+
+{
+  "requestType": "OrderRead",
+  "requestId": "34234",
+  "filter": null
+}
+
+### Read order with filter
+POST http://127.0.0.1:8080/order/read/
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
+
+{
+  "requestType": "OrderRead",
+  "requestId": "34234",
+  "filter": {
+    "filterType": "byType",
+    "type": "buy"
+  }
+}
+
+### Detele order
+POST http://127.0.0.1:8080/order/delete/
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJ1c2VycyIsImlzcyI6IkNyeXB0b0V4Y2hhbmdlIiwiZ3JvdXBzIjpbIlVTRVIiXSwiaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDEiLCJleHAiOjIwODI3NTg0MDB9.Epa46UfpbKQKnAsBi_7Z24kCcM3hxx-CQTz19rRsO6Q
+
+{
+  "requestType": "OrderDelete",
+  "requestId": "34234",
+  "orderId": "7a3f088a-91e3-4bac-affc-f92ea41660a9"
+}

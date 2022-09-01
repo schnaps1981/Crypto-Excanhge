@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: Логи
+  description: Модель логов.
+  version: 1.0.0
+servers:
+  - url: 'https'
+paths:
+  /log:
+    get:
+      responses:
+        200:
+          description: logs
+          content: {}
+
+components:
+  schemas:
+    CommonLogModel:
+      title: Общая модель лога
+      description: Общая модель лога для всех микросервисов системы
+      type: object
+      properties:
+        messageId:
+          type: string
+        messageTime:
+          type: string
+        logId:
+          type: string
+        source:
+          type: string
+        order:
+          $ref: '#/components/schemas/OrderLogModel'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorLogModel'
+
+    OrderLogModel:
+      type: object
+      properties:
+        requestId:
+          type: string
+        requestOrder:
+          $ref: '#/components/schemas/OrderLog'
+        requestFilter:
+          $ref: '#/components/schemas/OrderFilterLog'
+        responseOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderLog'
+
+    ErrorLogModel:
+      title: Модель лога для ошибки
+      type: object
+      properties:
+        message:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        level:
+          type: string
+
+    OrderLog:
+      title: Модель лога для ордера
+      type: object
+      properties:
+        orderId:
+          type: string
+        ownerId:
+          type: string
+        created:
+          type: string
+        orderState:
+          type: string
+        amount:
+          type: string
+        quantity:
+          type: string
+        price:
+          type: string
+        orderType:
+          type: string
+        pair:
+          type: string
+
+        permissions:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+
+    OrderFilterLog:
+      title: Модель лога фильтра
+      properties:
+        filterType:
+          type: string
+        filterValue:
+          type: string
+        searchTypes:
+          type: array
+          uniqueItems: true
+          items:
+            type: string

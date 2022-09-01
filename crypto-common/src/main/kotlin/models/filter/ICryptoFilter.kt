@@ -1,6 +1,10 @@
 package models.filter
 
+import models.CryptoFilterApplyTo
+
 sealed interface ICryptoFilter {
+    var filterPermissions: MutableSet<CryptoFilterApplyTo>
+
     fun deepCopy(): ICryptoFilter
 
     companion object {
@@ -9,5 +13,7 @@ sealed interface ICryptoFilter {
 }
 
 object ICryptoFilterNone : ICryptoFilter {
+    override var filterPermissions: MutableSet<CryptoFilterApplyTo> = mutableSetOf(CryptoFilterApplyTo.NONE)
+
     override fun deepCopy() = ICryptoFilterNone
 }

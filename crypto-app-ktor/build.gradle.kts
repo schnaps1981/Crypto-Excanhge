@@ -15,7 +15,7 @@ docker {
     javaApplication {
         mainClassName.set(application.mainClass.get())
         baseImage.set("adoptopenjdk/openjdk11:alpine-jre")
-        maintainer.set("(c) Otus")
+        maintainer.set("Alex Ul")
         ports.set(listOf(8080))
         val imageName = project.name
         images.set(
@@ -39,6 +39,8 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
     implementation("io.ktor:ktor-server-websockets:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth-jwt:$ktorVersion")
 
     // jackson
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
@@ -61,6 +63,11 @@ dependencies {
     implementation(project(":crypto-repo-sql"))
 
     implementation(project(":crypto-utils-ticker"))
+
+    // Logging
+    implementation(project(":crypto-logging"))
+    implementation(project(":crypto-logging-mapper"))
+    implementation(project(":crypto-api-logs"))
 
     testImplementation(kotlin("test-junit"))
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")

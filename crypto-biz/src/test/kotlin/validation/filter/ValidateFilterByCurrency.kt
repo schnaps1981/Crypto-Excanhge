@@ -4,7 +4,9 @@ import context.CryptoOrderContext
 import crypto.app.inmemory.OrderRepositoryInMemory
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import models.*
+import models.CryptoSettings
+import models.CryptoState
+import models.CryptoWorkMode
 import models.commands.CryptoOrderCommands
 import models.filter.CryptoFilterByCurrency
 import models.filter.ICryptoFilterNone
