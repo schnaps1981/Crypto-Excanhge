@@ -18,9 +18,9 @@ class MapperTest {
                     orderId = CryptoOrderId("order-id"),
                     created = Instant.fromEpochMilliseconds(1231313131),
                     orderState = CryptoOrderState.ACTIVE,
-                    amount = 3.3.toBigDecimal(),
-                    quantity = 4.4.toBigDecimal(),
-                    price = 5.5.toBigDecimal(),
+                    amount = "3.3".toBigDecimal(),
+                    quantity = "4.4".toBigDecimal(),
+                    price = "5.5".toBigDecimal(),
                     orderType = CryptoOrderType.SELL,
                     pair = CryptoPair("BTC", "USD")
                 )
