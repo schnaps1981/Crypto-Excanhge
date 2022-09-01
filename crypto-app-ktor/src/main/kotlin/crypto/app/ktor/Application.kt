@@ -7,6 +7,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
+import controller.WsClientController
 import crypto.app.inmemory.OrderRepositoryInMemory
 import crypto.app.ktor.KtorAuthConfig.Companion.GROUPS_CLAIM
 import crypto.app.ktor.api.createOrder
@@ -27,6 +28,7 @@ import io.ktor.server.websocket.*
 import logger
 import models.CryptoSettings
 import org.slf4j.event.Level
+import service.ExmoService
 import java.time.Duration
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -64,10 +66,23 @@ fun Application.module(
     }
 
     val orderService = OrderService(settings)
+
+    val exmoService = ExmoService(settings)
+
     val sessions = mutableSetOf<KtorUserSession>()
     val logger = logger("CryptoKtorLogger")
 
-    install(Authentication) {
+    val tickerApiUrl = "wss://ws-api.exmo.com:443/v1/public"
+    val wsClient = WsClientController(tickerApiUrl, exmoService)
+
+    wsClient.start()
+
+    routing {
+        route("/order") {
+            post("/create") {
+                call.createOrder(orderService)
+
+install(Authentication) {
         jwt("auth-jwt") {
             realm = authConfig.realm
             verifier(

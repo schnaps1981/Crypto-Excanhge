@@ -62,6 +62,8 @@ dependencies {
     implementation(project(":crypto-repo-inmemory"))
     implementation(project(":crypto-repo-sql"))
 
+    implementation(project(":crypto-utils-ticker"))
+
     // Logging
     implementation(project(":crypto-logging"))
     implementation(project(":crypto-logging-mapper"))
