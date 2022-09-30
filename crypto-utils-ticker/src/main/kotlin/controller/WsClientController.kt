@@ -52,8 +52,6 @@ class WsClientController(
                 .map { response ->
                     val ctx = ExmoContext().apply { fromTransport(response) }
 
-                    println("WS ${ctx.exmoInData}")
-
                     if (ctx.exmoInData.event == ExmoEvent.SUBSCRIBED && ctx.exmoInData.topic.isNotBlank()) {
                         ctx.exmoOutData = ExmoOutData.EMPTY
                     }
@@ -74,7 +72,6 @@ class WsClientController(
                 .map {
                     if (!it.exmoOutData.isEmpty()) {
                         val frame = apiExmoRequestSerialize(it.toTransport())
-                        println("WS!! $frame")
                         outgoing.send(Frame.Text(frame))
                     }
                 }

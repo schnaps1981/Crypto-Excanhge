@@ -53,6 +53,7 @@ fun CryptoOrderContext.fromTransport(request: OrderDeleteRequest) {
     command = CryptoOrderCommands.DELETE
 
     orderRequest.orderId = request.orderId.toCryptoOrderId()
+    orderRequest.lock = request.lock.toCryptoLock()
     userIdRequest = request.userId.toCryptoUserId()
 }
 

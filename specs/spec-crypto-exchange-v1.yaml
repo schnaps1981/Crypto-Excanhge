@@ -327,6 +327,13 @@ components:
         - completed
         - cancelled
 
+    OrderLock:
+      type: object
+      description: Оптимистичная блокировка для ордера, характеризующая его версию
+      properties:
+        lock:
+          type: string
+
     OrderBase:
       type: object
       description: база ордера
@@ -346,6 +353,7 @@ components:
       description: Объект, описывающий ордер
       allOf:
         - $ref: '#/components/schemas/OrderBase'
+        - $ref: '#/components/schemas/OrderLock'
         - type: object
           properties:
             orderId:
@@ -511,6 +519,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/IResponse'
         - $ref: '#/components/schemas/OrderId'
+        - $ref: '#/components/schemas/OrderLock'
 
     OrderDeleteRequest:
       description: Запрос. удаление ордера
@@ -519,11 +528,13 @@ components:
         - $ref: '#/components/schemas/RequestDebug'
         - $ref: '#/components/schemas/OrderId'
         - $ref: '#/components/schemas/UserId'
+        - $ref: '#/components/schemas/OrderLock'
 
     OrderDeleteResponse:
       description: Ответ. удаление ордера
       allOf:
         - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/OrderLock'
         - type: object
           properties:
             deleteResult:

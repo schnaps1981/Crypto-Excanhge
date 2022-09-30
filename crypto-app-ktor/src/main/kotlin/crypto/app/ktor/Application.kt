@@ -20,7 +20,6 @@ import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.config.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
@@ -77,12 +76,7 @@ fun Application.module(
 
     wsClient.start()
 
-    routing {
-        route("/order") {
-            post("/create") {
-                call.createOrder(orderService)
-
-install(Authentication) {
+    install(Authentication) {
         jwt("auth-jwt") {
             realm = authConfig.realm
             verifier(
@@ -94,7 +88,8 @@ install(Authentication) {
             )
             validate { jwtCredential: JWTCredential ->
                 when {
-                    jwtCredential.payload.getClaim(GROUPS_CLAIM).asList(String::class.java).isNullOrEmpty() -> {
+                    jwtCredential.payload.getClaim(GROUPS_CLAIM).asList(String::class.java)
+                        .isNullOrEmpty() -> {
                         this@module.log.error("Groups claim must not be empty in JWT token")
                         null
                     }

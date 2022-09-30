@@ -16,7 +16,8 @@ fun CryptoOrderContext.toTransportCreateOrder() = OrderCreateResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = state.toTransportResponseResult(),
     errors = errors.toTransportErrors(),
-    orderId = this.orderResponse.orderId.asString().takeIf { it.isNotBlank() }
+    orderId = this.orderResponse.orderId.asString().takeIf { it.isNotBlank() },
+    lock = this.orderResponse.lock.asString().takeIf { it.isNotBlank() }
 )
 
 fun CryptoOrderContext.toTransportReadOrder() = OrderReadResponse(
@@ -33,7 +34,8 @@ fun CryptoOrderContext.toTransportReadOrder() = OrderReadResponse(
             created = order.created.toString(),
             orderState = order.orderState.toTransport(),
             amount = order.amount.toString(),
-            ownerId = order.ownerId.asString()
+            ownerId = order.ownerId.asString(),
+            lock = order.lock.asString()
         )
     }
 )
@@ -42,7 +44,8 @@ fun CryptoOrderContext.toTransportDeleteOrder() = OrderDeleteResponse(
     requestId = this.requestId.asString().takeIf { it.isNotBlank() },
     result = state.toTransportResponseResult(),
     errors = errors.toTransportErrors(),
-    deleteResult = if (orderResponse.orderState == CryptoOrderState.NONE) DeleteResult.SUCCESS else DeleteResult.ERROR
+    deleteResult = if (orderResponse.orderState == CryptoOrderState.NONE) DeleteResult.SUCCESS else DeleteResult.ERROR,
+    lock = this.orderResponse.lock.asString().takeIf { it.isNotBlank() }
 )
 
 private fun CryptoOrderState.toTransport(): OrderState? = when (this) {

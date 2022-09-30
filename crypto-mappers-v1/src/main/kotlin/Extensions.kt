@@ -5,6 +5,7 @@ import java.math.BigDecimal
 fun IRequest?.requestId() = this?.requestId?.let { CryptoRequestId(it) } ?: CryptoRequestId.NONE
 fun String?.toCryptoUserId() = this?.let { CryptoUserId(it) } ?: CryptoUserId.NONE
 fun String?.toCryptoOrderId() = this?.let { CryptoOrderId(it) } ?: CryptoOrderId.NONE
+fun String?.toCryptoLock() = this?.let { CryptoLock(it) } ?: CryptoLock.NONE
 
 fun Debug?.transportToWorkMode(): CryptoWorkMode = when (this?.mode) {
     RequestDebugMode.PROD -> CryptoWorkMode.PROD
