@@ -38,7 +38,6 @@ fun Application.module(
     dbConfig: SQLDbConfig = SQLDbConfig.fromEnvironment(environment),
     authConfig: KtorAuthConfig = KtorAuthConfig(environment)
 ) {
-    println("DATABASE!!!!! $dbConfig")
 
     install(ContentNegotiation) {
         jackson {

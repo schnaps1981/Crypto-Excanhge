@@ -20,7 +20,6 @@ docker {
         val imageName = project.name
         images.set(
             listOf(
-                "$imageName:${project.version}",
                 "$imageName:latest"
             )
         )
